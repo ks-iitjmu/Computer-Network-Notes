@@ -15,6 +15,15 @@
             padding: 15px;
             background-color: #fff;
         }
+        .header-nav {
+            column-span: all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+        }
         .container {
             column-count: 3;
             column-gap: 20px;
@@ -98,6 +107,40 @@
             color: #444;
             font-weight: 600;
         }
+        .chapter-nav {
+            column-span: all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px 0;
+            border-top: 1px solid #ccc;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background-color: #e9ecef;
+            border-left: 3px solid #0056b3;
+            text-decoration: none;
+            color: #222;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .nav-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+        .nav-btn.next {
+            border-left: none;
+            border-right: 3px solid #0056b3;
+        }
         /* Tablet Responsive */
         @media screen and (max-width: 1024px) {
             .container {
@@ -179,6 +222,21 @@
 <body>
 
     <div class="container">
+        <div class="header-nav">
+            <a href="Chapter1.html" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Chapter 1: Networks & Internet
+            </a>
+            <a href="Chapter3.html" class="nav-btn next">
+                Chapter 3: Transport Layer
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
         <h1>Chapter 2: Application Layer</h1>
 
         <h2>2.1 Principles of Network Applications</h2>
@@ -1431,6 +1489,21 @@ while True:
             <li><strong>DASH:</strong> Adaptive streaming - client selects quality based on available bandwidth.</li>
             <li><strong>Security:</strong> Major concern - many attack vectors, need encryption and vigilance.</li>
         </ul>
+
+        <div class="chapter-nav">
+            <a href="Chapter1.html" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Chapter 1: Networks & Internet
+            </a>
+            <a href="Chapter3.html" class="nav-btn next">
+                Chapter 3: Transport Layer
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
 
         <div class="footer">
             Made by <a href="https://www.linkedin.com/in/ks-iitjmu" target="_blank" style="color: #0056b3; text-decoration: none;">Kunal Sharma</a>
