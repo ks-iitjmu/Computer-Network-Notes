@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 2: Application Layer</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.25;
+            color: #222;
+            max-width: 100%;
+            margin: 0;
+            padding: 15px;
+            background-color: #fff;
+        }
+        .container {
+            column-count: 3;
+            column-gap: 20px;
+            column-rule: 1px solid #eee;
+        }
+        h1 {
+            column-span: all;
+            text-align: center;
+            font-size: 16px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 12px;
+            background-color: #e9ecef;
+            padding: 3px 6px;
+            border-left: 3px solid #0056b3;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            break-after: avoid;
+            font-weight: 800;
+        }
+        h3 {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 6px;
+            margin-bottom: 2px;
+            color: #444;
+            border-bottom: 1px dotted #ccc;
+        }
+        p { margin: 2px 0; }
+        ul, ol {
+            margin: 0;
+            padding-left: 12px;
+        }
+        li {
+            margin-bottom: 1px;
+        }
+        strong { color: #000; font-weight: 700; }
+        .formula {
+            background-color: #f1f3f5;
+            border: 1px solid #ced4da;
+            padding: 2px;
+            font-family: "Courier New", monospace;
+            display: block;
+            text-align: center;
+            margin: 3px 0;
+            font-weight: bold;
+            font-size: 9px;
+        }
+        .box {
+            border: 1px solid #444;
+            padding: 4px;
+            margin: 4px 0;
+            background-color: #fff;
+            break-inside: avoid;
+        }
+        .code {
+            font-family: "Courier New", monospace;
+            background: #eee;
+            padding: 2px 4px;
+            display: block;
+            white-space: pre-wrap;
+            margin: 2px 0;
+            font-size: 9px;
+        }
+        .example {
+            background-color: #e8f4fd;
+            padding: 3px;
+            border-left: 2px solid #2196F3;
+            margin: 2px 0;
+        }
+        .footer {
+            column-span: all;
+            text-align: center;
+            font-size: 12px;
+            border-top: 2px solid #000;
+            margin-top: 15px;
+            padding-top: 10px;
+            color: #444;
+            font-weight: 600;
+        }
+        /* Tablet Responsive */
+        @media screen and (max-width: 1024px) {
+            .container {
+                column-count: 2;
+                column-gap: 15px;
+            }
+            body {
+                font-size: 11px;
+                padding: 12px;
+            }
+            h1 {
+                font-size: 18px;
+            }
+            h2 {
+                font-size: 13px;
+            }
+            h3 {
+                font-size: 11.5px;
+            }
+            .formula {
+                font-size: 10px;
+            }
+            .code {
+                font-size: 10px;
+            }
+        }
+        /* Mobile Responsive */
+        @media screen and (max-width: 600px) {
+            .container {
+                column-count: 1;
+            }
+            body {
+                font-size: 12px;
+                padding: 10px;
+                line-height: 1.4;
+            }
+            h1 {
+                font-size: 20px;
+                padding-bottom: 8px;
+            }
+            h2 {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+            h3 {
+                font-size: 12.5px;
+                margin-top: 10px;
+            }
+            .box {
+                padding: 8px;
+                margin: 8px 0;
+            }
+            .formula {
+                font-size: 11px;
+                padding: 6px;
+            }
+            .code {
+                font-size: 11px;
+                padding: 6px;
+                overflow-x: auto;
+            }
+            .example {
+                padding: 6px;
+            }
+            ul, ol {
+                padding-left: 18px;
+            }
+            li {
+                margin-bottom: 4px;
+            }
+            .footer {
+                font-size: 14px;
+                padding-top: 15px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Chapter 2: Application Layer</h1>
+
+        <h2>2.1 Principles of Network Applications</h2>
+
+        <h3>Network Application Overview</h3>
+        <p><strong>Key Concept:</strong> Application layer protocols run on END SYSTEMS only, not on network-core devices (routers/switches). This allows rapid application development without needing to write software for network-core devices.</p>
+        <ul>
+            <li>Applications exchange <strong>messages</strong> through the network</li>
+            <li>Network provides <strong>communication services</strong> to applications</li>
+            <li>Developer has full control over application-layer protocol design</li>
+        </ul>
+
+        <h3>Application Architectures</h3>
+        <ul>
+            <li><strong>Client-Server:</strong>
+                <ul>
+                    <li><em>Server:</em> Always-on, fixed/permanent IP, Data Centers (scaling), provides services.</li>
+                    <li><em>Client:</em> Intermittent, dynamic IP, initiates contact, do not communicate directly with each other.</li>
+                    <li><em>Examples:</em> Web, Email, FTP, Telnet, Search Engines.</li>
+                    <li><em>Scalability Issue:</em> Single server can get overwhelmed → use <strong>data centers</strong> with many hosts.</li>
+                </ul>
+            </li>
+            <li><strong>Peer-to-Peer (P2P):</strong>
+                <ul>
+                    <li><em>Peers:</em> Arbitrary end systems directly communicate, act as both client & server.</li>
+                    <li><em>Self-Scalability:</em> New peers bring new service capacity AND demand (scales automatically).</li>
+                    <li><em>No Always-On Server:</em> Decentralized, peers request and provide service.</li>
+                    <li><em>Challenges:</em>
+                        <ol>
+                            <li>ISP Friendly (asymmetric: more downstream, less upstream bandwidth).</li>
+                            <li>Security (open, distributed nature).</li>
+                            <li>Incentive mechanisms (free-riding problem).</li>
+                            <li>Peer Churn (peers come and go unpredictably).</li>
+                        </ol>
+                    </li>
+                    <li><em>Examples:</em> BitTorrent, Skype (originally), IPTV, Blockchain Networks.</li>
+                </ul>
+            </li>
+            <li><strong>Hybrid (Client-Server + P2P):</strong>
+                <ul>
+                    <li>Instant Messaging: Server for presence detection/contact lists, P2P for actual messaging.</li>
+                    <li>Napster: Centralized directory for file locations, P2P for file transfer.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Processes & Sockets</h3>
+        <ul>
+            <li><strong>Process:</strong> Program running within a host. Within same host, two processes communicate using <strong>inter-process communication (IPC)</strong> defined by OS.</li>
+            <li><strong>Inter-Host Communication:</strong> Processes on different hosts communicate by exchanging <strong>messages</strong> across the network.</li>
+            <li><strong>Client Process:</strong> Process that <em>initiates</em> communication.</li>
+            <li><strong>Server Process:</strong> Process that <em>waits</em> to be contacted.</li>
+            <li><strong>Socket:</strong> The "API" or "Door" between application and transport layer.
+                <ul>
+                    <li>Process sends/receives messages to/from its socket.</li>
+                    <li>Application developer controls App side (socket creation, binding).</li>
+                    <li>OS/Transport layer controls Transport side (TCP/UDP implementation).</li>
+                    <li>Socket = interface between application layer and transport layer.</li>
+                </ul>
+            </li>
+            <li><strong>Addressing Processes:</strong> To receive messages, process needs:
+                <ol>
+                    <li><strong>Host IP Address</strong> (32-bit for IPv4) - identifies the host machine.</li>
+                    <li><strong>Port Number</strong> (16-bit) - identifies the receiving process/socket on that host.</li>
+                </ol>
+            </li>
+            <li><strong>Well-Known Port Numbers:</strong>
+                <ul>
+                    <li>HTTP Server: <strong>80</strong></li>
+                    <li>HTTPS: <strong>443</strong></li>
+                    <li>Mail Server (SMTP): <strong>25</strong></li>
+                    <li>DNS: <strong>53</strong></li>
+                    <li>FTP Control: <strong>21</strong>, FTP Data: <strong>20</strong></li>
+                    <li>SSH: <strong>22</strong></li>
+                    <li>Telnet: <strong>23</strong></li>
+                    <li>POP3: <strong>110</strong></li>
+                    <li>IMAP: <strong>143</strong></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Transport Services Required by Apps</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Service</th><th>Description</th><th>Application Examples</th></tr>
+            <tr><td><strong>Reliable Data Transfer</strong></td><td>Guaranteed delivery without loss or corruption. Data integrity.</td><td>File transfer, Web, Email, Banking (CRITICAL)<br><em>Tolerate loss:</em> Audio/Video streaming</td></tr>
+            <tr><td><strong>Throughput</strong></td><td>Guaranteed minimum available rate (bits/sec).</td><td><em>Bandwidth-sensitive:</em> Multimedia, VoIP need min rate.<br><em>Elastic:</em> Web/Mail/FTP use whatever available.</td></tr>
+            <tr><td><strong>Timing (Delay)</strong></td><td>Upper bound on end-to-end delay.</td><td>Interactive games (< 100ms), VoIP/Telephony (< 150ms preferred), Video conferencing</td></tr>
+            <tr><td><strong>Security</strong></td><td>Confidentiality (encryption), Data integrity, End-point authentication.</td><td>Banking, E-commerce, Secure communications</td></tr>
+        </table>
+
+        <h3>Application Requirements Summary</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Application</th><th>Data Loss</th><th>Throughput</th><th>Time Sensitive</th></tr>
+            <tr><td>File Transfer/Email</td><td>No loss</td><td>Elastic</td><td>No</td></tr>
+            <tr><td>Web Documents</td><td>No loss</td><td>Elastic</td><td>No</td></tr>
+            <tr><td>Real-time Audio/Video</td><td>Loss-tolerant</td><td>Audio: 5kbps-1Mbps, Video: 10kbps-5Mbps</td><td>Yes, 100s of msec</td></tr>
+            <tr><td>Stored Audio/Video</td><td>Loss-tolerant</td><td>Same as above</td><td>Yes, few seconds</td></tr>
+            <tr><td>Interactive Games</td><td>Loss-tolerant</td><td>Few kbps-10kbps</td><td>Yes, 100s of msec</td></tr>
+            <tr><td>Text Messaging</td><td>No loss</td><td>Elastic</td><td>Yes and No</td></tr>
+        </table>
+
+        <h3>Transport Protocols Available</h3>
+        <div class="box">
+            <strong>TCP (Transmission Control Protocol)</strong>
+            <ul>
+                <li><strong>Connection-oriented:</strong> Setup required (3-way handshake) before data exchange.</li>
+                <li><strong>Reliable Data Transfer:</strong> No data loss, correct order guaranteed.</li>
+                <li><strong>Congestion Control:</strong> Throttles sender when network congested (good for network, may slow sender).</li>
+                <li><strong>Flow Control:</strong> Sender won't overwhelm receiver (matches receiver's consumption rate).</li>
+                <li><strong>Full-Duplex:</strong> Bi-directional data flow in same connection.</li>
+                <li><em>Does NOT provide:</em> Timing/delay guarantees, Minimum throughput guarantees, Security (plain TCP).</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>UDP (User Datagram Protocol)</strong>
+            <ul>
+                <li><strong>Connectionless:</strong> No handshaking before sending data.</li>
+                <li><strong>Unreliable:</strong> No guarantee of delivery, order, or duplicate avoidance.</li>
+                <li><strong>No Congestion Control:</strong> Can pump data as fast as desired (may cause packet loss).</li>
+                <li><strong>No Flow Control:</strong> No receiver speed matching.</li>
+                <li><strong>Lightweight:</strong> Minimal overhead, faster for some applications.</li>
+                <li><em>Used for:</em> Streaming media, DNS, SNMP, Gaming (where speed > reliability).</li>
+                <li><em>Why UDP?</em> No connection establishment delay, no connection state, small segment overhead, finer control over when data is sent.</li>
+            </ul>
+        </div>
+
+        <h3>Securing TCP: TLS (Transport Layer Security)</h3>
+        <div class="box">
+            <ul>
+                <li>TCP & UDP provide NO encryption - data sent as cleartext.</li>
+                <li><strong>TLS</strong> provides encrypted TCP connections (previously SSL).</li>
+                <li>TLS runs at application layer (sits between application and TCP socket).</li>
+                <li><strong>Services:</strong> Encryption, Data Integrity, End-Point Authentication.</li>
+                <li>Application sends cleartext → TLS encrypts → sends to TCP socket.</li>
+                <li><strong>HTTPS</strong> = HTTP + TLS (Port 443).</li>
+            </ul>
+        </div>
+
+        <h2>2.2 The Web and HTTP</h2>
+        <p><strong>HTTP (HyperText Transfer Protocol)</strong> [RFC 7230]. Uses TCP (Port 80). Stateless protocol - server maintains no information about past client requests.</p>
+
+        <h3>Web Terminology</h3>
+        <ul>
+            <li><strong>Web Page:</strong> Consists of objects (HTML file, JPEG, audio, video, Java applet, etc.).</li>
+            <li><strong>Base HTML File:</strong> References other objects via URLs.</li>
+            <li><strong>URL (Uniform Resource Locator):</strong> <code>http://www.hostname.com/pathname</code>
+                <ul>
+                    <li>Protocol + Host Name + Path Name</li>
+                </ul>
+            </li>
+            <li><strong>Web Browser:</strong> Client (implements client-side HTTP).</li>
+            <li><strong>Web Server:</strong> Stores web objects, addressable by URL (implements server-side HTTP).</li>
+        </ul>
+
+        <h3>HTTP Connection Types</h3>
+        <ul>
+            <li><strong>Non-Persistent (HTTP/1.0):</strong>
+                <ul>
+                    <li>At most <strong>1 Object per TCP connection</strong>, then connection closed.</li>
+                    <li><strong>Steps:</strong>
+                        <ol>
+                            <li>Client initiates TCP connection to server (port 80).</li>
+                            <li>Server accepts connection, notifies client.</li>
+                            <li>Client sends HTTP request message.</li>
+                            <li>Server sends HTTP response with object.</li>
+                            <li>Server closes TCP connection.</li>
+                            <li>Repeat for each object.</li>
+                        </ol>
+                    </li>
+                    <li><strong>Response Time Calculation:</strong></li>
+                    <li><span class="formula">Response Time = 2*RTT + File Transmission Time</span></li>
+                    <li><em>1st RTT:</em> Initiate TCP connection (SYN, SYN-ACK).</li>
+                    <li><em>2nd RTT:</em> HTTP Request + first few bytes of response.</li>
+                    <li><strong>Problems:</strong> New TCP connection for each object (OS overhead), 2 RTTs per object.</li>
+                    <li><strong>Browsers workaround:</strong> Open multiple parallel TCP connections (typically 6-10).</li>
+                </ul>
+            </li>
+            <li><strong>Persistent (HTTP/1.1 default):</strong>
+                <ul>
+                    <li>Server leaves connection <strong>open</strong> after sending response.</li>
+                    <li>Subsequent HTTP messages sent over <strong>same TCP connection</strong>.</li>
+                    <li>Client sends requests as soon as it encounters referenced objects.</li>
+                    <li><strong>Pipelining:</strong> Multiple requests sent back-to-back <em>without waiting</em> for responses.</li>
+                    <li>As little as <strong>1 RTT</strong> for all referenced objects (after initial connection).</li>
+                    <li>Server closes connection after timeout of non-use.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>HTTP Message Format</h3>
+        <p><strong>Two types:</strong> Request and Response messages (both in ASCII - human-readable).</p>
+        
+        <h3>HTTP Request Message</h3>
+        <div class="code">
+GET /somedir/page.html HTTP/1.1
+Host: www.someschool.edu
+Connection: close
+User-agent: Mozilla/5.0
+Accept-language: fr
+Accept: text/html
+(blank line - CRLF)
+(entity body - for POST)
+        </div>
+        <ul>
+            <li><strong>Request Line:</strong> Method SP URL SP HTTP-Version CRLF
+                <ul>
+                    <li>Method: GET, POST, HEAD, PUT, DELETE, PATCH, OPTIONS</li>
+                </ul>
+            </li>
+            <li><strong>Header Lines:</strong>
+                <ul>
+                    <li><code>Host:</code> Required in HTTP/1.1 (for virtual hosting/proxy).</li>
+                    <li><code>Connection:</code> close (non-persistent) or keep-alive.</li>
+                    <li><code>User-agent:</code> Browser type (server can send different versions).</li>
+                    <li><code>Accept-language:</code> Preferred language.</li>
+                    <li><code>Accept:</code> MIME types client can handle.</li>
+                    <li><code>Content-Type:</code> MIME type of body (for POST).</li>
+                    <li><code>Content-Length:</code> Length of body in bytes.</li>
+                </ul>
+            </li>
+            <li><strong>Entity Body:</strong> Empty for GET, contains data for POST.</li>
+        </ul>
+
+        <h3>HTTP Methods (Detailed)</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Method</th><th>Description</th><th>Body</th></tr>
+            <tr><td><strong>GET</strong></td><td>Request object at URL. Most common. Parameters in URL (?name=value&...).</td><td>No</td></tr>
+            <tr><td><strong>POST</strong></td><td>Submit data to server (forms). Data in entity body. Creates new resource.</td><td>Yes</td></tr>
+            <tr><td><strong>HEAD</strong></td><td>Like GET but returns ONLY headers (no object body). Used for debugging/testing.</td><td>No</td></tr>
+            <tr><td><strong>PUT</strong></td><td>Upload/replace file at specified URL path. Idempotent.</td><td>Yes</td></tr>
+            <tr><td><strong>DELETE</strong></td><td>Delete object at specified URL.</td><td>No</td></tr>
+            <tr><td><strong>PATCH</strong></td><td>Partial modification of resource.</td><td>Yes</td></tr>
+            <tr><td><strong>OPTIONS</strong></td><td>Query supported methods for a URL.</td><td>No</td></tr>
+        </table>
+
+        <h3>HTTP Response Message</h3>
+        <div class="code">
+HTTP/1.1 200 OK
+Connection: close
+Date: Tue, 18 Aug 2015 15:44:04 GMT
+Server: Apache/2.2.3
+Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT
+Content-Length: 6821
+Content-Type: text/html
+(blank line - CRLF)
+(data data data ...)
+        </div>
+        <ul>
+            <li><strong>Status Line:</strong> HTTP-Version SP Status-Code SP Phrase CRLF</li>
+            <li><strong>Common Headers:</strong> Date, Server, Last-Modified, Content-Length, Content-Type, Set-Cookie</li>
+        </ul>
+
+        <h3>HTTP Response Status Codes</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Code</th><th>Phrase</th><th>Meaning</th></tr>
+            <tr><td>200</td><td>OK</td><td>Request succeeded, object in response body.</td></tr>
+            <tr><td>301</td><td>Moved Permanently</td><td>Object moved to new URL (in Location: header).</td></tr>
+            <tr><td>302</td><td>Found</td><td>Temporary redirect.</td></tr>
+            <tr><td>304</td><td>Not Modified</td><td>Cached version still valid (conditional GET).</td></tr>
+            <tr><td>400</td><td>Bad Request</td><td>Request not understood by server.</td></tr>
+            <tr><td>401</td><td>Unauthorized</td><td>Authentication required.</td></tr>
+            <tr><td>403</td><td>Forbidden</td><td>Server refuses access (no permission).</td></tr>
+            <tr><td>404</td><td>Not Found</td><td>Requested document not found on server.</td></tr>
+            <tr><td>500</td><td>Internal Server Error</td><td>Server-side error.</td></tr>
+            <tr><td>505</td><td>HTTP Version Not Supported</td><td>Version not supported by server.</td></tr>
+        </table>
+
+        <h3>Cookies (User-Server State)</h3>
+        <p>HTTP is stateless, but applications often need state. <strong>Cookies</strong> allow sites to track users.</p>
+        <p><strong>Four Components:</strong></p>
+        <ol>
+            <li><code>Set-Cookie:</code> header line in HTTP response (server → client).</li>
+            <li><code>Cookie:</code> header line in subsequent HTTP requests (client → server).</li>
+            <li>Cookie file kept on user's browser/host, managed by browser.</li>
+            <li>Back-end database at website (maps cookie ID to user data).</li>
+        </ol>
+        <div class="example">
+            <strong>Cookie Flow:</strong><br>
+            1. User visits amazon.com for first time.<br>
+            2. Amazon creates unique ID (1678), entry in database.<br>
+            3. Response: <code>Set-Cookie: 1678</code><br>
+            4. Browser stores cookie for amazon.com.<br>
+            5. Next visit: Request includes <code>Cookie: 1678</code><br>
+            6. Amazon looks up 1678 → retrieves user's cart, history, etc.
+        </div>
+        <p><strong>Cookie Uses:</strong> Authorization, Shopping carts, Recommendations, User session state (web email login).</p>
+        <p><strong>Privacy Concerns:</strong> Cookies enable tracking across sites (third-party cookies), profiling user behavior.</p>
+
+        <h3>Web Caching (Proxy Server)</h3>
+        <p>Goal: Satisfy client request <strong>without involving origin server</strong>.</p>
+        <ul>
+            <li>User configures browser to use Web cache (or transparently intercepted).</li>
+            <li>Browser sends ALL HTTP requests to cache.</li>
+            <li><strong>Cache Hit:</strong> Object in cache → return to client immediately.</li>
+            <li><strong>Cache Miss:</strong> Cache requests from origin server, stores copy, returns to client.</li>
+            <li>Cache acts as <strong>both client and server</strong>.</li>
+            <li>Typically installed by ISP (university, company, residential ISP).</li>
+        </ul>
+        <p><strong>Why Web Caching?</strong></p>
+        <ul>
+            <li><strong>Reduce response time</strong> for client (cache is closer).</li>
+            <li><strong>Reduce traffic</strong> on institution's access link (saves bandwidth costs).</li>
+            <li><strong>Enable "poor" content providers</strong> to effectively deliver content (Internet dense with caches).</li>
+        </ul>
+        <div class="example">
+            <strong>Caching Example Calculation:</strong><br>
+            <em>Assumptions:</em><br>
+            - LAN Speed: 1 Gbps<br>
+            - Access Link: 15 Mbps<br>
+            - Avg Object Size: 1 Mb (100 Kbytes)<br>
+            - Avg Request Rate: 15 requests/sec<br>
+            - RTT from router to origin: 2 sec<br><br>
+            
+            <strong>Without Cache:</strong><br>
+            - LAN Utilization = (15 req/s × 1 Mb) / 1000 Mbps = 1.5% (OK)<br>
+            - Access Link Utilization = (15 × 1) / 15 = <strong>100%</strong> (SATURATED!)<br>
+            - Total Delay → minutes (queueing delay → ∞)<br><br>
+            
+            <strong>Option 1: Upgrade Access Link to 100 Mbps</strong><br>
+            - Access Utilization = 15/100 = 15% (OK)<br>
+            - But EXPENSIVE!<br><br>
+            
+            <strong>Option 2: Install Local Cache (Hit Rate = 40%)</strong><br>
+            - 40% requests satisfied locally (msec delay).<br>
+            - 60% go through access link.<br>
+            - Access Utilization = 0.6 × 15 / 15 = <strong>60%</strong> (OK)<br>
+            - Avg Delay = 0.4 × (~msec) + 0.6 × (2 sec) ≈ <strong>1.2 sec</strong><br>
+            - CHEAPER and FASTER than upgrading link!
+        </div>
+
+        <h3>Conditional GET (Cache Consistency)</h3>
+        <p>Problem: Cached object may be <strong>stale</strong> (out of date). Solution: Verify before using.</p>
+        <ul>
+            <li><strong>Conditional GET Request:</strong>
+                <br><code>If-Modified-Since: &lt;date&gt;</code> (date from Last-Modified of cached copy)
+            </li>
+            <li><strong>If NOT modified:</strong>
+                <br>Response: <code>HTTP/1.1 304 Not Modified</code>
+                <br>No object body sent (saves bandwidth).
+                <br>Cache uses its stored copy.
+            </li>
+            <li><strong>If modified:</strong>
+                <br>Response: <code>HTTP/1.1 200 OK</code>
+                <br>New object in body. Cache updates its copy.
+            </li>
+            <li>Other validators: <code>If-None-Match</code> with ETag (entity tag - hash of content).</li>
+        </ul>
+
+        <h3>HTTP/2 & HTTP/3</h3>
+        <p><strong>HTTP/2 Goals:</strong> Reduce latency, address HTTP/1.1 inefficiencies.</p>
+        <ul>
+            <li><strong>HTTP/1.1 Problem - Head-of-Line (HOL) Blocking:</strong>
+                <ul>
+                    <li>Client wants video + multiple small objects.</li>
+                    <li>Large video blocks small objects behind it in queue.</li>
+                    <li>Workaround: Multiple parallel TCP connections (inefficient).</li>
+                </ul>
+            </li>
+            <li><strong>HTTP/2 Solutions:</strong>
+                <ul>
+                    <li><strong>Single TCP Connection:</strong> All objects over one persistent connection.</li>
+                    <li><strong>Binary Framing:</strong> Messages divided into small frames (not text).</li>
+                    <li><strong>Request/Response Multiplexing:</strong> Frames from different requests interleaved.</li>
+                    <li><strong>Stream Prioritization:</strong> Client can specify priority weights.</li>
+                    <li><strong>Server Push:</strong> Server proactively sends objects client will likely need (CSS, JS) without explicit request.</li>
+                    <li><strong>Header Compression (HPACK):</strong> Reduces redundant header overhead.</li>
+                </ul>
+            </li>
+            <li><strong>HTTP/2 Remaining Problem:</strong> TCP-level HOL blocking.
+                <ul>
+                    <li>Packet loss in TCP → ALL streams blocked until retransmission.</li>
+                    <li>TCP treats all frames as one byte stream.</li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li><strong>HTTP/3:</strong> Built on <strong>QUIC</strong> protocol (over UDP).
+                <ul>
+                    <li><strong>QUIC:</strong> Quick UDP Internet Connections (Google-developed).</li>
+                    <li>Per-stream error recovery (packet loss only blocks affected stream).</li>
+                    <li>Faster connection establishment (0-RTT or 1-RTT).</li>
+                    <li>Built-in encryption (TLS 1.3 integrated).</li>
+                    <li>Connection migration (handles IP changes, good for mobile).</li>
+                    <li>Solves TCP-level HOL blocking problem.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>2.3 Electronic Mail (Email)</h2>
+        <p><strong>Three Major Components:</strong></p>
+        <ol>
+            <li><strong>User Agents:</strong> Mail reader (Outlook, Gmail, Thunderbird). Composing, reading, replying to messages.</li>
+            <li><strong>Mail Servers:</strong>
+                <ul>
+                    <li><strong>Mailbox:</strong> Contains incoming messages for user.</li>
+                    <li><strong>Message Queue:</strong> Holds outgoing messages to be sent.</li>
+                    <li>Runs SMTP (client and server).</li>
+                </ul>
+            </li>
+            <li><strong>SMTP (Simple Mail Transfer Protocol):</strong> The protocol for sending email between servers.</li>
+        </ol>
+
+        <h3>Email Flow (Alice → Bob)</h3>
+        <ol>
+            <li>Alice uses User Agent to compose message to bob@someschool.edu</li>
+            <li>Alice's UA sends message to her mail server (placed in message queue).</li>
+            <li>Alice's mail server opens TCP connection to Bob's mail server (port 25).</li>
+            <li>SMTP handshaking, then Alice's server sends message over TCP connection.</li>
+            <li>Bob's mail server receives, places in Bob's mailbox.</li>
+            <li>Bob invokes his User Agent to read message (using IMAP/POP3/HTTP).</li>
+        </ol>
+
+        <h3>SMTP (Simple Mail Transfer Protocol)</h3>
+        <ul>
+            <li>[RFC 5321]. Uses <strong>TCP Port 25</strong>.</li>
+            <li><strong>Push Protocol:</strong> Sending server pushes file to receiving server.</li>
+            <li><strong>Direct Transfer:</strong> Sending server directly to receiving server (no intermediate servers for message transfer).</li>
+            <li><strong>Three Phases:</strong> Handshaking → Transfer of message(s) → Closure.</li>
+            <li><strong>Command/Response Interaction:</strong>
+                <ul>
+                    <li>Commands: ASCII text (HELO, MAIL FROM, RCPT TO, DATA, QUIT).</li>
+                    <li>Responses: Status code + phrase (250 OK, 354 Start mail input, etc.).</li>
+                </ul>
+            </li>
+            <li><strong>Persistent Connection:</strong> Multiple messages can be sent over single TCP connection.</li>
+        </ul>
+
+        <h3>SMTP Characteristics</h3>
+        <div class="box">
+            <ul>
+                <li><strong>7-bit ASCII Only:</strong> Message body must be in 7-bit ASCII. Binary data (images, etc.) must be encoded (Base64 via MIME).</li>
+                <li><strong>CRLF.CRLF:</strong> End of message indicated by line with only a period.</li>
+                <li><strong>Push vs Pull:</strong> SMTP is PUSH protocol (sender initiates). Retrieving mail needs PULL protocol (IMAP/POP3).</li>
+            </ul>
+        </div>
+
+        <h3>SMTP vs HTTP Comparison</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Feature</th><th>HTTP</th><th>SMTP</th></tr>
+            <tr><td>Type</td><td>Pull protocol</td><td>Push protocol</td></tr>
+            <tr><td>Port</td><td>80 (443 for HTTPS)</td><td>25</td></tr>
+            <tr><td>Transport</td><td>TCP</td><td>TCP</td></tr>
+            <tr><td>Persistent</td><td>Yes (HTTP/1.1+)</td><td>Yes (multiple messages per connection)</td></tr>
+            <tr><td>Encoding</td><td>Each object in own response</td><td>All objects in one message (multipart MIME)</td></tr>
+            <tr><td>Data Format</td><td>8-bit binary OK</td><td>7-bit ASCII (binary must be encoded)</td></tr>
+        </table>
+
+        <div class="code">
+S: 220 hamburger.edu SMTP ready
+C: HELO crepes.fr
+S: 250 Hello crepes.fr, pleased to meet you
+C: MAIL FROM: &lt;alice@crepes.fr&gt;
+S: 250 alice@crepes.fr... Sender ok
+C: RCPT TO: &lt;bob@hamburger.edu&gt;
+S: 250 bob@hamburger.edu... Recipient ok
+C: DATA
+S: 354 Enter mail, end with "." on a line by itself
+C: From: alice@crepes.fr
+C: To: bob@hamburger.edu
+C: Subject: Searching for the meaning of life
+C:
+C: Do you like ketchup?
+C: How about pickles?
+C: .
+S: 250 Message accepted for delivery
+C: QUIT
+S: 221 hamburger.edu closing connection
+        </div>
+
+        <h3>Mail Message Format [RFC 5322]</h3>
+        <ul>
+            <li><strong>Distinction:</strong> SMTP commands (MAIL FROM, RCPT TO) ≠ Message headers (From:, To:).</li>
+            <li><strong>Header Lines:</strong> To:, From:, Subject:, Date:, Reply-To:, Cc:, etc.</li>
+            <li><strong>Blank Line (CRLF):</strong> Separates header from body.</li>
+            <li><strong>Body:</strong> The actual message content (ASCII characters only in basic SMTP).</li>
+        </ul>
+
+        <h3>MIME (Multipurpose Internet Mail Extensions)</h3>
+        <p>Extends email to support:</p>
+        <ul>
+            <li>Non-ASCII text (different character sets).</li>
+            <li>Non-text attachments (images, audio, video, applications).</li>
+            <li>Multi-part message bodies.</li>
+        </ul>
+        <div class="box">
+            <strong>MIME Headers:</strong>
+            <ul>
+                <li><code>MIME-Version: 1.0</code></li>
+                <li><code>Content-Type: type/subtype</code> (text/plain, image/jpeg, multipart/mixed)</li>
+                <li><code>Content-Transfer-Encoding:</code> base64, quoted-printable (for binary data)</li>
+            </ul>
+        </div>
+
+        <h3>Mail Access Protocols</h3>
+        <p>SMTP: Delivery/transfer TO receiver's mail server. To READ mail, user agent needs <strong>access protocol</strong>.</p>
+        <ul>
+            <li><strong>POP3 (Post Office Protocol v3) [Port 110]:</strong>
+                <ul>
+                    <li>Simple protocol with limited features.</li>
+                    <li><strong>Phases:</strong> Authorization (user/pass) → Transaction (list, retr, dele, quit).</li>
+                    <li><em>Download-and-delete Mode:</em> Messages deleted from server after retrieval.</li>
+                    <li><em>Download-and-keep Mode:</em> Copies left on server.</li>
+                    <li><strong>Stateless across sessions:</strong> No memory of previous session.</li>
+                    <li>Problem: Cannot organize mail in folders on server.</li>
+                </ul>
+            </li>
+            <li><strong>IMAP (Internet Mail Access Protocol) [Port 143]:</strong>
+                <ul>
+                    <li>All messages kept <strong>on server</strong>.</li>
+                    <li>Allows organizing messages in <strong>server-side folders</strong>.</li>
+                    <li><strong>Stateful:</strong> Maintains state across sessions (folder names, mappings).</li>
+                    <li>Allows partial fetch (headers only, or portion of MIME message).</li>
+                    <li>Useful for accessing from multiple devices.</li>
+                    <li>More complex than POP3.</li>
+                </ul>
+            </li>
+            <li><strong>HTTP (Web-based Mail):</strong>
+                <ul>
+                    <li>Gmail, Hotmail, Yahoo Mail, etc.</li>
+                    <li>User Agent is web browser.</li>
+                    <li>User ↔ Mail Server: HTTP (both directions).</li>
+                    <li>Mail Server ↔ Mail Server: Still SMTP.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>2.4 DNS (Domain Name System)</h2>
+        <p><strong>The Internet's Directory Service.</strong> UDP Port 53. Distributed, Hierarchical Database.</p>
+
+        <h3>Why DNS?</h3>
+        <ul>
+            <li>Humans prefer <strong>hostname identifiers</strong> (www.google.com) - meaningful, memorable.</li>
+            <li>Routers prefer <strong>IP addresses</strong> (142.250.190.46) - fixed length, hierarchical.</li>
+            <li>Need translation service: Hostname → IP Address.</li>
+        </ul>
+
+        <h3>DNS Services</h3>
+        <ul>
+            <li><strong>Hostname to IP Address Translation:</strong> Primary service.</li>
+            <li><strong>Host Aliasing:</strong> Canonical name vs alias names.
+                <ul>
+                    <li>Canonical: relay1.west-coast.enterprise.com</li>
+                    <li>Aliases: enterprise.com, www.enterprise.com (easier to remember)</li>
+                </ul>
+            </li>
+            <li><strong>Mail Server Aliasing:</strong> MX records. bob@yahoo.com → mail server IP.</li>
+            <li><strong>Load Distribution:</strong> Replicated web servers have multiple IPs. DNS returns rotated list of IPs. Distributes load among servers.</li>
+        </ul>
+
+        <h3>Why Not Centralize DNS?</h3>
+        <ul>
+            <li><strong>Single Point of Failure:</strong> Entire Internet stops working.</li>
+            <li><strong>Traffic Volume:</strong> Billions of queries/day - cannot handle.</li>
+            <li><strong>Distant Centralized Database:</strong> High latency for far users.</li>
+            <li><strong>Maintenance:</strong> Single database for all hosts - impossible to maintain.</li>
+            <li><em>Conclusion:</em> Centralized DNS <strong>doesn't scale!</strong></li>
+        </ul>
+
+        <h3>DNS Hierarchy (Distributed, Hierarchical Database)</h3>
+        <div class="box">
+            <strong>Three Classes of DNS Servers:</strong>
+            <ol>
+                <li><strong>Root DNS Servers:</strong>
+                    <ul>
+                        <li>13 logical root servers (A through M) worldwide.</li>
+                        <li>Each "server" is actually many replicated servers (>1000 total instances).</li>
+                        <li>Managed by different organizations (ICANN, NASA, US Army, etc.).</li>
+                        <li>Provides IP addresses of TLD servers.</li>
+                    </ul>
+                </li>
+                <li><strong>Top-Level Domain (TLD) Servers:</strong>
+                    <ul>
+                        <li>Responsible for: .com, .org, .net, .edu, .gov, .mil</li>
+                        <li>Country codes: .uk, .fr, .ca, .jp, .in, etc.</li>
+                        <li>Verisign maintains .com, Educause maintains .edu.</li>
+                        <li>Provides IP addresses of Authoritative servers.</li>
+                    </ul>
+                </li>
+                <li><strong>Authoritative DNS Servers:</strong>
+                    <ul>
+                        <li>Organization's own DNS server(s).</li>
+                        <li>Provides authoritative hostname → IP mappings for organization's hosts.</li>
+                        <li>Can be maintained by organization or service provider.</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <h3>Local DNS Server (Default Name Server)</h3>
+        <ul>
+            <li>Does NOT strictly belong to hierarchy.</li>
+            <li>Each ISP has one (residential ISP, company, university).</li>
+            <li>Host's DNS query is sent to local DNS server first.</li>
+            <li>Acts as <strong>proxy</strong>: Forwards query into hierarchy.</li>
+            <li>Has local cache of recent name-to-address mappings.</li>
+        </ul>
+
+        <h3>DNS Resolution Methods</h3>
+        <div class="box">
+            <strong>Iterated Query:</strong>
+            <ul>
+                <li>Contacted server replies with name of server to contact next.</li>
+                <li>"I don't know this name, but ask this server".</li>
+                <li>Local DNS server does most of the work.</li>
+                <li>Root/TLD servers prefer this (less load on them).</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>Recursive Query:</strong>
+            <ul>
+                <li>Puts burden of name resolution on contacted name server.</li>
+                <li>Server must obtain the answer and return it.</li>
+                <li>Heavy load at upper levels of hierarchy.</li>
+                <li>Typically: Host → Local DNS (recursive), then Local DNS → others (iterative).</li>
+            </ul>
+        </div>
+
+        <h3>DNS Resolution Example (Iterative)</h3>
+        <ol>
+            <li>Host at <code>cse.nyu.edu</code> wants IP for <code>gaia.cs.umass.edu</code>.</li>
+            <li>Host queries Local DNS <code>dns.nyu.edu</code>.</li>
+            <li>Local DNS queries <strong>Root Server</strong>.</li>
+            <li>Root returns IP of <strong>.edu TLD server</strong>.</li>
+            <li>Local DNS queries <strong>.edu TLD server</strong>.</li>
+            <li>TLD returns IP of <strong>umass.edu Authoritative server</strong>.</li>
+            <li>Local DNS queries <strong>dns.umass.edu</strong> (Authoritative).</li>
+            <li>Authoritative returns IP of <code>gaia.cs.umass.edu</code>.</li>
+            <li>Local DNS returns IP to requesting host.</li>
+        </ol>
+        <p><em>Total: 8 DNS messages (4 queries + 4 replies) without caching.</em></p>
+
+        <h3>DNS Caching</h3>
+        <ul>
+            <li>Once name server learns mapping, it <strong>caches</strong> the mapping.</li>
+            <li>Cached entries expire after <strong>TTL (Time To Live)</strong> - typically 2 days.</li>
+            <li>TLD servers typically cached in local DNS → root servers not often visited.</li>
+            <li>Cached entries may be <strong>out-of-date</strong> if IP changes before TTL expires.</li>
+            <li>Update/notify mechanisms proposed (RFC 2136) but not widely deployed.</li>
+        </ul>
+
+        <h3>DNS Records (Resource Records - RRs)</h3>
+        <p>DNS stores <strong>Resource Records (RRs)</strong> in distributed database.</p>
+        <p><strong>RR Format:</strong> <code>(Name, Value, Type, TTL)</code></p>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Type</th><th>Name</th><th>Value</th><th>Purpose</th></tr>
+            <tr><td><strong>A</strong></td><td>Hostname</td><td>IP Address (IPv4)</td><td>Standard name-to-IP mapping</td></tr>
+            <tr><td><strong>AAAA</strong></td><td>Hostname</td><td>IPv6 Address</td><td>IPv6 address mapping</td></tr>
+            <tr><td><strong>NS</strong></td><td>Domain</td><td>Authoritative DNS server hostname</td><td>Route DNS queries further</td></tr>
+            <tr><td><strong>CNAME</strong></td><td>Alias hostname</td><td>Canonical (real) hostname</td><td>Alias to canonical name</td></tr>
+            <tr><td><strong>MX</strong></td><td>Domain</td><td>Mail server hostname</td><td>Mail exchanger for domain</td></tr>
+            <tr><td><strong>TXT</strong></td><td>Domain</td><td>Text string</td><td>SPF, DKIM, verification</td></tr>
+        </table>
+
+        <div class="example">
+            <strong>Example Records for foo.com:</strong><br>
+            <code>(foo.com, dns.foo.com, NS)</code> - foo.com's authoritative server is dns.foo.com<br>
+            <code>(dns.foo.com, 212.212.212.1, A)</code> - dns.foo.com has IP 212.212.212.1<br>
+            <code>(foo.com, mail.foo.com, MX)</code> - Mail for foo.com goes to mail.foo.com<br>
+            <code>(www.foo.com, foo.com, CNAME)</code> - www.foo.com is alias for foo.com
+        </div>
+
+        <h3>DNS Message Format</h3>
+        <p>Query and Reply have <strong>same format</strong>.</p>
+        <ul>
+            <li><strong>Header (12 bytes):</strong>
+                <ul>
+                    <li>Identification: 16-bit ID for matching query/reply.</li>
+                    <li>Flags: Query/Reply, Recursion Desired (RD), Recursion Available (RA), Authoritative Answer (AA).</li>
+                    <li>Number of: Questions, Answer RRs, Authority RRs, Additional RRs.</li>
+                </ul>
+            </li>
+            <li><strong>Questions Section:</strong> Name being queried, Type (A, MX, etc.).</li>
+            <li><strong>Answers Section:</strong> RRs in response to query.</li>
+            <li><strong>Authority Section:</strong> Records for authoritative servers.</li>
+            <li><strong>Additional Section:</strong> Additional "helpful" info (e.g., A record for NS).</li>
+        </ul>
+
+        <h3>Inserting Records into DNS (Registrars)</h3>
+        <p>To create domain "networkutopia.com":</p>
+        <ol>
+            <li>Register name at <strong>DNS Registrar</strong> (e.g., GoDaddy, Namecheap).</li>
+            <li>Provide registrar with names and IPs of your authoritative DNS server(s).</li>
+            <li>Registrar inserts into <strong>.com TLD server</strong>:
+                <ul>
+                    <li>NS record: (networkutopia.com, dns1.networkutopia.com, NS)</li>
+                    <li>A record: (dns1.networkutopia.com, 212.212.71.4, A)</li>
+                </ul>
+            </li>
+            <li>Configure your authoritative server with A records (www.networkutopia.com → IP), MX records (mail server), etc.</li>
+        </ol>
+
+        <h3>DNS Security</h3>
+        <ul>
+            <li><strong>DDoS Attacks:</strong>
+                <ul>
+                    <li>Bombard root servers with traffic (hasn't been successful due to traffic filtering, local DNS caching).</li>
+                    <li>Bombard TLD servers (potentially more dangerous).</li>
+                </ul>
+            </li>
+            <li><strong>Spoofing/Redirect Attacks:</strong>
+                <ul>
+                    <li>Intercept DNS queries, return bogus replies.</li>
+                    <li>DNS Cache Poisoning: Inject fake records into DNS cache.</li>
+                </ul>
+            </li>
+            <li><strong>DNSSEC (DNS Security Extensions):</strong>
+                <ul>
+                    <li>Provides authentication and integrity using digital signatures.</li>
+                    <li>Chain of trust from root to authoritative servers.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>2.5 Peer-to-Peer (P2P) File Distribution</h2>
+        
+        <h3>P2P Architecture Revisited</h3>
+        <ul>
+            <li>No always-on server.</li>
+            <li>Arbitrary end systems (peers) directly communicate.</li>
+            <li>Peers are intermittently connected, change IP addresses.</li>
+            <li>Key property: <strong>Self-scalability</strong> - new peers add service capacity!</li>
+        </ul>
+
+        <h3>File Distribution: Client-Server vs P2P</h3>
+        <p><strong>Question:</strong> How much time to distribute file (size F) from one server to N peers?</p>
+        <p><strong>Given:</strong> Server upload capacity = u<sub>s</sub>, Peer i upload = u<sub>i</sub>, Peer i download = d<sub>i</sub></p>
+        
+        <div class="box">
+            <strong>Client-Server Distribution Time</strong>
+            <ul>
+                <li>Server must sequentially upload N copies: N×F/u<sub>s</sub></li>
+                <li>Each client must download F bits: F/d<sub>min</sub> (bottleneck)</li>
+            </ul>
+            <span class="formula">D<sub>cs</sub> ≥ max { NF/u<sub>s</sub>, F/d<sub>min</sub> }</span>
+            <p><strong>Increases linearly with N</strong> (server is bottleneck).</p>
+        </div>
+        
+        <div class="box">
+            <strong>P2P Distribution Time</strong>
+            <ul>
+                <li>Server must upload at least one copy: F/u<sub>s</sub></li>
+                <li>Slowest client download: F/d<sub>min</sub></li>
+                <li>Total data to distribute: NF bits</li>
+                <li>Total upload capacity: u<sub>s</sub> + Σu<sub>i</sub> (server + all peers)</li>
+            </ul>
+            <span class="formula">D<sub>p2p</sub> ≥ max { F/u<sub>s</sub>, F/d<sub>min</sub>, NF/(u<sub>s</sub> + Σu<sub>i</sub>) }</span>
+            <p><strong>Scales much better!</strong> As N increases, so does aggregate upload capacity.</p>
+            <p>Client-server grows linearly; P2P grows logarithmically with N.</p>
+        </div>
+
+        <div class="example">
+            <strong>Example Comparison (F = 15 Gbits, u<sub>s</sub> = 30 Mbps, d<sub>min</sub> = 2 Mbps, u<sub>i</sub> = 300 kbps):</strong><br>
+            <em>N = 10:</em> CS = 7500s, P2P = 7500s (similar)<br>
+            <em>N = 100:</em> CS = 50000s, P2P = 8000s<br>
+            <em>N = 1000:</em> CS = 500000s (~5.8 days), P2P = 25000s (~7 hours)<br>
+            <strong>P2P is dramatically faster at scale!</strong>
+        </div>
+
+        <h3>BitTorrent Protocol</h3>
+        <p>Most popular P2P file distribution protocol.</p>
+        <ul>
+            <li><strong>Torrent:</strong> Group of peers exchanging chunks of a file.</li>
+            <li><strong>Tracker:</strong> Server that tracks peers participating in torrent.</li>
+            <li><strong>Chunks:</strong> File divided into 256 KB pieces (chunks).</li>
+        </ul>
+
+        <h3>BitTorrent: Joining a Torrent</h3>
+        <ol>
+            <li>Peer contacts tracker, gets list of peers (subset), connects to some ("neighbors").</li>
+            <li>While downloading, peer uploads chunks to others.</li>
+            <li>Peer may change neighbors over time (<strong>churn</strong>).</li>
+            <li>Once peer has entire file, it may leave (selfish) or stay (<strong>seed</strong>).</li>
+        </ol>
+
+        <h3>BitTorrent: Chunk Selection - Rarest First</h3>
+        <ul>
+            <li>Each peer has different subset of chunks.</li>
+            <li>Periodically, peer asks each neighbor for list of chunks they have.</li>
+            <li><strong>Rarest First Policy:</strong> Request the chunk that is <em>rarest among neighbors</em> first.</li>
+            <li><strong>Why?</strong> Prevents rare chunks from becoming extinct. Equalizes chunk distribution.</li>
+        </ul>
+
+        <h3>BitTorrent: Sending Chunks - Tit-for-Tat</h3>
+        <p>Goal: Encourage peers to share. Punish free-riders.</p>
+        <ul>
+            <li><strong>Unchoked Peers:</strong> Peer sends chunks to 4 neighbors currently providing highest download rate.</li>
+            <li>Re-evaluate <strong>every 10 seconds</strong>: Recalculate top 4.</li>
+            <li><strong>Optimistic Unchoking:</strong> Every 30 seconds, randomly select one additional peer to unchoke.
+                <ul>
+                    <li>Gives new peers a chance to participate.</li>
+                    <li>May discover better trading partners.</li>
+                    <li>Newly unchoked peer may become top-4.</li>
+                </ul>
+            </li>
+        </ul>
+        <div class="box">
+            <strong>Tit-for-Tat Effect:</strong>
+            <ul>
+                <li>Peers with higher upload rate find better partners, get file faster.</li>
+                <li>Discourages <strong>free-riding</strong> (downloading without uploading).</li>
+                <li>Creates incentive to contribute bandwidth.</li>
+            </ul>
+        </div>
+
+        <h3>Distributed Hash Table (DHT)</h3>
+        <p>P2P systems need to find where data is stored. DHT provides distributed "database" for this.</p>
+        <ul>
+            <li><strong>Hash Table:</strong> Key-Value pairs distributed across peers.</li>
+            <li>Each peer responsible for subset of keys.</li>
+            <li><strong>Circular DHT:</strong> Peers organized in virtual ring by ID.</li>
+            <li>Queries forwarded around ring until key found.</li>
+            <li><strong>Shortcuts:</strong> Each peer knows several other peers (not just immediate neighbors) → O(log N) lookups.</li>
+            <li><strong>Peer Churn:</strong> DHT must handle peers joining/leaving gracefully.</li>
+        </ul>
+
+        <h2>2.6 Video Streaming & Content Distribution Networks (CDNs)</h2>
+        
+        <h3>Internet Video Overview</h3>
+        <ul>
+            <li>Video = Sequence of images displayed at constant rate (e.g., 24-30 fps).</li>
+            <li><strong>Massive bandwidth requirement:</strong> ~10 Mbps for 4K video.</li>
+            <li>Netflix, YouTube account for ~80% of residential ISP traffic.</li>
+            <li><strong>Challenge:</strong> Scale - how to reach ~1 billion users with high-quality video?</li>
+            <li><strong>Challenge:</strong> Heterogeneity - different users have different capabilities (bandwidth, device).</li>
+        </ul>
+
+        <h3>Video Compression</h3>
+        <ul>
+            <li>Digital image = array of pixels, each pixel = bits (color, intensity).</li>
+            <li><strong>Spatial Coding (within image):</strong> Instead of sending N identical values, send: color value + count (run-length encoding).</li>
+            <li><strong>Temporal Coding (across images):</strong> Only send differences between consecutive frames (motion vectors + difference).</li>
+            <li><strong>CBR (Constant Bit Rate):</strong> Fixed encoding rate.</li>
+            <li><strong>VBR (Variable Bit Rate):</strong> Changes based on spatial/temporal complexity. More efficient.</li>
+            <li><strong>Examples:</strong> MPEG1 (CD-ROM, 1.5 Mbps), MPEG2 (DVD, 3-6 Mbps), MPEG4 (often <1 Mbps), H.264, H.265/HEVC, VP9, AV1.</li>
+        </ul>
+
+        <h3>Streaming Stored Video</h3>
+        <p><strong>Characteristics:</strong></p>
+        <ul>
+            <li>Pre-recorded, stored on server.</li>
+            <li>Client can pause, rewind, fast-forward, jump (interactivity).</li>
+            <li><strong>Continuous playout:</strong> Once playout starts, should match original timing.</li>
+            <li><strong>Client-side buffering:</strong> Absorbs network delay/jitter variations.</li>
+        </ul>
+
+        <h3>Streaming Challenges</h3>
+        <ul>
+            <li><strong>Network Delay Variation (Jitter):</strong> Variable network delays cause playout issues.</li>
+            <li>Solution: <strong>Client-side buffer</strong> - accumulate video before playout.</li>
+            <li><strong>Buffer Starvation:</strong> If buffer empties → video freezes/rebuffers.</li>
+            <li><strong>Trade-off:</strong> Larger buffer = more delay before video starts, but smoother playout.</li>
+        </ul>
+
+        <h3>DASH (Dynamic Adaptive Streaming over HTTP)</h3>
+        <p><strong>The dominant streaming approach today.</strong></p>
+        <ul>
+            <li><strong>Server:</strong>
+                <ul>
+                    <li>Divides video into multiple <strong>chunks</strong> (e.g., 2-10 seconds each).</li>
+                    <li>Each chunk encoded at <strong>multiple bit rates/quality levels</strong>.</li>
+                    <li>Different rate chunks stored as different files.</li>
+                    <li><strong>Manifest File (MPD):</strong> Provides URLs for different chunks at different quality levels.</li>
+                </ul>
+            </li>
+            <li><strong>Client (Intelligence at client):</strong>
+                <ul>
+                    <li>Periodically measures server-to-client bandwidth.</li>
+                    <li>Consults manifest, requests one chunk at a time.</li>
+                    <li>Chooses maximum coding rate sustainable given current bandwidth.</li>
+                    <li>Can switch quality levels at any chunk boundary (adaptive).</li>
+                    <li>Can choose from different servers based on proximity/load.</li>
+                </ul>
+            </li>
+        </ul>
+        <div class="box">
+            <strong>DASH Advantages:</strong>
+            <ul>
+                <li>Uses standard HTTP infrastructure (port 80/443).</li>
+                <li>Works through NATs and firewalls.</li>
+                <li>Adapts to varying bandwidth conditions.</li>
+                <li>Client controls quality selection (no server-side intelligence needed).</li>
+            </ul>
+        </div>
+
+        <h3>Content Distribution Networks (CDNs)</h3>
+        <p><strong>Challenge:</strong> How to stream content to hundreds of thousands of simultaneous users?</p>
+        <p><strong>Option 1:</strong> Single mega-server - Problems: Single point of failure, congestion, long paths, bandwidth costs. <strong>Doesn't scale!</strong></p>
+        <p><strong>Option 2:</strong> Store/serve copies at multiple geographically distributed sites → <strong>CDN</strong></p>
+
+        <h3>CDN Approaches</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Approach</th><th>Enter Deep (Akamai)</th><th>Bring Home (Limelight)</th></tr>
+            <tr><td>Strategy</td><td>Push CDN servers deep into access ISPs</td><td>Large clusters at fewer, key locations (IXPs)</td></tr>
+            <tr><td>Locations</td><td>~240,000 servers in ~1,700+ locations worldwide</td><td>Fewer (~100), larger clusters</td></tr>
+            <tr><td>Proximity</td><td>Very close to users</td><td>Further from some users</td></tr>
+            <tr><td>Latency</td><td>Lower latency</td><td>Higher latency for some</td></tr>
+            <tr><td>Management</td><td>Higher maintenance complexity</td><td>Easier to maintain</td></tr>
+        </table>
+
+        <h3>CDN Content Access: DNS Redirection</h3>
+        <ol>
+            <li>User navigates to video on netcinema.com → client resolves <code>video.netcinema.com</code>.</li>
+            <li>User's Local DNS (LDNS) queries authoritative DNS for netcinema.com.</li>
+            <li>NetCinema's DNS returns <strong>CNAME</strong>: <code>video.netcinema.com</code> → <code>a]z.kingcdn.com</code>.</li>
+            <li>LDNS queries KingCDN's authoritative DNS.</li>
+            <li>KingCDN DNS returns <strong>IP address of best CDN server</strong> for this client.</li>
+            <li>LDNS returns CDN server IP to client.</li>
+            <li>Client requests video directly from CDN server.</li>
+        </ol>
+
+        <h3>CDN Cluster Selection Strategies</h3>
+        <ul>
+            <li><strong>Geographically Closest:</strong>
+                <ul>
+                    <li>Use geolocation database to map client IP to location.</li>
+                    <li>Pick "nearest" CDN cluster.</li>
+                    <li>Problem: Nearest geographically ≠ nearest in network terms.</li>
+                </ul>
+            </li>
+            <li><strong>Real-Time Measurements:</strong>
+                <ul>
+                    <li>CDN performs periodic measurements to ISPs/clients.</li>
+                    <li>Ping, DNS-based probes.</li>
+                    <li>Pick cluster with lowest latency/best performance.</li>
+                </ul>
+            </li>
+            <li><strong>Client-Based:</strong> Netflix clients measure and report performance → influence server selection.</li>
+        </ul>
+
+        <h3>CDN Case Studies</h3>
+        <div class="box">
+            <strong>Netflix:</strong>
+            <ul>
+                <li>Uses <strong>Amazon Cloud (AWS)</strong> for non-video content (website, user accounts, payments).</li>
+                <li>Operates its <strong>own private CDN</strong>: <strong>Open Connect</strong>.</li>
+                <li>Servers placed inside ISPs or at IXPs.</li>
+                <li><strong>Push caching:</strong> Content pushed to servers during off-peak hours (proactive).</li>
+                <li>Predicts what will be popular → pre-positions content.</li>
+                <li>~95% of Netflix traffic served from Open Connect.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>YouTube (Google):</strong>
+            <ul>
+                <li>Uses <strong>Google's private CDN</strong>: Google Global Cache.</li>
+                <li><strong>Pull caching:</strong> Content pulled to CDN servers when first requested.</li>
+                <li>Large content volume → cannot pre-position everything.</li>
+                <li>Uses DASH for adaptive streaming.</li>
+                <li>Servers in ISPs and at Google data centers.</li>
+            </ul>
+        </div>
+
+        <h2>2.7 Socket Programming</h2>
+        <p><strong>Goal:</strong> Learn how to build client/server applications that communicate using sockets.</p>
+        <p><strong>Socket:</strong> Interface (door) between application process and end-to-end transport protocol (TCP or UDP).</p>
+
+        <h3>Two Socket Types</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Feature</th><th>UDP Socket (SOCK_DGRAM)</th><th>TCP Socket (SOCK_STREAM)</th></tr>
+            <tr><td>Connection</td><td>Connectionless (no handshake)</td><td>Connection-oriented (3-way handshake)</td></tr>
+            <tr><td>Reliability</td><td>Unreliable, unordered</td><td>Reliable, ordered byte stream</td></tr>
+            <tr><td>Data Boundary</td><td>Preserved (datagrams)</td><td>No boundaries (byte stream)</td></tr>
+            <tr><td>Addressing</td><td>Attach destination to EACH message</td><td>Once connected, no need to specify dest</td></tr>
+            <tr><td>Use Case</td><td>DNS, streaming, gaming</td><td>Web, email, file transfer</td></tr>
+        </table>
+
+        <h3>1. UDP Socket Programming</h3>
+        <p><strong>No "connection" established.</strong> Sender explicitly attaches destination IP and port to each packet. Receiver extracts sender info from received packet.</p>
+        <p><strong>Transmitted data may be lost or received out-of-order.</strong></p>
+        <p><strong>Point-of-view:</strong> UDP provides unreliable transfer of groups of bytes ("datagrams") between client and server.</p>
+        
+        <div class="code">
+# ============ UDP CLIENT ============
+from socket import *
+serverName = 'hostname'
+serverPort = 12000
+
+# Create UDP socket (AF_INET = IPv4, SOCK_DGRAM = UDP)
+clientSocket = socket(AF_INET, SOCK_DGRAM)
+
+message = input('Input lowercase sentence: ')
+
+# Send message - MUST attach destination address
+clientSocket.sendto(message.encode(), (serverName, serverPort))
+
+# Receive response - also get server's address
+modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
+
+print(modifiedMessage.decode())
+clientSocket.close()
+        </div>
+
+        <div class="code">
+# ============ UDP SERVER ============
+from socket import *
+serverPort = 12000
+
+# Create UDP socket
+serverSocket = socket(AF_INET, SOCK_DGRAM)
+
+# Bind socket to local port number
+serverSocket.bind(('', serverPort))
+
+print("The server is ready to receive")
+
+while True:
+    # Receive message AND client's address
+    message, clientAddress = serverSocket.recvfrom(2048)
+    
+    # Process message
+    modifiedMessage = message.decode().upper()
+    
+    # Send response back to client's address
+    serverSocket.sendto(modifiedMessage.encode(), clientAddress)
+        </div>
+
+        <h3>2. TCP Socket Programming</h3>
+        <p><strong>Client must contact server:</strong> Server process must be running first. Server must have created "welcoming socket".</p>
+        <p><strong>Client contacts by:</strong> Creating TCP socket, specifying IP address & port number of server process.</p>
+        <p><strong>When client creates socket:</strong> Client TCP establishes connection to server TCP (3-way handshake).</p>
+        <p><strong>When contacted by client:</strong> Server TCP creates NEW socket for communication with that specific client.</p>
+        <ul>
+            <li>Allows server to talk with multiple clients.</li>
+            <li>Source port numbers used to distinguish clients.</li>
+        </ul>
+
+        <div class="code">
+# ============ TCP CLIENT ============
+from socket import *
+serverName = 'servername'
+serverPort = 12000
+
+# Create TCP socket (SOCK_STREAM = TCP)
+clientSocket = socket(AF_INET, SOCK_STREAM)
+
+# Initiate TCP connection (3-way handshake happens here)
+clientSocket.connect((serverName, serverPort))
+
+sentence = input('Input lowercase sentence: ')
+
+# Send - NO need to attach address (connection established)
+clientSocket.send(sentence.encode())
+
+# Receive response
+modifiedSentence = clientSocket.recv(1024)
+
+print('From Server:', modifiedSentence.decode())
+clientSocket.close()
+        </div>
+
+        <div class="code">
+# ============ TCP SERVER ============
+from socket import *
+serverPort = 12000
+
+# Create TCP WELCOMING socket
+serverSocket = socket(AF_INET, SOCK_STREAM)
+
+# Bind to port
+serverSocket.bind(('', serverPort))
+
+# Start listening for incoming connections
+# Parameter = max queued connections
+serverSocket.listen(1)
+
+print('The server is ready to receive')
+
+while True:
+    # Accept connection - creates NEW socket for this client
+    # connectionSocket is dedicated to this client
+    connectionSocket, addr = serverSocket.accept()
+    
+    # Receive data from this client
+    sentence = connectionSocket.recv(1024).decode()
+    
+    # Process
+    capitalizedSentence = sentence.upper()
+    
+    # Send response
+    connectionSocket.send(capitalizedSentence.encode())
+    
+    # Close connection socket (not welcoming socket)
+    connectionSocket.close()
+        </div>
+
+        <h3>TCP Client/Server Interaction Summary</h3>
+        <div class="box">
+            <strong>Server Side:</strong>
+            <ol>
+                <li><code>socket()</code> - Create welcoming socket</li>
+                <li><code>bind()</code> - Assign port number</li>
+                <li><code>listen()</code> - Wait for connections</li>
+                <li><code>accept()</code> - Accept connection, get new connection socket</li>
+                <li><code>recv()/send()</code> - Read/write data</li>
+                <li><code>close()</code> - Close connection socket</li>
+            </ol>
+        </div>
+        <div class="box">
+            <strong>Client Side:</strong>
+            <ol>
+                <li><code>socket()</code> - Create socket</li>
+                <li><code>connect()</code> - Initiate connection (3-way handshake)</li>
+                <li><code>send()/recv()</code> - Write/read data</li>
+                <li><code>close()</code> - Close socket</li>
+            </ol>
+        </div>
+
+        <h3>Important Socket Concepts</h3>
+        <ul>
+            <li><strong>Blocking vs Non-Blocking:</strong> By default, recv() blocks until data arrives. Can set non-blocking mode.</li>
+            <li><strong>Buffer Sizes:</strong> recv() specifies max bytes to receive. May receive less.</li>
+            <li><strong>Multi-Client Server:</strong> Use threads or select() to handle multiple clients simultaneously.</li>
+            <li><strong>Port Numbers:</strong> 0-1023 = Well-known (require root). 1024-49151 = Registered. 49152-65535 = Dynamic/ephemeral.</li>
+        </ul>
+
+        <h2>2.8 Network Security Fundamentals</h2>
+        <p><strong>Security is not a separate layer</strong> - it permeates all aspects of networking.</p>
+
+        <h3>What is Network Security?</h3>
+        <ul>
+            <li><strong>Confidentiality:</strong> Only sender and intended receiver should understand message contents (encryption).</li>
+            <li><strong>Authentication:</strong> Sender and receiver confirm each other's identity.</li>
+            <li><strong>Message Integrity:</strong> Message not altered during transmission (without detection).</li>
+            <li><strong>Access and Availability:</strong> Services accessible and available to legitimate users.</li>
+        </ul>
+
+        <h3>Types of Bad Actors (Attackers)</h3>
+        <ul>
+            <li><strong>Passive:</strong> Eavesdropping (reading/copying messages).</li>
+            <li><strong>Active:</strong> Inserting, modifying, or deleting messages.</li>
+        </ul>
+
+        <h3>Malware Types</h3>
+        <div class="box">
+            <strong>Virus:</strong>
+            <ul>
+                <li>Malware that requires <strong>user action</strong> to spread (e.g., opening email attachment).</li>
+                <li>Self-replicating: Infects other programs/documents.</li>
+                <li>Payload may corrupt files, steal data, spread further.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>Worm:</strong>
+            <ul>
+                <li>Malware that spreads <strong>automatically</strong> without user action.</li>
+                <li>Self-replicating over the network.</li>
+                <li>Exploits network vulnerabilities.</li>
+                <li>Example: Morris Worm, Code Red, Slammer.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>Trojan Horse:</strong>
+            <ul>
+                <li>Hidden within useful software.</li>
+                <li>User installs it thinking it's legitimate.</li>
+                <li>Provides backdoor access to attacker.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>Spyware:</strong>
+            <ul>
+                <li>Records user activity (keystrokes, web browsing).</li>
+                <li>Sends information to attacker.</li>
+                <li>Often bundled with other software.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>Ransomware:</strong>
+            <ul>
+                <li>Encrypts user's files.</li>
+                <li>Demands payment for decryption key.</li>
+                <li>Often spread via phishing emails.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>Botnet:</strong>
+            <ul>
+                <li>Network of compromised computers ("zombies").</li>
+                <li>Controlled by attacker (botmaster).</li>
+                <li>Used for spam, DDoS attacks, cryptocurrency mining.</li>
+            </ul>
+        </div>
+
+        <h3>Attack Types</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Attack</th><th>Description</th><th>Defense</th></tr>
+            <tr><td><strong>DoS (Denial of Service)</strong></td><td>Overwhelm server with illegitimate requests, making it unavailable to legitimate users.</td><td>Filtering, rate limiting</td></tr>
+            <tr><td><strong>DDoS (Distributed DoS)</strong></td><td>Coordinated attack from many compromised hosts (botnet).</td><td>CDN, traffic scrubbing, anycast</td></tr>
+            <tr><td><strong>Packet Sniffing</strong></td><td>Capture packets on broadcast media (WiFi, shared Ethernet). Read unencrypted data.</td><td>Encryption (TLS)</td></tr>
+            <tr><td><strong>IP Spoofing</strong></td><td>Send packets with false source IP address. Impersonate another host.</td><td>Ingress filtering</td></tr>
+            <tr><td><strong>DNS Poisoning</strong></td><td>Inject false DNS records. Redirect users to malicious sites.</td><td>DNSSEC</td></tr>
+            <tr><td><strong>Man-in-the-Middle</strong></td><td>Intercept communications between two parties. Read/modify messages.</td><td>TLS, certificate verification</td></tr>
+            <tr><td><strong>Phishing</strong></td><td>Trick users into revealing sensitive info via fake websites/emails.</td><td>User education, 2FA</td></tr>
+        </table>
+
+        <h3>Denial of Service (DoS) Attack Types</h3>
+        <ul>
+            <li><strong>Vulnerability Attack:</strong> Send carefully crafted packets to crash vulnerable server/application.</li>
+            <li><strong>Bandwidth Flooding:</strong> Send massive traffic to clog access link.</li>
+            <li><strong>Connection Flooding:</strong> Establish many half-open or full TCP connections, exhaust server resources (SYN Flood).</li>
+        </ul>
+
+        <h3>Packet Sniffing</h3>
+        <ul>
+            <li><strong>Broadcast Media:</strong> Wireless, shared Ethernet.</li>
+            <li><strong>Promiscuous Mode:</strong> Network interface captures ALL passing packets (not just addressed to it).</li>
+            <li>Can read passwords, emails, any unencrypted data.</li>
+            <li><strong>Tools:</strong> Wireshark, tcpdump.</li>
+            <li><strong>Defense:</strong> Encrypt all sensitive communications (HTTPS, SSH).</li>
+        </ul>
+
+        <h3>IP Spoofing</h3>
+        <ul>
+            <li>Attacker creates IP packets with <strong>forged source address</strong>.</li>
+            <li>Receiver cannot easily verify if source address is authentic.</li>
+            <li><strong>Uses:</strong> Hide identity in attacks, reflect attacks off third parties, bypass IP-based authentication.</li>
+            <li><strong>Defense:</strong> Ingress filtering (ISP blocks outgoing packets with external source IPs).</li>
+        </ul>
+
+        <h3>Summary: Challenges for the Internet</h3>
+        <ul>
+            <li>Internet was <strong>not designed with security</strong> in mind (trust model).</li>
+            <li>Security mechanisms added after the fact (TLS, DNSSEC, etc.).</li>
+            <li>Continuous arms race between attackers and defenders.</li>
+            <li><strong>Defense-in-Depth:</strong> Multiple layers of security (firewalls, IDS, encryption, authentication).</li>
+        </ul>
+
+        <h2>2.9 Summary: Application Layer Protocols</h2>
+        <table border="1" style="width:100%; border-collapse:collapse; font-size:9px;">
+            <tr><th>Application</th><th>Protocol</th><th>Transport</th><th>Port</th></tr>
+            <tr><td>Web</td><td>HTTP, HTTPS</td><td>TCP</td><td>80, 443</td></tr>
+            <tr><td>File Transfer</td><td>FTP</td><td>TCP</td><td>20, 21</td></tr>
+            <tr><td>Email (Send)</td><td>SMTP</td><td>TCP</td><td>25, 587</td></tr>
+            <tr><td>Email (Receive)</td><td>POP3, IMAP</td><td>TCP</td><td>110, 143</td></tr>
+            <tr><td>DNS</td><td>DNS</td><td>UDP (TCP for large)</td><td>53</td></tr>
+            <tr><td>Remote Login</td><td>Telnet, SSH</td><td>TCP</td><td>23, 22</td></tr>
+            <tr><td>DHCP</td><td>DHCP</td><td>UDP</td><td>67, 68</td></tr>
+        </table>
+
+        <h3>Key Takeaways from Chapter 2</h3>
+        <ul>
+            <li><strong>Client-Server vs P2P:</strong> Two fundamental architectures with different scaling properties.</li>
+            <li><strong>Sockets:</strong> API between application and transport layer - developers use these.</li>
+            <li><strong>Transport Services:</strong> Apps need reliability, throughput, timing, security - TCP/UDP provide subsets.</li>
+            <li><strong>HTTP:</strong> Request-response, stateless, but cookies/sessions add state. HTTP/2 and HTTP/3 improve performance.</li>
+            <li><strong>Email:</strong> SMTP for sending, POP3/IMAP for receiving. Complex multi-server architecture.</li>
+            <li><strong>DNS:</strong> Critical infrastructure. Hierarchical, distributed, heavily cached. Translates names to IPs.</li>
+            <li><strong>P2P:</strong> Self-scaling. BitTorrent uses rarest-first + tit-for-tat for efficient, fair distribution.</li>
+            <li><strong>CDNs:</strong> Bring content closer to users. Essential for video streaming at scale.</li>
+            <li><strong>DASH:</strong> Adaptive streaming - client selects quality based on available bandwidth.</li>
+            <li><strong>Security:</strong> Major concern - many attack vectors, need encryption and vigilance.</li>
+        </ul>
+
+        <div class="footer">
+            Made by <a href="https://www.linkedin.com/in/ks-iitjmu" target="_blank" style="color: #0056b3; text-decoration: none;">Kunal Sharma</a>
+        </div>
+
+    </div>
+
+</body>
+</html>
