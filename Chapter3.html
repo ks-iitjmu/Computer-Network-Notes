@@ -1542,7 +1542,70 @@ throughput
             </li>
         </ul>
 
-        <h2>3.8 Evolution of Transport Layer: QUIC</h2>
+        <h2>3.8 SCTP: Stream Control Transmission Protocol</h2>
+        <p><strong>RFC 4960</strong> (updated by RFC 9260). SCTP is a reliable, message-oriented transport protocol that blends features of TCP and UDP and adds multi-streaming and multi-homing.</p>
+
+        <h3>Core Characteristics</h3>
+        <ul>
+            <li><strong>Message-Oriented:</strong> Preserves message boundaries (like UDP), unlike TCP byte stream.</li>
+            <li><strong>Reliable, In-Order Delivery:</strong> Optional per-stream ordering with retransmissions.</li>
+            <li><strong>Connection-Oriented:</strong> Uses an <em>association</em> instead of a connection.</li>
+            <li><strong>Full Duplex:</strong> Bidirectional data transfer.</li>
+            <li><strong>Checksum:</strong> 32-bit CRC for stronger error detection than TCP/UDP.</li>
+        </ul>
+
+        <h3>Key Features</h3>
+        <div class="box">
+            <strong>1. Multi-Streaming (No Head-of-Line Blocking)</strong>
+            <ul>
+                <li>Single SCTP association can carry multiple independent streams.</li>
+                <li>Loss in one stream does not block delivery in other streams.</li>
+                <li>Each stream has its own sequence numbers.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>2. Multi-Homing (Resilience)</strong>
+            <ul>
+                <li>Endpoints can advertise multiple IP addresses.</li>
+                <li>Supports automatic failover to alternate paths if primary path fails.</li>
+                <li>Improves availability for critical signaling and control traffic.</li>
+            </ul>
+        </div>
+
+        <h3>SCTP Association Setup (4-Way Handshake)</h3>
+        <div class="box">
+            <div class="diagram">
+Client                                  Server
+  |----INIT------------------------------>|  1. INIT (propose params)
+  |<---INIT-ACK---------------------------|  2. INIT-ACK (cookie)
+  |----COOKIE-ECHO----------------------->|  3. Cookie Echo
+  |<---COOKIE-ACK-------------------------|  4. Cookie Ack (association established)
+            </div>
+            <ul>
+                <li>Protects against SYN-flood style attacks using a <strong>cookie</strong> mechanism.</li>
+                <li>No server state allocated until valid COOKIE-ECHO arrives.</li>
+            </ul>
+        </div>
+
+        <h3>SCTP vs TCP/UDP (Quick Comparison)</h3>
+        <table>
+            <tr><th>Feature</th><th>UDP</th><th>TCP</th><th>SCTP</th></tr>
+            <tr><td>Connection Setup</td><td>None</td><td>3-way</td><td>4-way (cookie)</td></tr>
+            <tr><td>Message Boundaries</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Reliability</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td>Multi-Streaming</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Multi-Homing</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Checksum</td><td>16-bit</td><td>16-bit</td><td>32-bit CRC</td></tr>
+        </table>
+
+        <h3>Common Use Cases</h3>
+        <ul>
+            <li><strong>Telecom signaling:</strong> SS7 over IP (SIGTRAN), LTE/5G control planes.</li>
+            <li><strong>Reliable message transport:</strong> Where message boundaries and multistreaming matter.</li>
+            <li><strong>Resilient services:</strong> Multi-homing for high availability.</li>
+        </ul>
+
+        <h2>3.9 Evolution of Transport Layer: QUIC</h2>
         <p><strong>Quick UDP Internet Connections</strong> - Developed by Google, now IETF standard (RFC 9000). Used by HTTP/3.</p>
 
         <h3>Motivation: Why QUIC?</h3>
