@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Network Layer</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.25;
+            color: #222;
+            max-width: 100%;
+            margin: 0;
+            padding: 15px;
+            background-color: #fff;
+        }
+        .header-nav {
+            column-span: all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        .container {
+            column-count: 3;
+            column-gap: 20px;
+            column-rule: 1px solid #eee;
+        }
+        h1 {
+            column-span: all;
+            text-align: center;
+            font-size: 16px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+        h2 {
+            font-size: 12px;
+            background-color: #e9ecef;
+            padding: 3px 6px;
+            border-left: 3px solid #0056b3;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            break-after: avoid;
+            font-weight: 800;
+        }
+        h3 {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 6px;
+            margin-bottom: 2px;
+            color: #444;
+            border-bottom: 1px dotted #ccc;
+        }
+        p { margin: 2px 0; text-align: justify; }
+        ul, ol {
+            margin: 0;
+            padding-left: 12px;
+        }
+        li {
+            margin-bottom: 1px;
+        }
+        strong {
+            color: #000;
+            font-weight: 700;
+        }
+        .highlight {
+            background-color: #fffacd;
+        }
+        .formula {
+            background-color: #f1f3f5;
+            border: 1px solid #ced4da;
+            padding: 2px;
+            font-family: "Courier New", monospace;
+            display: block;
+            text-align: center;
+            margin: 3px 0;
+            font-weight: bold;
+            font-size: 9px;
+        }
+        .box {
+            border: 1px solid #444;
+            padding: 4px;
+            margin: 4px 0;
+            background-color: #fff;
+            break-inside: avoid;
+        }
+        .sub-box {
+            border-left: 2px solid #ccc;
+            padding-left: 5px;
+            margin-left: 2px;
+            font-style: italic;
+        }
+        .code {
+            font-family: "Courier New", monospace;
+            background: #eee;
+            padding: 2px 4px;
+            display: block;
+            white-space: pre-wrap;
+            margin: 2px 0;
+            font-size: 9px;
+            border-radius: 2px;
+        }
+        .footer {
+            column-span: all;
+            text-align: center;
+            font-size: 12px;
+            border-top: 2px solid #000;
+            margin-top: 15px;
+            padding-top: 10px;
+            color: #444;
+            font-weight: 600;
+        }
+        .chapter-nav {
+            column-span: all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px 0;
+            border-top: 1px solid #ccc;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background-color: #e9ecef;
+            border-left: 3px solid #0056b3;
+            text-decoration: none;
+            color: #222;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .nav-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+        .nav-btn.next {
+            border-left: none;
+            border-right: 3px solid #0056b3;
+        }
+        .diagram {
+            font-family: "Courier New", monospace;
+            font-size: 8px;
+            background-color: #fcfcfc;
+            border: 1px dashed #bbb;
+            padding: 5px;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 4px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+            margin: 4px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 2px;
+            text-align: left;
+        }
+        th { background-color: #f0f0f0; }
+        /* Tablet Responsive */
+        @media screen and (max-width: 1024px) {
+            .container {
+                column-count: 2;
+                column-gap: 15px;
+            }
+            body {
+                font-size: 11px;
+                padding: 12px;
+            }
+            h1 { font-size: 18px; }
+            h2 { font-size: 13px; }
+            h3 { font-size: 11.5px; }
+            .formula { font-size: 10px; }
+            .code { font-size: 10px; }
+            .diagram { font-size: 7px; }
+            table { font-size: 9px; }
+        }
+        /* Mobile Responsive */
+        @media screen and (max-width: 600px) {
+            .container { column-count: 1; }
+            body {
+                font-size: 12px;
+                padding: 10px;
+                line-height: 1.4;
+            }
+            h1 { font-size: 20px; padding-bottom: 8px; }
+            h2 { font-size: 14px; padding: 6px 10px; }
+            h3 { font-size: 12.5px; margin-top: 10px; }
+            .box { padding: 8px; margin: 8px 0; }
+            .formula { font-size: 11px; padding: 6px; }
+            .code { font-size: 11px; padding: 6px; overflow-x: auto; }
+            .diagram { font-size: 9px; padding: 8px; overflow-x: auto; }
+            table { font-size: 10px; }
+            th, td { padding: 4px; }
+            ul, ol { padding-left: 18px; }
+            li { margin-bottom: 4px; }
+            .footer { font-size: 14px; padding-top: 15px; margin-top: 20px; }
+            .header-nav,
+            .chapter-nav {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            .nav-btn {
+                justify-content: center;
+                padding: 12px 16px;
+                font-size: 12px;
+            }
+            .nav-btn.next {
+                border-left: 3px solid #0056b3;
+                border-right: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-nav">
+            <a href="Chapter3.html" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Chapter 3: Transport Layer
+            </a>
+            <a href="index.html" class="nav-btn next">
+                Home
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </a>
+        </div>
+
+        <h1>Chapter 4: The Network Layer &mdash; Data Plane</h1>
+
+        <!-- ============================================================ -->
+        <!-- 4.1 OVERVIEW OF THE NETWORK LAYER                            -->
+        <!-- ============================================================ -->
+        <h2>4.1 Overview of the Network Layer</h2>
+        <p>The Network Layer moves packets from a sending host to a receiving host. Every router in the path examines header fields to <strong>forward</strong> each packet toward its destination.</p>
+
+        <h3>Two Key Network-Layer Functions</h3>
+        <div class="box">
+            <ul>
+                <li><strong>Forwarding (Data Plane):</strong> Move packets from router's input port to appropriate output port. A <em>local, per-router</em> action. Uses forwarding table.
+                    <ul>
+                        <li>Very fast — typically hardware-implemented.</li>
+                        <li>Time scale: nanoseconds.</li>
+                    </ul>
+                </li>
+                <li><strong>Routing (Control Plane):</strong> Determine the route / path packets take from source to destination.
+                    <ul>
+                        <li>Network-wide process — involves all routers.</li>
+                        <li>Time scale: seconds.</li>
+                        <li>Implemented via routing algorithms (OSPF, BGP) or SDN controller.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h3>Data Plane vs Control Plane</h3>
+        <table>
+            <tr><th>Aspect</th><th>Data Plane</th><th>Control Plane</th></tr>
+            <tr><td>Scope</td><td>Per-router (local)</td><td>Network-wide (global)</td></tr>
+            <tr><td>Function</td><td>Forwarding</td><td>Routing</td></tr>
+            <tr><td>Speed</td><td>Nanoseconds</td><td>Seconds</td></tr>
+            <tr><td>Implementation</td><td>Hardware (ASICs)</td><td>Software</td></tr>
+            <tr><td>Chapter</td><td>Chapter 4</td><td>Chapter 5</td></tr>
+        </table>
+
+        <h3>Control Plane Approaches</h3>
+        <div class="box">
+            <strong>1. Traditional Per-Router Control Plane</strong>
+            <ul>
+                <li>Each router has a routing algorithm component that communicates with other routers.</li>
+                <li>Routing algorithm runs in each router independently.</li>
+                <li>Routing table computed locally from protocol messages (e.g., OSPF, BGP).</li>
+            </ul>
+            <strong>2. Software-Defined Networking (SDN) Control Plane</strong>
+            <ul>
+                <li>A logically centralized <strong>remote controller</strong> computes and installs forwarding tables in routers.</li>
+                <li>Routers become simple forwarding devices (switches).</li>
+                <li>Controller communicates with routers via APIs (e.g., OpenFlow).</li>
+                <li>Separates "brains" (control) from "brawn" (forwarding).</li>
+            </ul>
+        </div>
+        <div class="diagram">
+Traditional:                     SDN:
+┌────────┐ routing  ┌────────┐   ┌──────────────────┐
+│Router A│←────────→│Router B│   │  Remote Controller│
+│ ctrl+  │ msgs     │ ctrl+  │   │  (computes tables)│
+│ fwd    │          │ fwd    │   └──────┬───────┬────┘
+└────────┘          └────────┘          │       │
+                                   ┌────▼──┐ ┌──▼────┐
+                                   │Switch │ │Switch │
+                                   │(fwd)  │ │(fwd)  │
+                                   └───────┘ └───────┘
+        </div>
+
+        <h3>Network Service Model</h3>
+        <p>Defines services provided by network layer to transport layer.</p>
+        <div class="box">
+            <strong>Possible Services (Theoretical):</strong>
+            <ul>
+                <li>Guaranteed delivery.</li>
+                <li>Guaranteed delivery with bounded delay (e.g., within 40 ms).</li>
+                <li>In-order packet delivery.</li>
+                <li>Guaranteed minimum bandwidth.</li>
+                <li>Security (encryption, integrity).</li>
+            </ul>
+            <strong>Internet's Actual Service Model: Best Effort</strong>
+            <ul>
+                <li>No guarantees on delivery, timing, ordering, or bandwidth.</li>
+                <li>Simplicity → scalability → hugely successful.</li>
+                <li>Sufficient bandwidth + adaptive protocols make it work well enough.</li>
+            </ul>
+        </div>
+
+        <h3>Network Service Model Comparison</h3>
+        <table>
+            <tr><th>Network</th><th>Service</th><th>Bandwidth</th><th>Loss</th><th>Order</th><th>Timing</th></tr>
+            <tr><td>Internet</td><td>Best effort</td><td>None</td><td>No guarantee</td><td>No guarantee</td><td>No guarantee</td></tr>
+            <tr><td>ATM CBR</td><td>Constant bit rate</td><td>Guaranteed</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td>ATM ABR</td><td>Available bit rate</td><td>Minimum</td><td>No</td><td>Yes</td><td>No</td></tr>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- 4.2 WHAT'S INSIDE A ROUTER                                   -->
+        <!-- ============================================================ -->
+        <h2>4.2 What's Inside a Router?</h2>
+        <p>A router has four major components: input ports, switching fabric, output ports, and a routing processor.</p>
+
+        <h3>Router Architecture Overview</h3>
+        <div class="diagram">
+                    Routing Processor
+                  (Control Plane - SW)
+                ┌──────────────────────┐
+                │  Routing tables,     │
+                │  protocols, SDN agent│
+                └──────────┬───────────┘
+                           │
+ ┌───────────┐   ┌────────▼────────┐   ┌───────────┐
+ │ Input     │──→│  Switching      │──→│  Output   │
+ │ Ports     │   │  Fabric         │   │  Ports    │
+ └───────────┘   └─────────────────┘   └───────────┘
+ (Data Plane)     (Data Plane)          (Data Plane)
+        </div>
+
+        <h3>Input Port Functions</h3>
+        <div class="box">
+            <ol>
+                <li><strong>Line Termination:</strong> Physical layer — receive bit-level signal.</li>
+                <li><strong>Link-Layer Processing:</strong> Data link layer — e.g., Ethernet decapsulation.</li>
+                <li><strong>Lookup &amp; Forwarding:</strong>
+                    <ul>
+                        <li>Extract destination IP from packet header.</li>
+                        <li>Consult forwarding table to determine output port.</li>
+                        <li>Forward packet to switching fabric.</li>
+                        <li>Goal: <strong>line speed</strong> processing (input ≈ output rate).</li>
+                    </ul>
+                </li>
+            </ol>
+            <strong>Destination-Based Forwarding:</strong>
+            <ul>
+                <li>Forward based on <em>destination IP address only</em>.</li>
+                <li>Traditional approach.</li>
+            </ul>
+            <strong>Generalized Forwarding (SDN):</strong>
+            <ul>
+                <li>Forward based on <em>any set of header fields</em> (src/dst IP, src/dst port, protocol, etc.).</li>
+                <li>Used in OpenFlow-based switches.</li>
+            </ul>
+        </div>
+
+        <h3>Longest Prefix Match (LPM)</h3>
+        <div class="box">
+            <p>When looking up a destination address in forwarding table, use the <strong>longest matching prefix</strong> to determine output link.</p>
+            <strong>Example Forwarding Table:</strong>
+            <table>
+                <tr><th>Prefix</th><th>Output Link</th></tr>
+                <tr><td>11001000 00010111 00010*** ********</td><td>0</td></tr>
+                <tr><td>11001000 00010111 00011000 ********</td><td>1</td></tr>
+                <tr><td>11001000 00010111 00011*** ********</td><td>2</td></tr>
+                <tr><td>Otherwise</td><td>3</td></tr>
+            </table>
+            <ul>
+                <li>Destination <code>11001000 00010111 00011000 10101010</code> matches both prefix for link 1 and link 2.</li>
+                <li>Link 1 prefix is <strong>longer</strong> (24 bits vs 21 bits) → <strong>Route to link 1.</strong></li>
+            </ul>
+            <p><strong>Implementation:</strong> Ternary Content Addressable Memory (TCAM) — looks up address in O(1) time regardless of table size. Millions of lookups per second.</p>
+        </div>
+
+        <h3>Switching Fabric</h3>
+        <p>Transfers packets from input port to output port. The "heart" of the router.</p>
+        <div class="box">
+            <strong>Switching Rate:</strong> Rate at which packets can be transferred. Often measured as multiple of input/output line rate. N × line rate desirable for N ports.
+
+            <strong>Three Types of Switching Fabrics:</strong>
+            <ol>
+                <li><strong>Switching via Memory (1st generation):</strong>
+                    <ul>
+                        <li>Packet copied to processor memory, then to output port.</li>
+                        <li>Speed limited by memory bandwidth.</li>
+                        <li>Two bus crossings per datagram.</li>
+                        <li>Cannot forward faster than memory read + write.</li>
+                    </ul>
+                </li>
+                <li><strong>Switching via Bus:</strong>
+                    <ul>
+                        <li>Packet sent on shared bus from input to output port.</li>
+                        <li>Bus contention: only one packet at a time.</li>
+                        <li>Switching speed limited by bus bandwidth.</li>
+                        <li>Sufficient for access and enterprise routers (e.g., Cisco 5600: 32 Gbps).</li>
+                    </ul>
+                </li>
+                <li><strong>Switching via Interconnection Network (Crossbar):</strong>
+                    <ul>
+                        <li>Overcomes bus bandwidth limitation.</li>
+                        <li>2N buses connecting N input ports to N output ports (crossbar).</li>
+                        <li>Multiple packets can be forwarded simultaneously (non-blocking if to different output ports).</li>
+                        <li>Used in high-end routers (Cisco 12000: 60 Gbps crossbar).</li>
+                        <li>Multi-stage switching: build larger from smaller (Clos network).</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        <div class="diagram">
+Memory:        Bus:           Crossbar:
+In→[CPU]→Out   In─┬─Bus─┬─Out  In0──×──×──Out0
+               In─┘     └─Out  In1──×──×──Out1
+                               In2──×──×──Out2
+        </div>
+
+        <h3>Input Port Queuing</h3>
+        <div class="box">
+            <ul>
+                <li>Occurs when switching fabric is slower than combined input line rates.</li>
+                <li><strong>Head-of-Line (HOL) Blocking:</strong>
+                    <ul>
+                        <li>Packet at front of input queue blocks packets behind it, even if those packets could be switched.</li>
+                        <li>Queued datagram at front prevents others from being forwarded.</li>
+                    </ul>
+                </li>
+                <li>With HOL blocking, throughput limited to about <strong>58%</strong> of capacity even without congestion.</li>
+            </ul>
+            <div class="diagram">
+Input Port 1: [Pkt→Out1] [Pkt→Out2] [Pkt→Out3]
+                  ↑ HOL blocking!
+Input Port 2: [Pkt→Out1] [Pkt→Out3] [Pkt→Out2]
+                  ↑ Both want Out1, one must wait
+            </div>
+        </div>
+
+        <h3>Output Port Queuing</h3>
+        <div class="box">
+            <ul>
+                <li>Occurs when arrival rate from fabric exceeds output link rate.</li>
+                <li><strong>Buffering required:</strong> Queue packets when they arrive faster than transmission rate.</li>
+                <li><strong>Buffer overflow → Packet loss</strong> (drop policy needed).</li>
+            </ul>
+            <strong>How Much Buffering?</strong>
+            <ul>
+                <li><strong>RFC 3439 rule of thumb:</strong>
+                    <span class="formula">Buffer = RTT × C</span>
+                    where C = link capacity, RTT ≈ 250 ms typical.
+                </li>
+                <li><strong>Recent recommendation (with N TCP flows):</strong>
+                    <span class="formula">Buffer = (RTT × C) / √N</span>
+                    Less buffering needed when many flows are multiplexed (statistical multiplexing).
+                </li>
+            </ul>
+        </div>
+
+        <h3>Packet Scheduling</h3>
+        <p>Determines which queued packet is transmitted next on output link.</p>
+
+        <div class="box">
+            <strong>1. FIFO (First-In First-Out) / FCFS</strong>
+            <ul>
+                <li>Simplest: packets transmitted in arrival order.</li>
+                <li>No differentiation between traffic types.</li>
+                <li><strong>Drop Policy (when buffer full):</strong>
+                    <ul>
+                        <li><em>Tail drop:</em> Drop arriving packet (most common).</li>
+                        <li><em>Priority drop:</em> Drop lowest-priority packet.</li>
+                        <li><em>Random drop:</em> Drop a random packet.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>2. Priority Queuing</strong>
+            <ul>
+                <li>Packets classified into priority classes (e.g., high, low).</li>
+                <li>Always send from highest priority non-empty queue first.</li>
+                <li>Within each class: FIFO.</li>
+                <li><strong>Starvation risk:</strong> Low-priority packets may never be sent if high-priority queue always has packets.</li>
+            </ul>
+            <div class="diagram">
+Arriving  classify  ┌────────────────┐ send highest
+packets ──────────→ │ High Priority  │──────→ Out
+                    ├────────────────┤
+                    │ Low Priority   │──(wait)
+                    └────────────────┘
+            </div>
+        </div>
+        <div class="box">
+            <strong>3. Round Robin (RR)</strong>
+            <ul>
+                <li>Multiple classes, cyclically scan classes and serve one packet from each.</li>
+                <li>Fair: each class gets equal turns.</li>
+                <li>Skips empty queues.</li>
+            </ul>
+        </div>
+        <div class="box">
+            <strong>4. Weighted Fair Queuing (WFQ)</strong>
+            <ul>
+                <li>Generalized Round Robin.</li>
+                <li>Each class gets a <strong>weighted</strong> share of bandwidth.</li>
+                <li>Higher weight → more bandwidth.</li>
+                <li>Minimum bandwidth guarantee per class.</li>
+                <li>Widely deployed in modern routers.</li>
+            </ul>
+            <div class="diagram">
+ w=3 ──→ ████████████  (3/6 = 50%)
+ w=2 ──→ ████████      (2/6 = 33%)
+ w=1 ──→ ████          (1/6 = 17%)
+            </div>
+        </div>
+
+        <h3>Packet Scheduling Summary</h3>
+        <table>
+            <tr><th>Method</th><th>Fairness</th><th>Starvation</th><th>Complexity</th></tr>
+            <tr><td>FIFO</td><td>None</td><td>No</td><td>Lowest</td></tr>
+            <tr><td>Priority</td><td>By class</td><td>Yes (low prio)</td><td>Low</td></tr>
+            <tr><td>Round Robin</td><td>Equal turns</td><td>No</td><td>Medium</td></tr>
+            <tr><td>WFQ</td><td>Weighted</td><td>No</td><td>Higher</td></tr>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- 4.3 THE INTERNET PROTOCOL (IP)                               -->
+        <!-- ============================================================ -->
+        <h2>4.3 The Internet Protocol: IPv4, Addressing, IPv6</h2>
+        <p>IP is the "glue" of the Internet. The network layer has three major components: the IP protocol, routing protocols (control plane), and ICMP.</p>
+
+        <h3>IPv4 Datagram Format</h3>
+        <div class="diagram">
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Version|  IHL  |Type of Service|          Total Length         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Identification        |Flags|    Fragment Offset      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Time to Live |    Protocol   |       Header Checksum         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     Source IP Address                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                  Destination IP Address                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Options (if any)                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Payload (Data)                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        </div>
+
+        <h3>IPv4 Header Fields Explained</h3>
+        <ul>
+            <li><strong>Version (4 bits):</strong> IP version. Always <code>4</code> for IPv4.</li>
+            <li><strong>Header Length / IHL (4 bits):</strong> Length of IP header in 32-bit words.
+                <ul>
+                    <li>Minimum = 5 (20 bytes, no options).</li>
+                    <li>Maximum = 15 (60 bytes).</li>
+                </ul>
+            </li>
+            <li><strong>Type of Service / DSCP+ECN (8 bits):</strong>
+                <ul>
+                    <li>DSCP (6 bits): Differentiated Services Code Point — for QoS marking.</li>
+                    <li>ECN (2 bits): Explicit Congestion Notification (used with TCP).</li>
+                </ul>
+            </li>
+            <li><strong>Total Length (16 bits):</strong> Entire datagram (header + data) in bytes.
+                <ul>
+                    <li>Maximum: 65,535 bytes.</li>
+                    <li>Typically ≤ 1500 bytes (Ethernet MTU).</li>
+                </ul>
+            </li>
+            <li><strong>Identification (16 bits):</strong> Unique ID for each datagram. Used for reassembly of fragments.</li>
+            <li><strong>Flags (3 bits):</strong>
+                <ul>
+                    <li>Bit 0: Reserved (must be 0).</li>
+                    <li><em>DF (Don't Fragment):</em> If set, router must not fragment this datagram.</li>
+                    <li><em>MF (More Fragments):</em> Set on all fragments except the last one.</li>
+                </ul>
+            </li>
+            <li><strong>Fragment Offset (13 bits):</strong> Position of fragment in original datagram (in units of 8 bytes).</li>
+            <li><strong>Time to Live / TTL (8 bits):</strong>
+                <ul>
+                    <li>Maximum number of hops. Decremented by 1 at each router.</li>
+                    <li>When TTL = 0, datagram is discarded → prevents infinite loops.</li>
+                    <li>ICMP "Time Exceeded" sent back to source.</li>
+                    <li>Typical initial values: 64, 128, or 255.</li>
+                </ul>
+            </li>
+            <li><strong>Protocol (8 bits):</strong> Upper-layer protocol. Specifies what to deliver payload to.
+                <ul>
+                    <li>6 = TCP, 17 = UDP, 1 = ICMP, 89 = OSPF.</li>
+                    <li>Like port numbers for transport layer — "demultiplexing" at network layer.</li>
+                </ul>
+            </li>
+            <li><strong>Header Checksum (16 bits):</strong>
+                <ul>
+                    <li>Computed over IP header only (not data).</li>
+                    <li>Must be recomputed at every router (TTL changes).</li>
+                    <li>Same 1's complement algorithm as TCP/UDP.</li>
+                </ul>
+            </li>
+            <li><strong>Source IP Address (32 bits):</strong> IP address of the originating host.</li>
+            <li><strong>Destination IP Address (32 bits):</strong> IP address of the target host.</li>
+            <li><strong>Options (variable, 0–40 bytes):</strong> Rarely used. Timestamp, record route, source route.</li>
+        </ul>
+        <p><strong>IP header overhead:</strong> 20 bytes (typical) + TCP 20 bytes = <strong>40 bytes</strong> of header per segment.</p>
+
+        <h3>IP Fragmentation &amp; Reassembly</h3>
+        <div class="box">
+            <p>Different links have different MTU (Maximum Transmission Unit). When a datagram is larger than the outgoing link MTU, the router <strong>fragments</strong> it.</p>
+            <strong>Key Points:</strong>
+            <ul>
+                <li>Large IP datagram becomes several smaller datagrams (fragments).</li>
+                <li>Fragments may travel different paths.</li>
+                <li><strong>Reassembly happens ONLY at the destination host</strong> (not at routers).</li>
+                <li>Uses Identification, Flags (MF), and Fragment Offset fields.</li>
+            </ul>
+            <strong>Example:</strong>
+            <ul>
+                <li>Original datagram: 4000 bytes (3980 data + 20 header). ID = x.</li>
+                <li>MTU of next link = 1500 bytes.</li>
+                <li>Max data per fragment = 1500 - 20 = 1480 bytes.</li>
+            </ul>
+            <table>
+                <tr><th>Fragment</th><th>Bytes</th><th>ID</th><th>MF</th><th>Offset</th></tr>
+                <tr><td>1</td><td>1480</td><td>x</td><td>1</td><td>0</td></tr>
+                <tr><td>2</td><td>1480</td><td>x</td><td>1</td><td>185 (1480/8)</td></tr>
+                <tr><td>3</td><td>1020</td><td>x</td><td>0</td><td>370 (2960/8)</td></tr>
+            </table>
+            <p><strong>If any fragment is lost, entire datagram is discarded</strong> (no retransmission at IP layer — transport layer handles this).</p>
+        </div>
+
+        <h3>IPv4 Addressing</h3>
+        <p>An IP address is a <strong>32-bit identifier</strong> for a host/router <em>interface</em> (not for a host/router itself).</p>
+
+        <div class="box">
+            <strong>Interface:</strong> Connection between host/router and a physical link.
+            <ul>
+                <li>Routers typically have multiple interfaces (each with its own IP).</li>
+                <li>Hosts typically have one or two (wired + wireless).</li>
+            </ul>
+            <strong>Dotted-Decimal Notation:</strong>
+            <div class="code">
+11000000 10101000 00000001 00000001 = 192.168.1.1
+            </div>
+        </div>
+
+        <h3>Subnets</h3>
+        <div class="box">
+            <strong>Subnet:</strong> A group of interfaces that can physically reach each other <em>without passing through a router</em>.
+            <ul>
+                <li>Devices in the same subnet share the same <strong>network prefix</strong> (high-order bits).</li>
+                <li>The remaining bits = <strong>host part</strong>.</li>
+            </ul>
+            <strong>Subnet Mask:</strong> Indicates which bits are the network prefix.
+            <div class="code">
+IP:      223.1.1.0/24  (subnet mask: 255.255.255.0)
+Network: 223.1.1.___  (first 24 bits)
+Hosts:   ___.___.___.[0-255] (last 8 bits)
+            </div>
+            <strong>How to identify subnets:</strong> Detach each interface from its router/host. Each isolated network (island) is a subnet.
+        </div>
+        <div class="diagram">
+       223.1.1.0/24
+    ┌──────┬──────┐
+   .1     .2     .3
+  Host   Host   Host
+  
+       223.1.2.0/24
+    ┌──────┬──────┐
+   .1     .2     .4
+  Host   Host    Router───(223.1.3.0/24)
+        </div>
+
+        <h3>Classful Addressing (Historical)</h3>
+        <table>
+            <tr><th>Class</th><th>Leading Bits</th><th>Network Bits</th><th>Host Bits</th><th>Range</th></tr>
+            <tr><td>A</td><td>0</td><td>8</td><td>24</td><td>0.0.0.0 – 127.255.255.255</td></tr>
+            <tr><td>B</td><td>10</td><td>16</td><td>16</td><td>128.0.0.0 – 191.255.255.255</td></tr>
+            <tr><td>C</td><td>110</td><td>24</td><td>8</td><td>192.0.0.0 – 223.255.255.255</td></tr>
+            <tr><td>D (multicast)</td><td>1110</td><td>—</td><td>—</td><td>224.0.0.0 – 239.255.255.255</td></tr>
+            <tr><td>E (reserved)</td><td>1111</td><td>—</td><td>—</td><td>240.0.0.0 – 255.255.255.255</td></tr>
+        </table>
+        <p><strong>Problem:</strong> Wasteful. Class A = 16M hosts (too many), Class C = 254 hosts (too few for many orgs). Led to CIDR.</p>
+
+        <h3>CIDR — Classless Inter-Domain Routing</h3>
+        <div class="box">
+            <p><strong>RFC 4632.</strong> Generalized notion of subnet addressing. Network prefix can be <em>any length</em>.</p>
+            <span class="formula">a.b.c.d/x, where x = number of prefix bits</span>
+            <ul>
+                <li>/23 → 2<sup>9</sup> = 512 addresses.</li>
+                <li>/25 → 2<sup>7</sup> = 128 addresses.</li>
+                <li>Enables <strong>route aggregation (supernetting):</strong> Multiple subnets advertised as one prefix.
+                    <ul>
+                        <li>200.23.16.0/23, 200.23.18.0/23, 200.23.20.0/23 can be aggregated to <strong>200.23.16.0/20</strong>.</li>
+                        <li>Reduces routing table size.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h3>Special IP Addresses</h3>
+        <table>
+            <tr><th>Address</th><th>Purpose</th></tr>
+            <tr><td>0.0.0.0/8</td><td>"This" network (used during boot)</td></tr>
+            <tr><td>10.0.0.0/8</td><td>Private (RFC 1918)</td></tr>
+            <tr><td>127.0.0.0/8</td><td>Loopback (localhost)</td></tr>
+            <tr><td>169.254.0.0/16</td><td>Link-local (APIPA)</td></tr>
+            <tr><td>172.16.0.0/12</td><td>Private (RFC 1918)</td></tr>
+            <tr><td>192.168.0.0/16</td><td>Private (RFC 1918)</td></tr>
+            <tr><td>255.255.255.255</td><td>Broadcast (this LAN)</td></tr>
+        </table>
+
+        <h3>How Does a Host Get an IP Address?</h3>
+        <div class="box">
+            <strong>1. Manual Configuration (Static):</strong>
+            <ul>
+                <li>System admin configures IP, subnet mask, default gateway, DNS server.</li>
+                <li>Used for servers with stable addresses.</li>
+            </ul>
+            <strong>2. DHCP — Dynamic Host Configuration Protocol (RFC 2131):</strong>
+            <ul>
+                <li>Dynamically assigns IP from a pool.</li>
+                <li>"Plug-and-play" — no manual configuration needed.</li>
+                <li>Can return same address or a new one.</li>
+                <li>DHCP also provides: Subnet mask, Default gateway (first-hop router), DNS server address, Lease time.</li>
+            </ul>
+        </div>
+
+        <h3>DHCP Protocol — 4-Step Process (DORA)</h3>
+        <div class="box">
+            <div class="diagram">
+Client (0.0.0.0)                       DHCP Server
+  |                                       |
+  |--1. DHCP DISCOVER (broadcast)-------->|  src: 0.0.0.0:68
+  |     dst: 255.255.255.255:67          |  "Any DHCP servers?"
+  |                                       |
+  |<--2. DHCP OFFER (broadcast)-----------|  "Here's an IP you can use"
+  |     yiaddr: 223.1.2.4               |  Lease time, etc.
+  |                                       |
+  |--3. DHCP REQUEST (broadcast)--------->|  "I'll take that IP"
+  |     Requested IP: 223.1.2.4         |
+  |                                       |
+  |<--4. DHCP ACK (broadcast)-------------|  "Confirmed. It's yours"
+  |     yiaddr: 223.1.2.4               |  Lease = 3600s
+  |                                       |
+            </div>
+            <ul>
+                <li>All messages use <strong>UDP</strong> (port 67 server, port 68 client).</li>
+                <li>Uses broadcast because client doesn't have IP yet.</li>
+                <li>Transaction ID links messages in same exchange.</li>
+                <li><strong>Lease:</strong> IP is valid for limited time. Must renew before expiration.</li>
+            </ul>
+        </div>
+
+        <h3>How Does a Network Get Its Subnet?</h3>
+        <ul>
+            <li><strong>ISP allocates</strong> portion of its address space to organization.</li>
+            <li>ISP's block: 200.23.16.0/20</li>
+            <li>Organization 1: 200.23.16.0/23</li>
+            <li>Organization 2: 200.23.18.0/23</li>
+            <li>Organization 3: 200.23.20.0/23</li>
+        </ul>
+        <p><strong>ISPs get blocks from:</strong> ICANN (Internet Corporation for Assigned Names and Numbers) via Regional Internet Registries (RIRs): ARIN (N. America), RIPE (Europe), APNIC (Asia-Pacific), LACNIC (Latin America), AFRINIC (Africa).</p>
+
+        <h3>NAT — Network Address Translation</h3>
+        <div class="box">
+            <p><strong>RFC 3022.</strong> Allows multiple devices in a private network to share a <strong>single public IP address</strong>.</p>
+            <strong>How NAT Works:</strong>
+            <ul>
+                <li>All devices in local network use <em>private</em> IP addresses (10.x.x.x, 192.168.x.x).</li>
+                <li>NAT router has one <em>public</em> IP on its WAN side.</li>
+                <li><strong>Outgoing packets:</strong> Replace (source IP, source port) with (NAT IP, new port).</li>
+                <li><strong>Incoming packets:</strong> Use NAT translation table to map (NAT IP, port) back to (internal IP, original port).</li>
+                <li>Uses <strong>16-bit port number field</strong> → up to ~65,000 simultaneous connections with single public IP.</li>
+            </ul>
+            <div class="diagram">
+ Private Network (10.0.0.0/24)          Internet
+ ┌───────────────────┐
+ │ 10.0.0.1 ─┐      │     NAT Router
+ │ 10.0.0.2 ─┼──────┼──[10.0.0.4 | 138.76.29.7]──→ Internet
+ │ 10.0.0.3 ─┘      │     (private | public)
+ └───────────────────┘
+            </div>
+            <strong>NAT Translation Table Example:</strong>
+            <table>
+                <tr><th>LAN Side</th><th>WAN Side</th></tr>
+                <tr><td>10.0.0.1 : 3345</td><td>138.76.29.7 : 5001</td></tr>
+                <tr><td>10.0.0.2 : 3346</td><td>138.76.29.7 : 5002</td></tr>
+                <tr><td>10.0.0.1 : 2048</td><td>138.76.29.7 : 5003</td></tr>
+            </table>
+        </div>
+
+        <h3>NAT Controversies</h3>
+        <div class="box">
+            <strong>Arguments Against NAT:</strong>
+            <ul>
+                <li>Routers should only process up to layer 3 (but NAT modifies port = layer 4).</li>
+                <li>Violates <strong>end-to-end principle:</strong> external hosts cannot initiate connections to NAT'd hosts.</li>
+                <li>Port number used for addressing (not process identification).</li>
+                <li>Problem for P2P applications and servers behind NAT.</li>
+            </ul>
+            <strong>Arguments For NAT:</strong>
+            <ul>
+                <li>Conserves IPv4 addresses (huge practical benefit).</li>
+                <li>Security: internal structure hidden from outside.</li>
+                <li>Can change internal addresses without notifying outside world.</li>
+            </ul>
+            <strong>NAT Traversal Solutions:</strong>
+            <ul>
+                <li><em>Port Forwarding:</em> Statically configure NAT to forward specific port to internal host.</li>
+                <li><em>UPnP / IGD:</em> Protocol for automatic port mapping.</li>
+                <li><em>STUN/TURN/ICE:</em> Protocols for NAT traversal (used by WebRTC, VoIP).</li>
+                <li><em>Relay:</em> External relay server forwards traffic (Skype super nodes).</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- IPv6                                                          -->
+        <!-- ============================================================ -->
+        <h3>IPv6 — The Next Generation IP</h3>
+        <p><strong>RFC 2460 (updated by RFC 8200).</strong> Developed to address IPv4 address exhaustion and add improvements.</p>
+
+        <h3>Motivation for IPv6</h3>
+        <ul>
+            <li><strong>Address Exhaustion:</strong> 32-bit (4.3 billion) addresses nearly depleted.</li>
+            <li><strong>Header improvements:</strong> Faster processing (fixed-length 40 bytes, no options in base header).</li>
+            <li><strong>QoS support:</strong> Flow labeling and priority.</li>
+            <li><strong>Security:</strong> IPsec support was originally mandatory.</li>
+        </ul>
+
+        <h3>IPv6 Datagram Format</h3>
+        <div class="diagram">
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Version| Traffic Class |           Flow Label                  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Payload Length        |  Next Header  |   Hop Limit   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++                                                               +
+|                                                               |
++                     Source Address (128 bits)                  +
+|                                                               |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++                                                               +
+|                                                               |
++                  Destination Address (128 bits)                +
+|                                                               |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        </div>
+
+        <h3>IPv6 Header Fields</h3>
+        <ul>
+            <li><strong>Version (4 bits):</strong> Always 6.</li>
+            <li><strong>Traffic Class (8 bits):</strong> Similar to IPv4's ToS/DSCP. Priority marking for QoS.</li>
+            <li><strong>Flow Label (20 bits):</strong> Identify packets belonging to same "flow" for special handling. Allows routers to treat related packets consistently.</li>
+            <li><strong>Payload Length (16 bits):</strong> Length of data following the 40-byte header.</li>
+            <li><strong>Next Header (8 bits):</strong>
+                <ul>
+                    <li>Identifies upper-layer protocol (TCP=6, UDP=17) OR</li>
+                    <li>Identifies next extension header (replaces IPv4 options).</li>
+                </ul>
+            </li>
+            <li><strong>Hop Limit (8 bits):</strong> Same as TTL — decremented at each router, packet discarded at 0.</li>
+            <li><strong>Source Address (128 bits):</strong> IPv6 address of sender.</li>
+            <li><strong>Destination Address (128 bits):</strong> IPv6 address of receiver.</li>
+        </ul>
+
+        <h3>IPv6 vs IPv4 — What Changed?</h3>
+        <div class="box">
+            <strong>Removed from IPv4:</strong>
+            <ul>
+                <li><strong>No Fragmentation at routers:</strong> Only source can fragment. If too big → ICMPv6 "Packet Too Big" sent back. Source adjusts using <em>Path MTU Discovery</em>.</li>
+                <li><strong>No Header Checksum:</strong> Checksum at transport (TCP/UDP) and link layers sufficient. Removes per-hop recomputation → faster forwarding.</li>
+                <li><strong>No Options field:</strong> Replaced by extension headers (Next Header chain). Base header is <strong>fixed 40 bytes</strong>.</li>
+            </ul>
+            <strong>Added/Changed:</strong>
+            <ul>
+                <li>128-bit addresses (vs 32-bit).</li>
+                <li>Flow Label for QoS.</li>
+                <li>Extension headers (more flexible than options).</li>
+                <li>ICMPv6 replaces ICMP + ARP + IGMP.</li>
+            </ul>
+        </div>
+
+        <h3>IPv6 vs IPv4 Comparison</h3>
+        <table>
+            <tr><th>Feature</th><th>IPv4</th><th>IPv6</th></tr>
+            <tr><td>Address Size</td><td>32 bits (4B addresses)</td><td>128 bits (3.4×10<sup>38</sup>)</td></tr>
+            <tr><td>Header Size</td><td>20–60 bytes (variable)</td><td>40 bytes (fixed)</td></tr>
+            <tr><td>Header Checksum</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Fragmentation</td><td>Routers + source</td><td>Source only</td></tr>
+            <tr><td>Options</td><td>In header</td><td>Extension headers</td></tr>
+            <tr><td>NAT</td><td>Widely used</td><td>Not needed (enough addresses)</td></tr>
+            <tr><td>Broadcast</td><td>Yes</td><td>No (multicast/anycast instead)</td></tr>
+            <tr><td>ARP</td><td>Separate protocol</td><td>NDP (part of ICMPv6)</td></tr>
+            <tr><td>Configuration</td><td>DHCP/manual</td><td>SLAAC + DHCPv6</td></tr>
+        </table>
+
+        <h3>IPv6 Address Representation</h3>
+        <div class="box">
+            <ul>
+                <li>Written as eight groups of four hex digits, separated by colons.</li>
+                <li><code>2001:0db8:0000:0000:0000:ff00:0042:8329</code></li>
+                <li><strong>Shortening rules:</strong>
+                    <ul>
+                        <li>Leading zeros in each group can be omitted: <code>2001:db8:0:0:0:ff00:42:8329</code></li>
+                        <li>One consecutive run of all-zero groups can be replaced by <code>::</code></li>
+                        <li>Result: <code>2001:db8::ff00:42:8329</code></li>
+                    </ul>
+                </li>
+                <li><strong>Loopback:</strong> <code>::1</code> (equivalent to 127.0.0.1)</li>
+                <li><strong>Link-local:</strong> <code>fe80::/10</code></li>
+            </ul>
+        </div>
+
+        <h3>Transition from IPv4 to IPv6</h3>
+        <div class="box">
+            <p><strong>Problem:</strong> Cannot upgrade all routers simultaneously — billions of devices. Must coexist.</p>
+            <strong>1. Dual Stack:</strong>
+            <ul>
+                <li>Routers/hosts run both IPv4 and IPv6 simultaneously.</li>
+                <li>Use IPv6 when both endpoints support it; fall back to IPv4 otherwise.</li>
+                <li><strong>Problem:</strong> When traversing IPv4-only routers, IPv6-specific features (flow label, etc.) are lost.</li>
+            </ul>
+            <strong>2. Tunneling:</strong>
+            <ul>
+                <li>IPv6 datagram carried as <strong>payload</strong> inside an IPv4 datagram.</li>
+                <li>"IPv6-over-IPv4" tunnel between dual-stack routers through IPv4-only region.</li>
+                <li>IPv4 tunnel endpoints encapsulate/decapsulate.</li>
+            </ul>
+            <div class="diagram">
+IPv6     IPv4-only region     IPv6
+Node A ──[Tunnel Entry]══════[Tunnel Exit]── Node B
+         IPv6 inside IPv4 datagram
+         IPv4 hdr | IPv6 hdr | Data
+            </div>
+            <strong>3. Translation (NAT64):</strong>
+            <ul>
+                <li>Translates between IPv6 and IPv4 headers at the boundary.</li>
+                <li>Used when one side is IPv6-only.</li>
+            </ul>
+        </div>
+
+        <h3>IPv6 Adoption Status</h3>
+        <ul>
+            <li>Google: ~45% of traffic over IPv6 (2024).</li>
+            <li>Major mobile networks heavily use IPv6.</li>
+            <li>Adoption growing but slow — IPv4 + NAT still dominates many areas.</li>
+            <li>Full transition estimated to take decades.</li>
+        </ul>
+
+        <!-- ============================================================ -->
+        <!-- 4.4 GENERALIZED FORWARDING AND SDN                           -->
+        <!-- ============================================================ -->
+        <h2>4.4 Generalized Forwarding and SDN</h2>
+        <p>Traditional forwarding uses <em>only</em> destination IP. Generalized forwarding (match+action) uses <em>any combination</em> of header fields — enabling rich network functionality.</p>
+
+        <h3>Match-Plus-Action Abstraction</h3>
+        <div class="box">
+            <ul>
+                <li><strong>Match:</strong> Pattern against packet header fields (src/dst IP, src/dst port, protocol, VLAN, etc.).</li>
+                <li><strong>Action:</strong> What to do with matching packets:
+                    <ul>
+                        <li><em>Forward</em> to specific output port(s).</li>
+                        <li><em>Drop</em> the packet (firewall).</li>
+                        <li><em>Modify</em> header fields (NAT, load balancer).</li>
+                        <li><em>Send</em> to controller for special processing.</li>
+                    </ul>
+                </li>
+                <li><strong>Unifying concept:</strong> Router, switch, firewall, NAT, load balancer are all the <em>same device</em> programmed differently!</li>
+            </ul>
+        </div>
+
+        <h3>OpenFlow Protocol</h3>
+        <div class="box">
+            <p>Defines the communication between SDN controller and switches. Each flow table entry has:</p>
+            <ol>
+                <li><strong>Match fields:</strong> Packet header values to match against.
+                    <ul>
+                        <li>Ingress port, Ethernet src/dst, Ethernet type, VLAN ID</li>
+                        <li>IP src/dst, IP protocol, IP ToS</li>
+                        <li>TCP/UDP src/dst port</li>
+                        <li>Wildcards: <code>*</code> matches any value.</li>
+                    </ul>
+                </li>
+                <li><strong>Counters:</strong> Number of packets/bytes matched.</li>
+                <li><strong>Actions:</strong> Forward, drop, modify, encapsulate, send to controller.</li>
+                <li><strong>Priority:</strong> Disambiguate overlapping rules (higher priority wins).</li>
+            </ol>
+        </div>
+
+        <h3>OpenFlow Match Fields</h3>
+        <table>
+            <tr><th>Layer</th><th>Fields</th></tr>
+            <tr><td>Ingress</td><td>Switch port</td></tr>
+            <tr><td>Link (L2)</td><td>Ethernet src, Ethernet dst, Ethernet type, VLAN ID</td></tr>
+            <tr><td>Network (L3)</td><td>IP src, IP dst, IP protocol, IP ToS</td></tr>
+            <tr><td>Transport (L4)</td><td>TCP/UDP src port, TCP/UDP dst port</td></tr>
+        </table>
+
+        <h3>SDN Use Cases — Examples</h3>
+        <div class="box">
+            <strong>1. Simple Forwarding (Router):</strong>
+            <div class="code">Match: IP dst = 51.6.0.8 → Action: Forward port 6</div>
+
+            <strong>2. Firewall:</strong>
+            <div class="code">Match: IP src = 128.119.*.*, TCP dst port = 22 → Action: Drop</div>
+
+            <strong>3. Load Balancer:</strong>
+            <div class="code">Match: IP dst = 10.0.0.1 (VIP) → Action: Rewrite dst to 10.0.0.2 or 10.0.0.3, Forward</div>
+
+            <strong>4. NAT:</strong>
+            <div class="code">Match: IP src = 10.0.0.* → Action: Rewrite src IP to 138.76.29.7, Forward to Internet port</div>
+        </div>
+
+        <h3>OpenFlow Abstraction — Unifying Network Devices</h3>
+        <table>
+            <tr><th>Traditional Device</th><th>OpenFlow Match</th><th>OpenFlow Action</th></tr>
+            <tr><td>Router</td><td>Longest prefix on IP dst</td><td>Forward</td></tr>
+            <tr><td>Switch</td><td>Destination MAC</td><td>Forward / Flood</td></tr>
+            <tr><td>Firewall</td><td>IP addresses, port numbers</td><td>Permit / Deny</td></tr>
+            <tr><td>NAT</td><td>IP address, port</td><td>Rewrite + Forward</td></tr>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- 4.5 MIDDLEBOXES                                              -->
+        <!-- ============================================================ -->
+        <h2>4.5 Middleboxes</h2>
+        <p>Any network device that performs functions other than standard IP forwarding. They sit on the data path between source and destination.</p>
+
+        <h3>Types of Middleboxes</h3>
+        <div class="box">
+            <ul>
+                <li><strong>NAT Boxes:</strong> Address/port translation (covered above).</li>
+                <li><strong>Firewalls:</strong>
+                    <ul>
+                        <li>Filter packets based on header values (addresses, ports, flags).</li>
+                        <li><em>Stateless:</em> Examine each packet independently.</li>
+                        <li><em>Stateful:</em> Track connection state (e.g., allow return traffic for established connections).</li>
+                    </ul>
+                </li>
+                <li><strong>Intrusion Detection Systems (IDS):</strong>
+                    <ul>
+                        <li>Deep packet inspection — examine payload for malicious patterns.</li>
+                        <li>Can detect viruses, attacks, suspicious activity.</li>
+                    </ul>
+                </li>
+                <li><strong>Load Balancers:</strong>
+                    <ul>
+                        <li>Distribute incoming traffic across multiple servers.</li>
+                        <li>Single virtual IP → multiple backend servers.</li>
+                    </ul>
+                </li>
+                <li><strong>Caches / CDN nodes:</strong> Store copies of content close to clients.</li>
+                <li><strong>Application-Level Gateways:</strong> Protocol-specific processing (e.g., SIP ALG).</li>
+            </ul>
+        </div>
+
+        <h3>Middlebox Concerns</h3>
+        <ul>
+            <li>Break <strong>end-to-end principle</strong>: intermediate nodes modify/drop traffic.</li>
+            <li>Increase complexity and potential points of failure.</li>
+            <li><strong>Ossification:</strong> Middleboxes may block or break new protocols (why QUIC uses UDP).</li>
+            <li><strong>NFV (Network Function Virtualization):</strong> Move middlebox functions to software on commodity hardware. Easier to deploy, manage, and scale.</li>
+        </ul>
+
+        <!-- ============================================================ -->
+        <!-- ICMP                                                          -->
+        <!-- ============================================================ -->
+        <h2>4.6 ICMP: Internet Control Message Protocol</h2>
+        <p><strong>RFC 792.</strong> Used by hosts and routers to communicate network-layer information: error reporting and diagnostics. Carried inside IP datagrams (protocol = 1).</p>
+
+        <h3>ICMP Message Format</h3>
+        <div class="box">
+            <ul>
+                <li><strong>Type (8 bits):</strong> Category of message.</li>
+                <li><strong>Code (8 bits):</strong> Sub-type providing more detail.</li>
+                <li><strong>Checksum (16 bits):</strong> Error detection.</li>
+                <li><strong>First 8 bytes of offending datagram:</strong> Included for identification.</li>
+            </ul>
+        </div>
+
+        <h3>Key ICMP Message Types</h3>
+        <table>
+            <tr><th>Type</th><th>Code</th><th>Description</th></tr>
+            <tr><td>0</td><td>0</td><td>Echo Reply (ping response)</td></tr>
+            <tr><td>3</td><td>0</td><td>Destination Network Unreachable</td></tr>
+            <tr><td>3</td><td>1</td><td>Destination Host Unreachable</td></tr>
+            <tr><td>3</td><td>2</td><td>Destination Protocol Unreachable</td></tr>
+            <tr><td>3</td><td>3</td><td>Destination Port Unreachable</td></tr>
+            <tr><td>3</td><td>4</td><td>Fragmentation Needed, DF Set</td></tr>
+            <tr><td>4</td><td>0</td><td>Source Quench (deprecated)</td></tr>
+            <tr><td>5</td><td>0</td><td>Redirect (for network)</td></tr>
+            <tr><td>8</td><td>0</td><td>Echo Request (ping)</td></tr>
+            <tr><td>9</td><td>0</td><td>Router Advertisement</td></tr>
+            <tr><td>10</td><td>0</td><td>Router Solicitation</td></tr>
+            <tr><td>11</td><td>0</td><td>TTL Expired (Time Exceeded)</td></tr>
+            <tr><td>12</td><td>0</td><td>Bad IP Header (Parameter Problem)</td></tr>
+        </table>
+
+        <h3>Ping (Echo Request / Reply)</h3>
+        <div class="box">
+            <ul>
+                <li>Sender sends ICMP Type 8 (Echo Request).</li>
+                <li>Receiver responds with ICMP Type 0 (Echo Reply).</li>
+                <li>Measures RTT and packet loss.</li>
+                <li>Used to check if a host is reachable.</li>
+            </ul>
+            <div class="code">
+$ ping 8.8.8.8
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=12.3 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=11.8 ms
+            </div>
+        </div>
+
+        <h3>Traceroute</h3>
+        <div class="box">
+            <p>Uses ICMP to discover the path packets take to a destination.</p>
+            <strong>How Traceroute Works:</strong>
+            <ol>
+                <li>Send UDP packets (or ICMP Echo) with <strong>TTL = 1</strong>.</li>
+                <li>First router: TTL → 0, drops packet, sends ICMP <strong>Time Exceeded (Type 11)</strong> back.</li>
+                <li>Send with TTL = 2 → second router responds.</li>
+                <li>Send with TTL = 3 → third router responds.</li>
+                <li>Continue until destination reached.</li>
+                <li>Destination returns ICMP <strong>Port Unreachable (Type 3, Code 3)</strong> for UDP, or Echo Reply for ICMP mode.</li>
+            </ol>
+            <p>Three probes sent per TTL level → three RTT measurements per hop.</p>
+            <div class="code">
+$ traceroute google.com
+ 1  192.168.1.1   1.2ms  1.1ms  1.0ms
+ 2  10.10.10.1    5.3ms  5.1ms  5.4ms
+ 3  72.14.215.85  12.1ms 11.9ms 12.3ms
+ 4  216.58.214.78 13.2ms 13.0ms 13.1ms
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ROUTING ALGORITHMS (Control Plane Intro)                      -->
+        <!-- ============================================================ -->
+        <h2>4.7 Routing Algorithms (Overview)</h2>
+        <p>Routing algorithms determine the least-cost path from source to destination through the network graph. Covered in depth in Chapter 5, but essential context.</p>
+
+        <h3>Graph Abstraction</h3>
+        <div class="box">
+            <ul>
+                <li><strong>Nodes:</strong> Routers.</li>
+                <li><strong>Edges:</strong> Physical links between routers.</li>
+                <li><strong>Edge Cost:</strong> Can represent bandwidth, delay, monetary cost, hop count, or congestion.</li>
+                <li><strong>Goal:</strong> Find least-cost path from source to all destinations.</li>
+            </ul>
+            <div class="diagram">
+        5
+  u ──────── v
+  |╲         |╲
+ 2|  ╲1     3|  ╲2
+  |   ╲      |   ╲
+  w ────x────y ── z
+     3     1    5
+            </div>
+        </div>
+
+        <h3>Classification of Routing Algorithms</h3>
+        <table>
+            <tr><th>Criterion</th><th>Type 1</th><th>Type 2</th></tr>
+            <tr><td>Information</td><td><strong>Global (Link State):</strong> All routers have complete topology. E.g., OSPF.</td><td><strong>Decentralized (Distance Vector):</strong> Routers know only neighbors' costs. E.g., RIP, BGP.</td></tr>
+            <tr><td>Dynamism</td><td><strong>Static:</strong> Routes change slowly (manual).</td><td><strong>Dynamic:</strong> Routes change as topology/traffic changes.</td></tr>
+            <tr><td>Load Sensitivity</td><td><strong>Load-sensitive:</strong> Cost reflects congestion.</td><td><strong>Load-insensitive:</strong> Cost independent of traffic (modern Internet).</td></tr>
+        </table>
+
+        <h3>Link-State Algorithm (Dijkstra's)</h3>
+        <div class="box">
+            <p>Each router has <strong>complete knowledge</strong> of network topology and link costs (obtained via link-state broadcasts).</p>
+            <strong>Dijkstra's Algorithm:</strong>
+            <ul>
+                <li>Computes least-cost paths from one source to all destinations.</li>
+                <li><strong>Notation:</strong>
+                    <ul>
+                        <li>D(v): Current cost of least-cost path from source to v.</li>
+                        <li>p(v): Predecessor node along least-cost path to v.</li>
+                        <li>N': Set of nodes whose least-cost path is known.</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="code">
+Initialization:
+  N' = {u}  (source node)
+  for all nodes v:
+    if v adjacent to u: D(v) = c(u,v)
+    else: D(v) = ∞
+
+Loop (until N' = all nodes):
+  find w not in N' such that D(w) is minimum
+  add w to N'
+  for each neighbor v of w not in N':
+    D(v) = min(D(v), D(w) + c(w,v))
+            </div>
+            <strong>Complexity:</strong> O(N²) with simple implementation, O(N log N) with min-heap.
+        </div>
+
+        <h3>Dijkstra's Algorithm — Worked Example</h3>
+        <div class="box">
+            <p>Using the graph above with source u:</p>
+            <table>
+                <tr><th>Step</th><th>N'</th><th>D(v),p(v)</th><th>D(w),p(w)</th><th>D(x),p(x)</th><th>D(y),p(y)</th><th>D(z),p(z)</th></tr>
+                <tr><td>0</td><td>{u}</td><td>5,u</td><td>2,u</td><td>1,u</td><td>∞</td><td>∞</td></tr>
+                <tr><td>1</td><td>{u,x}</td><td>4,x</td><td>2,u</td><td>—</td><td>2,x</td><td>∞</td></tr>
+                <tr><td>2</td><td>{u,x,w}</td><td>3,w</td><td>—</td><td>—</td><td>2,x</td><td>∞</td></tr>
+                <tr><td>3</td><td>{u,x,w,y}</td><td>3,w</td><td>—</td><td>—</td><td>—</td><td>4,y</td></tr>
+                <tr><td>4</td><td>{u,x,w,y,v}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>4,y</td></tr>
+                <tr><td>5</td><td>{u,x,w,y,v,z}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            </table>
+            <p>Shortest path tree from u: u→x (1), u→w (2), u→x→y (2), u→w→v (3), u→x→y→z (4).</p>
+        </div>
+
+        <h3>Oscillations Problem with Link-State</h3>
+        <ul>
+            <li>If link costs depend on traffic, routing can <strong>oscillate</strong>.</li>
+            <li>All traffic shifts to new "cheapest" path → that path becomes expensive → shifts back.</li>
+            <li><strong>Solutions:</strong> Ensure link costs don't depend solely on traffic. Randomize timing of LS broadcasts.</li>
+        </ul>
+
+        <h3>Distance-Vector Algorithm (Bellman-Ford)</h3>
+        <div class="box">
+            <p>Decentralized: each node only talks to <strong>directly connected neighbors</strong>.</p>
+            <strong>Bellman-Ford Equation:</strong>
+            <span class="formula">d<sub>x</sub>(y) = min<sub>v</sub> { c(x,v) + d<sub>v</sub>(y) }</span>
+            <p>Least cost from x to y = min over all neighbors v of (cost to v + v's distance to y).</p>
+            <strong>Algorithm:</strong>
+            <ol>
+                <li>Each node maintains distance vector D<sub>x</sub> = [D<sub>x</sub>(y): y ∈ N] for all destinations.</li>
+                <li>Each node sends its DV to all neighbors periodically or when DV changes.</li>
+                <li>When node x receives new DV from neighbor v, it updates:
+                    <div class="code">D_x(y) = min_v { c(x,v) + D_v(y) }  for all y</div>
+                </li>
+                <li>If DV changed, notify all neighbors.</li>
+                <li>Converges to correct least-cost paths.</li>
+            </ol>
+        </div>
+
+        <h3>Count-to-Infinity Problem</h3>
+        <div class="box">
+            <p><strong>"Bad news travels slowly"</strong> in distance-vector algorithms.</p>
+            <strong>Example:</strong>
+            <ul>
+                <li>Link cost y→x increases from 4 to 60.</li>
+                <li>Node y thinks it can reach x through z (cost 5+1=6).</li>
+                <li>But z's route to x goes <em>through y</em>.</li>
+                <li>Routing loop: y→z→y→z→... Costs increment by 1 each iteration until they exceed 60.</li>
+                <li>Takes <strong>44 iterations</strong> to converge!</li>
+            </ul>
+            <strong>Solution: Poisoned Reverse</strong>
+            <ul>
+                <li>If z routes through y to reach x, z tells y that D<sub>z</sub>(x) = ∞.</li>
+                <li>Prevents y from routing through z to x.</li>
+                <li><strong>Limitation:</strong> Only works for 2-node loops, not larger loops.</li>
+            </ul>
+        </div>
+
+        <h3>LS vs DV Comparison</h3>
+        <table>
+            <tr><th>Feature</th><th>Link State (LS)</th><th>Distance Vector (DV)</th></tr>
+            <tr><td>Algorithm</td><td>Dijkstra's</td><td>Bellman-Ford</td></tr>
+            <tr><td>Information</td><td>Global topology</td><td>Neighbor costs only</td></tr>
+            <tr><td>Messages</td><td>O(N×E) link-state broadcasts</td><td>Exchanged between neighbors only</td></tr>
+            <tr><td>Convergence</td><td>O(N²) fast</td><td>Varies, can be slow</td></tr>
+            <tr><td>Robustness</td><td>Each node computes own table</td><td>Error propagates through network</td></tr>
+            <tr><td>Example</td><td>OSPF, IS-IS</td><td>RIP, BGP (path-vector)</td></tr>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- KEY FORMULAS                                                  -->
+        <!-- ============================================================ -->
+        <h2>Key Formulas Summary</h2>
+        <div class="box">
+            <ul>
+                <li><strong>Buffer sizing:</strong> <span class="formula">B = RTT × C</span> (classic) or <span class="formula">B = (RTT × C) / √N</span> (N flows)</li>
+                <li><strong>Fragment Offset:</strong> <span class="formula">Offset = byte_position / 8</span></li>
+                <li><strong>Max data per fragment:</strong> <span class="formula">= MTU − IP_header_size</span> (rounded down to multiple of 8)</li>
+                <li><strong>Number of host addresses in /x:</strong> <span class="formula">2<sup>(32−x)</sup> − 2</span> (subtract network + broadcast)</li>
+                <li><strong>CIDR block size:</strong> <span class="formula">2<sup>(32−prefix_length)</sup> addresses</span></li>
+                <li><strong>Dijkstra update:</strong> <span class="formula">D(v) = min(D(v), D(w) + c(w,v))</span></li>
+                <li><strong>Bellman-Ford:</strong> <span class="formula">d<sub>x</sub>(y) = min<sub>v</sub> { c(x,v) + d<sub>v</sub>(y) }</span></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- IMPORTANT DEFINITIONS                                         -->
+        <!-- ============================================================ -->
+        <h2>Important Definitions</h2>
+        <div class="box">
+            <ul>
+                <li><strong>Forwarding:</strong> Local router action — move packet from input to correct output port using forwarding table.</li>
+                <li><strong>Routing:</strong> Network-wide process — determine end-to-end path using routing algorithms.</li>
+                <li><strong>Data Plane:</strong> Per-router functions that forward packets (hardware, fast).</li>
+                <li><strong>Control Plane:</strong> Network-wide logic that computes forwarding tables (software, slow).</li>
+                <li><strong>SDN:</strong> Software-Defined Networking — centralized controller programs forwarding tables remotely.</li>
+                <li><strong>LPM:</strong> Longest Prefix Match — forwarding rule with most specific (longest) matching prefix wins.</li>
+                <li><strong>MTU:</strong> Maximum Transmission Unit — largest packet size a link can carry.</li>
+                <li><strong>Fragmentation:</strong> Breaking a large datagram into smaller pieces to fit link MTU.</li>
+                <li><strong>CIDR:</strong> Classless Inter-Domain Routing — flexible-length subnet prefix (a.b.c.d/x).</li>
+                <li><strong>Subnet:</strong> Group of interfaces sharing same network prefix, reachable without a router.</li>
+                <li><strong>DHCP:</strong> Dynamic Host Configuration Protocol — auto-assigns IP, mask, gateway, DNS.</li>
+                <li><strong>NAT:</strong> Network Address Translation — maps private IPs to single public IP using port numbers.</li>
+                <li><strong>ICMP:</strong> Internet Control Message Protocol — error reporting and diagnostics (ping, traceroute).</li>
+                <li><strong>TTL:</strong> Time to Live — hop counter preventing infinite loops; decremented at each router.</li>
+                <li><strong>HOL Blocking:</strong> Head-of-Line Blocking — front-of-queue packet prevents forwarding of subsequent packets.</li>
+                <li><strong>WFQ:</strong> Weighted Fair Queuing — scheduling that allocates bandwidth proportional to weights.</li>
+                <li><strong>TCAM:</strong> Ternary Content Addressable Memory — hardware for O(1) prefix lookup.</li>
+                <li><strong>Dual Stack:</strong> Running IPv4 and IPv6 simultaneously during transition period.</li>
+                <li><strong>Tunneling:</strong> Encapsulating IPv6 inside IPv4 to cross IPv4-only regions.</li>
+                <li><strong>OpenFlow:</strong> Protocol for SDN controller to program switch flow tables.</li>
+                <li><strong>Middlebox:</strong> Network device performing functions beyond standard forwarding (NAT, firewall, IDS).</li>
+                <li><strong>NFV:</strong> Network Function Virtualization — implementing middlebox functions in software on commodity hardware.</li>
+                <li><strong>SLAAC:</strong> Stateless Address Autoconfiguration — IPv6 hosts auto-generate addresses using prefix + MAC.</li>
+                <li><strong>Path MTU Discovery:</strong> Process of finding smallest MTU along path; source adjusts packet size.</li>
+                <li><strong>Link State:</strong> Routing approach where every router knows full topology (e.g., OSPF).</li>
+                <li><strong>Distance Vector:</strong> Routing approach where routers share cost estimates with neighbors (e.g., RIP).</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- HISTORICAL NOTES                                              -->
+        <!-- ============================================================ -->
+        <h2>Historical Notes</h2>
+        <div class="box">
+            <ul>
+                <li><strong>Vint Cerf &amp; Bob Kahn (1974):</strong> Designed TCP/IP; IP became the universal network-layer protocol.</li>
+                <li><strong>IPv4 (RFC 791, 1981):</strong> Original Internet Protocol, still dominant today.</li>
+                <li><strong>CIDR (1993, RFC 1519):</strong> Introduced to slow IPv4 exhaustion and reduce routing table growth.</li>
+                <li><strong>NAT (mid-1990s):</strong> Pragmatic solution to address scarcity; controversial but universally deployed.</li>
+                <li><strong>IPv6 (RFC 2460, 1998):</strong> Designed with 128-bit addresses; adoption has been slow but steady.</li>
+                <li><strong>IANA IPv4 Pool Exhausted (Feb 2011):</strong> Last /8 blocks allocated to RIRs.</li>
+                <li><strong>OpenFlow (2008):</strong> Stanford research; launched SDN movement. Nick McKeown et al.</li>
+                <li><strong>SDN:</strong> Transformed network management; widely adopted in data centers (Google B4, 2013).</li>
+                <li><strong>Dijkstra (1959):</strong> Published shortest-path algorithm; foundation of link-state routing.</li>
+                <li><strong>Bellman-Ford (1958):</strong> Dynamic programming approach; foundation of distance-vector routing.</li>
+            </ul>
+        </div>
+
+        <div class="chapter-nav">
+            <a href="Chapter3.html" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Chapter 3: Transport Layer
+            </a>
+            <a href="index.html" class="nav-btn next">
+                Home
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="footer">
+            Made by <a href="https://www.linkedin.com/in/ks-iitjmu" target="_blank" style="color: #0056b3; text-decoration: none;">Kunal Sharma</a>
+        </div>
+
+    </div>
+
+</body>
+</html>
