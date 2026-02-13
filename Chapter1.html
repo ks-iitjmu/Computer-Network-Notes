@@ -1,1333 +1,2293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chapter 1: Computer Networks and the Internet</title>
     <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            font-size: 10px; /* Smaller font for maximum density */
-            line-height: 1.25;
-            color: #222;
-            max-width: 100%;
-            margin: 0;
-            padding: 15px;
-            background-color: #fff;
-        }
-        .header-nav {
-            column-span: all;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ccc;
-        }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 10px; /* Smaller font for maximum density */
+        line-height: 1.25;
+        color: #222;
+        max-width: 100%;
+        margin: 0;
+        padding: 15px;
+        background-color: #fff;
+      }
+      .header-nav {
+        column-span: all;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ccc;
+      }
+      .container {
+        column-count: 3; /* Increased columns for density */
+        column-gap: 20px;
+        column-rule: 1px solid #eee;
+      }
+      h1 {
+        column-span: all;
+        text-align: center;
+        font-size: 16px;
+        border-bottom: 2px solid #000;
+        margin-bottom: 10px;
+      }
+      h2 {
+        font-size: 12px;
+        background-color: #e9ecef;
+        padding: 3px 6px;
+        border-left: 3px solid #0056b3;
+        margin-top: 8px;
+        margin-bottom: 4px;
+        break-after: avoid;
+        font-weight: 800;
+      }
+      h3 {
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 6px;
+        margin-bottom: 2px;
+        color: #444;
+        border-bottom: 1px dotted #ccc;
+      }
+      p {
+        margin: 2px 0;
+      }
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 12px;
+      }
+      li {
+        margin-bottom: 1px;
+      }
+      strong {
+        color: #000;
+        font-weight: 700;
+      }
+      .highlight {
+        background-color: #fffacd;
+      }
+      .formula {
+        background-color: #f1f3f5;
+        border: 1px solid #ced4da;
+        padding: 2px;
+        font-family: "Courier New", monospace;
+        display: block;
+        text-align: center;
+        margin: 3px 0;
+        font-weight: bold;
+        font-size: 9px;
+      }
+      .box {
+        border: 1px solid #444;
+        padding: 4px;
+        margin: 4px 0;
+        background-color: #fff;
+        break-inside: avoid;
+      }
+      .sub-box {
+        border-left: 2px solid #ccc;
+        padding-left: 5px;
+        margin-left: 2px;
+        font-style: italic;
+      }
+      .footer {
+        column-span: all;
+        text-align: center;
+        font-size: 12px;
+        border-top: 2px solid #000;
+        margin-top: 15px;
+        padding-top: 10px;
+        color: #444;
+        font-weight: 600;
+      }
+      .chapter-nav {
+        column-span: all;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding: 15px 0;
+        border-top: 1px solid #ccc;
+      }
+      .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background-color: #e9ecef;
+        border-left: 3px solid #0056b3;
+        text-decoration: none;
+        color: #222;
+        font-size: 11px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+      .nav-btn:hover {
+        background-color: #0056b3;
+        color: #fff;
+      }
+      .nav-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .nav-btn.next {
+        border-left: none;
+        border-right: 3px solid #0056b3;
+      }
+      /* Tablet Responsive */
+      @media screen and (max-width: 1024px) {
         .container {
-            column-count: 3; /* Increased columns for density */
-            column-gap: 20px;
-            column-rule: 1px solid #eee;
+          column-count: 2;
+          column-gap: 15px;
+        }
+        body {
+          font-size: 11px;
+          padding: 12px;
         }
         h1 {
-            column-span: all;
-            text-align: center;
-            font-size: 16px;
-            border-bottom: 2px solid #000;
-            margin-bottom: 10px;
+          font-size: 18px;
         }
         h2 {
-            font-size: 12px;
-            background-color: #e9ecef;
-            padding: 3px 6px;
-            border-left: 3px solid #0056b3;
-            margin-top: 8px;
-            margin-bottom: 4px;
-            break-after: avoid;
-            font-weight: 800;
+          font-size: 13px;
         }
         h3 {
-            font-size: 10.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 6px;
-            margin-bottom: 2px;
-            color: #444;
-            border-bottom: 1px dotted #ccc;
-        }
-        p { margin: 2px 0; }
-        ul, ol {
-            margin: 0;
-            padding-left: 12px;
-        }
-        li {
-            margin-bottom: 1px;
-        }
-        strong {
-            color: #000;
-            font-weight: 700;
-        }
-        .highlight {
-            background-color: #fffacd;
+          font-size: 11.5px;
         }
         .formula {
-            background-color: #f1f3f5;
-            border: 1px solid #ced4da;
-            padding: 2px;
-            font-family: "Courier New", monospace;
-            display: block;
-            text-align: center;
-            margin: 3px 0;
-            font-weight: bold;
-            font-size: 9px;
+          font-size: 10px;
+        }
+      }
+      /* Mobile Responsive */
+      @media screen and (max-width: 600px) {
+        .container {
+          column-count: 1;
+        }
+        body {
+          font-size: 12px;
+          padding: 10px;
+          line-height: 1.4;
+        }
+        h1 {
+          font-size: 20px;
+          padding-bottom: 8px;
+        }
+        h2 {
+          font-size: 14px;
+          padding: 6px 10px;
+        }
+        h3 {
+          font-size: 12.5px;
+          margin-top: 10px;
         }
         .box {
-            border: 1px solid #444;
-            padding: 4px;
-            margin: 4px 0;
-            background-color: #fff;
-            break-inside: avoid;
+          padding: 8px;
+          margin: 8px 0;
         }
-        .sub-box {
-            border-left: 2px solid #ccc;
-            padding-left: 5px;
-            margin-left: 2px;
-            font-style: italic;
+        .formula {
+          font-size: 11px;
+          padding: 6px;
+        }
+        ul,
+        ol {
+          padding-left: 18px;
+        }
+        li {
+          margin-bottom: 4px;
         }
         .footer {
-            column-span: all;
-            text-align: center;
-            font-size: 12px;
-            border-top: 2px solid #000;
-            margin-top: 15px;
-            padding-top: 10px;
-            color: #444;
-            font-weight: 600;
+          font-size: 14px;
+          padding-top: 15px;
+          margin-top: 20px;
         }
+        .header-nav,
         .chapter-nav {
-            column-span: all;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            padding: 15px 0;
-            border-top: 1px solid #ccc;
+          flex-direction: column;
+          gap: 10px;
+          align-items: stretch;
         }
         .nav-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background-color: #e9ecef;
-            border-left: 3px solid #0056b3;
-            text-decoration: none;
-            color: #222;
-            font-size: 11px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        .nav-btn:hover {
-            background-color: #0056b3;
-            color: #fff;
-        }
-        .nav-btn svg {
-            width: 14px;
-            height: 14px;
+          justify-content: center;
+          padding: 12px 16px;
+          font-size: 12px;
         }
         .nav-btn.next {
-            border-left: none;
-            border-right: 3px solid #0056b3;
+          border-left: 3px solid #0056b3;
+          border-right: none;
         }
-        /* Tablet Responsive */
-        @media screen and (max-width: 1024px) {
-            .container {
-                column-count: 2;
-                column-gap: 15px;
-            }
-            body {
-                font-size: 11px;
-                padding: 12px;
-            }
-            h1 {
-                font-size: 18px;
-            }
-            h2 {
-                font-size: 13px;
-            }
-            h3 {
-                font-size: 11.5px;
-            }
-            .formula {
-                font-size: 10px;
-            }
-        }
-        /* Mobile Responsive */
-        @media screen and (max-width: 600px) {
-            .container {
-                column-count: 1;
-            }
-            body {
-                font-size: 12px;
-                padding: 10px;
-                line-height: 1.4;
-            }
-            h1 {
-                font-size: 20px;
-                padding-bottom: 8px;
-            }
-            h2 {
-                font-size: 14px;
-                padding: 6px 10px;
-            }
-            h3 {
-                font-size: 12.5px;
-                margin-top: 10px;
-            }
-            .box {
-                padding: 8px;
-                margin: 8px 0;
-            }
-            .formula {
-                font-size: 11px;
-                padding: 6px;
-            }
-            ul, ol {
-                padding-left: 18px;
-            }
-            li {
-                margin-bottom: 4px;
-            }
-            .footer {
-                font-size: 14px;
-                padding-top: 15px;
-                margin-top: 20px;
-            }
-            .header-nav,
-            .chapter-nav {
-                flex-direction: column;
-                gap: 10px;
-                align-items: stretch;
-            }
-            .nav-btn {
-                justify-content: center;
-                padding: 12px 16px;
-                font-size: 12px;
-            }
-            .nav-btn.next {
-                border-left: 3px solid #0056b3;
-                border-right: none;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="container">
-        <div class="header-nav">
-            <a href="index.html" class="nav-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                Home
-            </a>
-            <a href="Chapter2.html" class="nav-btn next">
-                Chapter 2: Application Layer
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
+      <div class="header-nav">
+        <a href="index.html" class="nav-btn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          Home
+        </a>
+        <a href="Chapter2.html" class="nav-btn next">
+          Chapter 2: Application Layer
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
 
-        <h1>Chapter 1: Computer Networks and the Internet</h1>
+      <h1>Chapter 1: Computer Networks and the Internet</h1>
 
-        <h2>1.1 What Is the Internet?</h2>
-        
-        <h3>The Nuts-and-Bolts View</h3>
-        <ul>
-            <li><strong>Hosts (End Systems):</strong> Billions of connected devices (PCs, servers, IoT, smartphones). Run network apps at network "edge".</li>
-            <li><strong>Communication Links:</strong> Fiber, copper, radio, satellite. Performance metric: <strong>Transmission Rate</strong> (bandwidth, measured in bits/sec).</li>
-            <li><strong>Packet Switches:</strong> Forward packets (chunks of data).
-                <ul>
-                    <li><em>Routers:</em> Typically in the <strong>network core</strong>.</li>
-                    <li><em>Link-layer Switches:</em> Typically in <strong>access networks</strong>.</li>
-                </ul>
+      <h2>1.1 What Is the Internet?</h2>
+
+      <h3>The Nuts-and-Bolts View</h3>
+      <ul>
+        <li>
+          <strong>Hosts (End Systems):</strong> Billions of connected devices
+          (PCs, servers, IoT, smartphones). Run network apps at network "edge".
+        </li>
+        <li>
+          <strong>Communication Links:</strong> Fiber, copper, radio, satellite.
+          Performance metric: <strong>Transmission Rate</strong> (bandwidth,
+          measured in bits/sec).
+        </li>
+        <li>
+          <strong>Packet Switches:</strong> Forward packets (chunks of data).
+          <ul>
+            <li>
+              <em>Routers:</em> Typically in the <strong>network core</strong>.
             </li>
-            <li><strong>Path/Route:</strong> Sequence of communication links and packet switches traversed by a packet from sender to receiver.</li>
-            <li><strong>ISP (Internet Service Provider):</strong> Network of packet switches/links. Lower-tier ISPs (local) connect to Upper-tier ISPs (National/Global). Each ISP is independently managed, runs the IP protocol.</li>
-            <li><strong>Protocols:</strong> Control sending/receiving of messages. <strong>TCP</strong> (Transmission Control Protocol) & <strong>IP</strong> (Internet Protocol) - most important protocols.</li>
-            <li><strong>Standards:</strong>
-                <ul>
-                    <li><em>IETF:</em> Internet Engineering Task Force (develops Internet standards).</li>
-                    <li><em>RFCs:</em> Requests for Comments (technical docs defining protocols like TCP, IP, HTTP, SMTP).</li>
-                    <li><em>IEEE 802:</em> LAN/WiFi standards (802.3 Ethernet, 802.11 WiFi).</li>
-                </ul>
+            <li>
+              <em>Link-layer Switches:</em> Typically in
+              <strong>access networks</strong>.
             </li>
-        </ul>
-
-        <h3>The Services View</h3>
-        <ul>
-            <li><strong>Infrastructure:</strong> Provides services to distributed applications (Web, VoIP, Games, Email, Social Networks).</li>
-            <li><strong>Distributed Applications:</strong> Apps involving multiple end systems that exchange data (e.g., Web browser & server).</li>
-            <li><strong>Socket Interface:</strong> API provided by End Systems. Set of rules allowing a program to ask the Internet infrastructure to deliver data. Analogous to postal service "envelope/addressing" rules.
-                <ul>
-                    <li>Specifies how sending program must "package" data.</li>
-                    <li>Infrastructure delivers to destination program's socket.</li>
-                </ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Path/Route:</strong> Sequence of communication links and
+          packet switches traversed by a packet from sender to receiver.
+        </li>
+        <li>
+          <strong>ISP (Internet Service Provider):</strong> Network of packet
+          switches/links. Lower-tier ISPs (local) connect to Upper-tier ISPs
+          (National/Global). Each ISP is independently managed, runs the IP
+          protocol.
+        </li>
+        <li>
+          <strong>Protocols:</strong> Control sending/receiving of messages.
+          <strong>TCP</strong> (Transmission Control Protocol) &
+          <strong>IP</strong> (Internet Protocol) - most important protocols.
+        </li>
+        <li>
+          <strong>Standards:</strong>
+          <ul>
+            <li>
+              <em>IETF:</em> Internet Engineering Task Force (develops Internet
+              standards).
             </li>
-            <li><strong>Internet provides multiple services:</strong> Different services differ in timing/bandwidth guarantees.</li>
-        </ul>
-
-        <h3>Protocols</h3>
-        <ul>
-            <li><strong>Definition:</strong> Defines the <em>format</em> and <em>order</em> of messages exchanged between two or more communicating entities, and the <em>actions taken</em> on transmission/receipt.</li>
-            <li><strong>Human Analogy:</strong> "Hi" -> "Hi" -> "Time?" -> "2:00". Specific messages sent, specific actions taken when messages received.</li>
-            <li><strong>Machine Protocol:</strong> TCP Connection Request -> TCP Connection Reply -> GET -> File.</li>
-            <li><strong>Key Elements of a Protocol:</strong>
-                <ul>
-                    <li><em>Syntax:</em> Format/structure of data (how bits are arranged).</li>
-                    <li><em>Semantics:</em> Meaning of each section of bits.</li>
-                    <li><em>Timing:</em> When data should be sent and how fast.</li>
-                </ul>
+            <li>
+              <em>RFCs:</em> Requests for Comments (technical docs defining
+              protocols like TCP, IP, HTTP, SMTP).
             </li>
-            <li><strong>Protocol Stack:</strong> Protocols are organized in layers, each layer using services of layer below.</li>
-        </ul>
+            <li>
+              <em>IEEE 802:</em> LAN/WiFi standards (802.3 Ethernet, 802.11
+              WiFi).
+            </li>
+          </ul>
+        </li>
+      </ul>
 
-        <h2>1.2 The Network Edge</h2>
+      <h3>The Services View</h3>
+      <ul>
+        <li>
+          <strong>Infrastructure:</strong> Provides services to distributed
+          applications (Web, VoIP, Games, Email, Social Networks).
+        </li>
+        <li>
+          <strong>Distributed Applications:</strong> Apps involving multiple end
+          systems that exchange data (e.g., Web browser & server).
+        </li>
+        <li>
+          <strong>Socket Interface:</strong> API provided by End Systems. Set of
+          rules allowing a program to ask the Internet infrastructure to deliver
+          data. Analogous to postal service "envelope/addressing" rules.
+          <ul>
+            <li>Specifies how sending program must "package" data.</li>
+            <li>Infrastructure delivers to destination program's socket.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Internet provides multiple services:</strong> Different
+          services differ in timing/bandwidth guarantees.
+        </li>
+      </ul>
+
+      <h3>Protocols</h3>
+      <ul>
+        <li>
+          <strong>Definition:</strong> Defines the <em>format</em> and
+          <em>order</em> of messages exchanged between two or more communicating
+          entities, and the <em>actions taken</em> on transmission/receipt.
+        </li>
+        <li>
+          <strong>Human Analogy:</strong> "Hi" -> "Hi" -> "Time?" -> "2:00".
+          Specific messages sent, specific actions taken when messages received.
+        </li>
+        <li>
+          <strong>Machine Protocol:</strong> TCP Connection Request -> TCP
+          Connection Reply -> GET -> File.
+        </li>
+        <li>
+          <strong>Key Elements of a Protocol:</strong>
+          <ul>
+            <li>
+              <em>Syntax:</em> Format/structure of data (how bits are arranged).
+            </li>
+            <li><em>Semantics:</em> Meaning of each section of bits.</li>
+            <li><em>Timing:</em> When data should be sent and how fast.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Protocol Stack:</strong> Protocols are organized in layers,
+          each layer using services of layer below.
+        </li>
+      </ul>
+
+      <h2>1.2 The Network Edge</h2>
+      <ul>
+        <li>
+          <strong>Hosts:</strong> Clients (desktop, mobile, laptop) & Servers
+          (data centers).
+        </li>
+        <li>
+          <strong>Data Centers:</strong> Massive server farms (Google has ~19
+          major ones, 100k+ servers each). Interconnected by high-speed internal
+          network.
+        </li>
+        <li>
+          <strong>Client:</strong> Requests and receives service from servers.
+        </li>
+        <li>
+          <strong>Server:</strong> Always-on host that services requests from
+          clients.
+        </li>
+      </ul>
+
+      <h3>End System Functions</h3>
+      <ul>
+        <li>
+          <strong>Sending Side:</strong> Breaks application messages into
+          smaller chunks (packets) of length L bits.
+        </li>
+        <li>
+          <strong
+            >Transmits packet into access network at transmission rate R (link
+            capacity/bandwidth).</strong
+          >
+        </li>
+        <li>
+          <span class="formula"
+            >Packet Transmission Delay = L (bits) / R (bits/sec)</span
+          >
+        </li>
+      </ul>
+
+      <h3>Access Networks</h3>
+      <p>
+        Network that physically connects an end system to the first router
+        ("edge router") on a path from end system to any other distant end
+        system.
+      </p>
+      <div class="box">
+        <strong>1. DSL (Digital Subscriber Line)</strong>
         <ul>
-            <li><strong>Hosts:</strong> Clients (desktop, mobile, laptop) & Servers (data centers).</li>
-            <li><strong>Data Centers:</strong> Massive server farms (Google has ~19 major ones, 100k+ servers each). Interconnected by high-speed internal network.</li>
-            <li><strong>Client:</strong> Requests and receives service from servers.</li>
-            <li><strong>Server:</strong> Always-on host that services requests from clients.</li>
-        </ul>
-
-        <h3>End System Functions</h3>
-        <ul>
-            <li><strong>Sending Side:</strong> Breaks application messages into smaller chunks (packets) of length L bits.</li>
-            <li><strong>Transmits packet into access network at transmission rate R (link capacity/bandwidth).</strong></li>
-            <li><span class="formula">Packet Transmission Delay = L (bits) / R (bits/sec)</span></li>
-        </ul>
-
-        <h3>Access Networks</h3>
-        <p>Network that physically connects an end system to the first router ("edge router") on a path from end system to any other distant end system.</p>
-        <div class="box">
-            <strong>1. DSL (Digital Subscriber Line)</strong>
+          <li>
+            <strong>Medium:</strong> Existing telephone line (Twisted Pair
+            Copper) to central office DSLAM.
+          </li>
+          <li>
+            <strong>Device:</strong> DSL Modem (home) <-> DSLAM (Digital
+            Subscriber Line Access Multiplexer at Central Office).
+          </li>
+          <li>
+            <strong>Multiplexing (FDM):</strong>
             <ul>
-                <li><strong>Medium:</strong> Existing telephone line (Twisted Pair Copper) to central office DSLAM.</li>
-                <li><strong>Device:</strong> DSL Modem (home) <-> DSLAM (Digital Subscriber Line Access Multiplexer at Central Office).</li>
-                <li><strong>Multiplexing (FDM):</strong>
-                    <ul>
-                        <li><em>0-4 kHz:</em> Regular Telephone (voice).</li>
-                        <li><em>4-50 kHz:</em> Upstream Data (medium speed).</li>
-                        <li><em>50 kHz - 1 MHz:</em> Downstream Data (high speed).</li>
-                    </ul>
+              <li><em>0-4 kHz:</em> Regular Telephone (voice).</li>
+              <li><em>4-50 kHz:</em> Upstream Data (medium speed).</li>
+              <li><em>50 kHz - 1 MHz:</em> Downstream Data (high speed).</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Splitter:</strong> At customer premises, separates voice and
+            data signals.
+          </li>
+          <li>
+            <strong>Speed:</strong> Standards vary (e.g., ADSL: 24 Mbps down /
+            2.5 Mbps up). Asymmetric by design (users download more than
+            upload).
+          </li>
+          <li>
+            <strong>Architecture:</strong> Dedicated line to CO. Performance not
+            affected by neighbors.
+          </li>
+          <li>
+            <strong>Distance Limitation:</strong> Performance degrades
+            significantly beyond 5-10 miles from CO.
+          </li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <strong>2. Cable Internet</strong>
+        <ul>
+          <li>
+            <strong>Medium:</strong> Existing Cable TV infrastructure.
+            <strong>HFC (Hybrid Fiber Coax)</strong>: Fiber to neighborhood node
+            (fiber node), Coax to home.
+          </li>
+          <li>
+            <strong>Device:</strong> Cable Modem <-> CMTS (Cable Modem
+            Termination System at Head End).
+          </li>
+          <li>
+            <strong>Standard:</strong> DOCSIS (Data Over Cable Service Interface
+            Specification).
+          </li>
+          <li>
+            <strong>Architecture:</strong>
+            <strong>Shared Broadcast Medium</strong>. Every packet sent by head
+            end travels downstream to all homes. Users in a neighborhood share
+            the downstream/upstream capacity. Throughput drops if neighbors are
+            active.
+          </li>
+          <li>
+            <strong>Speed:</strong> Can be higher than DSL (e.g., DOCSIS 3.1: 10
+            Gbps down / 1 Gbps up). Asymmetric design.
+          </li>
+          <li>
+            <strong>Collision Domain:</strong> Upstream requires distributed
+            multiple access protocol to coordinate transmissions.
+          </li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <strong>3. Fiber To The Home (FTTH)</strong>
+        <ul>
+          <li>
+            <strong>Medium:</strong> Optical Fiber directly from CO to home.
+          </li>
+          <li>
+            <strong>Devices:</strong> ONT (Optical Network Terminator) at home
+            <-> OLT (Optical Line Terminator) at CO.
+          </li>
+          <li>
+            <strong>Types:</strong>
+            <ul>
+              <li>
+                <em>AON (Active Optical Network):</em> Switched Ethernet
+                (requires powered equipment in field). Each user has dedicated
+                fiber.
+              </li>
+              <li>
+                <em>PON (Passive Optical Network):</em> Uses unpowered optical
+                splitters (no power needed). Shares fiber from OLT to splitter.
+                Used by Verizon FiOS, AT&T Fiber.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Speed:</strong> Gbps range (symmetric). Most promising
+            technology.
+          </li>
+          <li>
+            <strong>Deployment Cost:</strong> Higher than DSL/Cable but
+            declining.
+          </li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <strong>4. Dial-Up (Legacy)</strong>
+        <ul>
+          <li>
+            <strong>Medium:</strong> Telephone line (same line as voice, cannot
+            use simultaneously).
+          </li>
+          <li>
+            <strong>Speed:</strong> Up to 56 kbps (extremely slow by modern
+            standards).
+          </li>
+          <li>
+            <strong>Usage:</strong> Largely obsolete, but still exists in remote
+            areas.
+          </li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <strong>5. Satellite Internet</strong>
+        <ul>
+          <li>
+            <strong>Medium:</strong> Satellite dish at home to satellite in
+            orbit.
+          </li>
+          <li>
+            <strong>Speed:</strong> Mbps range (improving with LEO
+            constellations like Starlink).
+          </li>
+          <li>
+            <strong>Latency:</strong> High for GEO satellites (~600ms RTT),
+            lower for LEO (~20-40ms).
+          </li>
+          <li>
+            <strong>Use Case:</strong> Rural/remote areas without other
+            infrastructure.
+          </li>
+        </ul>
+      </div>
+
+      <h3>Enterprise & Home Networks</h3>
+      <ul>
+        <li>
+          <strong>Ethernet:</strong> Wired access. Twisted pair to Ethernet
+          switch. Speeds: 100 Mbps / 1 Gbps / 10 Gbps / 100 Gbps.
+        </li>
+        <li>
+          <strong>Home Network Components:</strong>
+          <ul>
+            <li>Cable/DSL modem</li>
+            <li>Router/Firewall/NAT</li>
+            <li>Wireless Access Point (often combined as "home router")</li>
+            <li>Wired Ethernet connections</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Wireless Access Networks</h3>
+      <ul>
+        <li>
+          <strong>WiFi (WLAN):</strong> IEEE 802.11. Wireless users transmit to
+          Access Point (AP) connected to wired network.
+          <ul>
+            <li>
+              <em>802.11b/g/n:</em> 2.4 GHz band, various speeds up to 600 Mbps.
+            </li>
+            <li><em>802.11ac (WiFi 5):</em> 5 GHz band, up to 3.5 Gbps.</li>
+            <li><em>802.11ax (WiFi 6):</em> 2.4/5/6 GHz, up to 10 Gbps.</li>
+            <li><em>Range:</em> ~10-100 meters.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Wide-Area Wireless (Cellular):</strong>
+          <ul>
+            <li><em>3G:</em> ~1 Mbps.</li>
+            <li><em>4G LTE:</em> ~10-100 Mbps.</li>
+            <li><em>5G:</em> ~100 Mbps - 10 Gbps. Ultra-low latency (~1ms).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>5G Fixed Wireless Access:</strong> Beam-forming from 5G base
+          station to home modem. Competitor to DSL/Cable/Fiber.
+        </li>
+        <li>
+          <strong>Key Difference:</strong> WiFi = short range,
+          infrastructure-based. Cellular = wide range, provider-managed.
+        </li>
+      </ul>
+
+      <h3>Physical Media</h3>
+      <p>
+        <strong>Bit:</strong> Travels by propagating electromagnetic waves or
+        optical pulses across a physical medium.
+      </p>
+      <ul>
+        <li>
+          <strong>Guided Media (Solid Medium):</strong> Waves guided along a
+          solid medium.
+          <ul>
+            <li>
+              <em>Twisted Pair (TP):</em> Two insulated copper wires twisted
+              together (reduces EMI). Cheap, ubiquitous.
+              <ul>
+                <li>UTP (Unshielded Twisted Pair) - Cat5e/6/6a.</li>
+                <li>
+                  Rate depends on wire thickness, distance to switch,
+                  modulation.
                 </li>
-                <li><strong>Splitter:</strong> At customer premises, separates voice and data signals.</li>
-                <li><strong>Speed:</strong> Standards vary (e.g., ADSL: 24 Mbps down / 2.5 Mbps up). Asymmetric by design (users download more than upload).</li>
-                <li><strong>Architecture:</strong> Dedicated line to CO. Performance not affected by neighbors.</li>
-                <li><strong>Distance Limitation:</strong> Performance degrades significantly beyond 5-10 miles from CO.</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>2. Cable Internet</strong>
-            <ul>
-                <li><strong>Medium:</strong> Existing Cable TV infrastructure. <strong>HFC (Hybrid Fiber Coax)</strong>: Fiber to neighborhood node (fiber node), Coax to home.</li>
-                <li><strong>Device:</strong> Cable Modem <-> CMTS (Cable Modem Termination System at Head End).</li>
-                <li><strong>Standard:</strong> DOCSIS (Data Over Cable Service Interface Specification).</li>
-                <li><strong>Architecture:</strong> <strong>Shared Broadcast Medium</strong>. Every packet sent by head end travels downstream to all homes. Users in a neighborhood share the downstream/upstream capacity. Throughput drops if neighbors are active.</li>
-                <li><strong>Speed:</strong> Can be higher than DSL (e.g., DOCSIS 3.1: 10 Gbps down / 1 Gbps up). Asymmetric design.</li>
-                <li><strong>Collision Domain:</strong> Upstream requires distributed multiple access protocol to coordinate transmissions.</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>3. Fiber To The Home (FTTH)</strong>
-            <ul>
-                <li><strong>Medium:</strong> Optical Fiber directly from CO to home.</li>
-                <li><strong>Devices:</strong> ONT (Optical Network Terminator) at home <-> OLT (Optical Line Terminator) at CO.</li>
-                <li><strong>Types:</strong>
-                    <ul>
-                        <li><em>AON (Active Optical Network):</em> Switched Ethernet (requires powered equipment in field). Each user has dedicated fiber.</li>
-                        <li><em>PON (Passive Optical Network):</em> Uses unpowered optical splitters (no power needed). Shares fiber from OLT to splitter. Used by Verizon FiOS, AT&T Fiber.</li>
-                    </ul>
+                <li>Cat6a: 10 Gbps for 100m.</li>
+              </ul>
+            </li>
+            <li>
+              <em>Coaxial Cable:</em> Two concentric copper conductors. Better
+              shielding than TP. Shared medium capability (cable TV). High
+              bandwidth over long distances.
+            </li>
+            <li>
+              <em>Fiber Optics:</em> Thin glass fibers carrying light pulses
+              (each pulse = 1 bit).
+              <ul>
+                <li>Ultra-low attenuation (signal loss): ~0.2 dB/km.</li>
+                <li>Immune to electromagnetic interference.</li>
+                <li>Very hard to tap (secure).</li>
+                <li>Long-haul backbone: 10s-100s Gbps per fiber.</li>
+                <li>
+                  Cost: Higher than copper (fiber itself cheap, optical
+                  transmitters/receivers expensive).
                 </li>
-                <li><strong>Speed:</strong> Gbps range (symmetric). Most promising technology.</li>
-                <li><strong>Deployment Cost:</strong> Higher than DSL/Cable but declining.</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>4. Dial-Up (Legacy)</strong>
-            <ul>
-                <li><strong>Medium:</strong> Telephone line (same line as voice, cannot use simultaneously).</li>
-                <li><strong>Speed:</strong> Up to 56 kbps (extremely slow by modern standards).</li>
-                <li><strong>Usage:</strong> Largely obsolete, but still exists in remote areas.</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>5. Satellite Internet</strong>
-            <ul>
-                <li><strong>Medium:</strong> Satellite dish at home to satellite in orbit.</li>
-                <li><strong>Speed:</strong> Mbps range (improving with LEO constellations like Starlink).</li>
-                <li><strong>Latency:</strong> High for GEO satellites (~600ms RTT), lower for LEO (~20-40ms).</li>
-                <li><strong>Use Case:</strong> Rural/remote areas without other infrastructure.</li>
-            </ul>
-        </div>
-
-        <h3>Enterprise & Home Networks</h3>
-        <ul>
-            <li><strong>Ethernet:</strong> Wired access. Twisted pair to Ethernet switch. Speeds: 100 Mbps / 1 Gbps / 10 Gbps / 100 Gbps.</li>
-            <li><strong>Home Network Components:</strong>
-                <ul>
-                    <li>Cable/DSL modem</li>
-                    <li>Router/Firewall/NAT</li>
-                    <li>Wireless Access Point (often combined as "home router")</li>
-                    <li>Wired Ethernet connections</li>
-                </ul>
+              </ul>
             </li>
-        </ul>
-
-        <h3>Wireless Access Networks</h3>
-        <ul>
-            <li><strong>WiFi (WLAN):</strong> IEEE 802.11. Wireless users transmit to Access Point (AP) connected to wired network.
-                <ul>
-                    <li><em>802.11b/g/n:</em> 2.4 GHz band, various speeds up to 600 Mbps.</li>
-                    <li><em>802.11ac (WiFi 5):</em> 5 GHz band, up to 3.5 Gbps.</li>
-                    <li><em>802.11ax (WiFi 6):</em> 2.4/5/6 GHz, up to 10 Gbps.</li>
-                    <li><em>Range:</em> ~10-100 meters.</li>
-                </ul>
-            </li>
-            <li><strong>Wide-Area Wireless (Cellular):</strong>
-                <ul>
-                    <li><em>3G:</em> ~1 Mbps.</li>
-                    <li><em>4G LTE:</em> ~10-100 Mbps.</li>
-                    <li><em>5G:</em> ~100 Mbps - 10 Gbps. Ultra-low latency (~1ms).</li>
-                </ul>
-            </li>
-            <li><strong>5G Fixed Wireless Access:</strong> Beam-forming from 5G base station to home modem. Competitor to DSL/Cable/Fiber.</li>
-            <li><strong>Key Difference:</strong> WiFi = short range, infrastructure-based. Cellular = wide range, provider-managed.</li>
-        </ul>
-
-        <h3>Physical Media</h3>
-        <p><strong>Bit:</strong> Travels by propagating electromagnetic waves or optical pulses across a physical medium.</p>
-        <ul>
-            <li><strong>Guided Media (Solid Medium):</strong> Waves guided along a solid medium.
-                <ul>
-                    <li><em>Twisted Pair (TP):</em> Two insulated copper wires twisted together (reduces EMI). Cheap, ubiquitous. 
-                        <ul>
-                            <li>UTP (Unshielded Twisted Pair) - Cat5e/6/6a.</li>
-                            <li>Rate depends on wire thickness, distance to switch, modulation.</li>
-                            <li>Cat6a: 10 Gbps for 100m.</li>
-                        </ul>
-                    </li>
-                    <li><em>Coaxial Cable:</em> Two concentric copper conductors. Better shielding than TP. Shared medium capability (cable TV). High bandwidth over long distances.</li>
-                    <li><em>Fiber Optics:</em> Thin glass fibers carrying light pulses (each pulse = 1 bit).
-                        <ul>
-                            <li>Ultra-low attenuation (signal loss): ~0.2 dB/km.</li>
-                            <li>Immune to electromagnetic interference.</li>
-                            <li>Very hard to tap (secure).</li>
-                            <li>Long-haul backbone: 10s-100s Gbps per fiber.</li>
-                            <li>Cost: Higher than copper (fiber itself cheap, optical transmitters/receivers expensive).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><strong>Unguided Media (Atmosphere/Space):</strong> Waves propagate in atmosphere/space.
-                <ul>
-                    <li><em>Terrestrial Radio Channels:</em>
-                        <ul>
-                            <li>Path loss: Signal attenuates as it travels.</li>
-                            <li>Shadow fading: Signal blocked by obstacles (buildings, mountains).</li>
-                            <li>Multipath fading: Signal reflects off objects, causing interference.</li>
-                            <li>Interference: Other signals in same frequency band.</li>
-                        </ul>
-                    </li>
-                    <li><em>Satellite Channels:</em>
-                        <ul>
-                            <li><strong>Geostationary (GEO):</strong> 36,000 km altitude. Stationary relative to earth. <strong>280 ms</strong> one-way propagation delay (~560ms RTT).</li>
-                            <li><strong>MEO (Medium Earth Orbit):</strong> ~5,000-12,000 km. GPS satellites.</li>
-                            <li><strong>LEO (Low Earth Orbit):</strong> ~500-2000 km. Low delay (~20-40ms RTT). Satellites move relative to earth (constellations needed, e.g., Starlink, OneWeb).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>1.3 The Network Core</h2>
-        <p>The mesh of packet switches and links interconnecting the Internet's end systems.</p>
-
-        <h3>Packet Switching</h3>
-        <ul>
-            <li><strong>Concept:</strong> Application-layer messages broken into <strong>Packets</strong> (L bits). Each packet travels independently through network links and switches.</li>
-            <li><strong>Store-and-Forward Transmission:</strong> Switch must receive <em>entire</em> packet before it can begin transmitting the first bit of the packet to the next link.
-                <ul>
-                    <li>Packet must be completely stored before forwarding.</li>
-                    <li>This is why we get per-hop delays.</li>
-                </ul>
-            </li>
-            <li><span class="formula">Transmission Delay for 1 packet on 1 link = L / R</span></li>
-            <li><span class="formula">End-to-End Delay (N links, no prop/proc/queue) = N * (L/R)</span></li>
-            <li><strong>Example:</strong> 1 packet, 3 links, L = 1000 bits, R = 1 Mbps:
-                <br><span class="formula">Delay = 3 × (1000/10⁶) = 3 ms</span></li>
-            <li><strong>Queuing Delay and Packet Loss:</strong>
-                <ul>
-                    <li>Each packet switch has multiple links attached.</li>
-                    <li>For each attached link, packet switch has an <strong>Output Buffer (Output Queue)</strong>.</li>
-                    <li>If arrival rate > output link transmission rate, packets queue in buffer.</li>
-                    <li><strong>Packet Loss:</strong> If buffer is full (finite capacity), arriving packets are <strong>dropped</strong>.</li>
-                </ul>
-            </li>
-            <li><strong>Forwarding Table:</strong> Each router has a table mapping destination IP addresses (or portions thereof) to outbound links.</li>
-            <li><strong>Routing Protocols:</strong> Algorithms that automatically set the forwarding tables.
-                <ul>
-                    <li>Interior: OSPF, RIP</li>
-                    <li>Exterior: BGP</li>
-                </ul>
-            </li>
-            <li><strong>Self-Routing:</strong> Each packet contains destination address in header. Router examines address, consults forwarding table, forwards to appropriate outbound link.</li>
-        </ul>
-
-        <h3>Circuit Switching</h3>
-        <ul>
-            <li><strong>Concept:</strong> Dedicated end-to-end path between source and destination. Resources (bandwidth/buffers) <em>reserved</em> for entire duration of session.</li>
-            <li><strong>Call Setup:</strong> Path must be established before communication begins.</li>
-            <li><strong>Analogy:</strong> Restaurant requiring reservation (Circuit) vs Walk-in and hope for table (Packet).</li>
-            <li><strong>Pros:</strong>
-                <ul>
-                    <li>Guaranteed constant transmission rate.</li>
-                    <li>No variable queuing delays.</li>
-                    <li>Predictable performance.</li>
-                </ul>
-            </li>
-            <li><strong>Cons:</strong>
-                <ul>
-                    <li>Inefficient during "silent periods" (resources wasted even when not transmitting).</li>
-                    <li>Call setup/tear-down overhead.</li>
-                    <li>Dedicated resources cannot be shared.</li>
-                </ul>
-            </li>
-            <li><strong>Multiplexing in Circuit-Switched Networks:</strong>
-                <ul>
-                    <li><em>FDM (Frequency-Division Multiplexing):</em> Link's frequency spectrum divided among connections. Each circuit gets dedicated frequency band. Width of band = <strong>bandwidth</strong>.
-                        <br>Example: FM radio stations in different frequencies.</li>
-                    <li><em>TDM (Time-Division Multiplexing):</em> Time divided into frames, frames into slots. Each circuit gets dedicated time slot(s) in each frame.
-                        <br><span class="formula">Transmission Rate = (Bits per Slot) × (Frame Rate)</span>
-                        <br>Example: 8000 frames/sec, 8 bits/slot = 64 kbps per circuit.</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h3>Packet vs Circuit Switching (Numerical Comparison)</h3>
-        <div class="box">
-            <strong>Scenario:</strong> 1 Mbps link. Each user needs 100 kbps when active. Each user is active only 10% of the time.
-            <ul>
-                <li><strong>Circuit Switching:</strong>
-                    <br>Max users = 1 Mbps / 100 kbps = <strong>10 users</strong> (dedicated allocation).</li>
-                <li><strong>Packet Switching:</strong>
-                    <br>With 35 users, probability of >10 users being active simultaneously:
-                    <br><span class="formula">P(>10 active) = Σ C(35,k) × 0.1^k × 0.9^(35-k) for k=11 to 35 ≈ 0.0004</span>
-                    <br>Can support <strong>35 users</strong> with negligible probability of overload.</li>
-                <li><strong>Conclusion:</strong> <strong>Statistical Multiplexing Gain</strong> - Packet switching wins for bursty data!</li>
-            </ul>
-        </div>
-
-        <h3>Why Packet Switching?</h3>
-        <ul>
-            <li><strong>Better sharing of transmission capacity:</strong> Resources used on demand rather than reserved.</li>
-            <li><strong>Simpler, no call setup.</strong></li>
-            <li><strong>Better for bursty traffic:</strong> Data transmission tends to be bursty (bursts of activity with idle periods).</li>
-            <li><strong>Cons of Packet Switching:</strong>
-                <ul>
-                    <li>Variable, unpredictable end-to-end delay (not ideal for real-time services like audio/video).</li>
-                    <li>Possible packet loss due to buffer overflow.</li>
-                    <li>Requires protocols for reliable data transfer (TCP), congestion control.</li>
-                </ul>
-            </li>
-            <li><strong>For real-time guarantees:</strong> Need additional mechanisms (QoS guarantees - still an unsolved problem for public Internet).</li>
-        </ul>
-
-        <h3>Network of Networks (Internet Structure Evolution)</h3>
-        <ul>
-            <li><strong>Problem:</strong> How to connect billions of access ISPs together?</li>
-            <li><strong>Structure 1:</strong> Access ISPs -> Single Global Transit ISP (Monopoly, unrealistic).</li>
-            <li><strong>Structure 2:</strong> Access ISPs -> Multiple competing Global Transit ISPs. Transit ISPs must interconnect.</li>
-            <li><strong>Structure 3:</strong> Multi-tier hierarchy. Access ISPs -> Regional ISPs -> Tier-1 ISPs (backbone).</li>
-            <li><strong>Structure 4 (Modern Features):</strong>
-                <ul>
-                    <li><em>PoP (Point of Presence):</em> Group of routers in provider's network where customer ISPs can connect.</li>
-                    <li><em>Multi-homing:</em> ISP connects to 2+ provider ISPs (reliability, cost optimization).</li>
-                    <li><em>Peering:</em> Direct traffic exchange between same-tier ISPs (bypasses payments to upstream provider). Usually settlement-free.</li>
-                    <li><em>IXP (Internet Exchange Point):</em> Physical location/building where multiple ISPs can peer together. Reduces costs, improves performance.</li>
-                </ul>
-            </li>
-            <li><strong>Structure 5 (Today's Internet):</strong> Adds <strong>Content Provider Networks</strong> (Google, Microsoft, Netflix, Meta).
-                <ul>
-                    <li>Built private global backbones to reduce payments to Tier-1 ISPs.</li>
-                    <li>Connect directly (peer) with lower-tier ISPs.</li>
-                    <li>Provide better control over user experience.</li>
-                    <li>Deploy servers close to users (CDNs).</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h3>Tier-1 ISPs</h3>
-        <ul>
-            <li>Global backbone providers: AT&T, Verizon, Sprint, NTT, Level3/Lumen, etc.</li>
-            <li>Peer with each other (settlement-free) - "Tier-1 club".</li>
-            <li>Do not pay for transit (only receive payments from lower tiers).</li>
-            <li>Have global reach through their own infrastructure.</li>
-        </ul>
-
-        <h2>1.4 Delay, Loss, and Throughput in Packet-Switched Networks</h2>
-        <p>Performance metrics critical for understanding network behavior.</p>
-
-        <h3>Overview of Delay</h3>
-        <ul>
-            <li>As a packet travels from one node to the next, it suffers from several types of delays.</li>
-            <li>These delays accumulate to give the <strong>total nodal delay</strong>.</li>
-        </ul>
-        
-        <h3>Nodal Delay Components</h3>
-        <p class="formula">d<sub>nodal</sub> = d<sub>proc</sub> + d<sub>queue</sub> + d<sub>trans</sub> + d<sub>prop</sub></p>
-        <ol>
-            <li><strong>Processing Delay (d<sub>proc</sub>):</strong> 
-                <ul>
-                    <li>Time to examine packet header and determine where to direct packet.</li>
-                    <li>Check for bit-level errors.</li>
-                    <li>Typically microseconds or less in high-speed routers.</li>
-                    <li>Depends on router processing speed.</li>
-                </ul>
-            </li>
-            <li><strong>Queuing Delay (d<sub>queue</sub>):</strong>
-                <ul>
-                    <li>Time waiting in output buffer queue for transmission onto link.</li>
-                    <li>Depends on congestion level (number of earlier-arriving packets in queue).</li>
-                    <li>Can range from microseconds to milliseconds in practice.</li>
-                    <li>Most interesting and complex component.</li>
-                </ul>
-            </li>
-            <li><strong>Transmission Delay (d<sub>trans</sub>):</strong>
-                <ul>
-                    <li>Time to push all packet's bits onto the link ("emit the packet").</li>
-                    <li><span class="formula">d<sub>trans</sub> = L / R</span></li>
-                    <li>L = packet length (bits), R = link transmission rate (bps).</li>
-                    <li>Depends on packet size and link bandwidth.</li>
-                    <li>Example: L = 1000 bits, R = 1 Mbps → d<sub>trans</sub> = 1 ms.</li>
-                </ul>
-            </li>
-            <li><strong>Propagation Delay (d<sub>prop</sub>):</strong>
-                <ul>
-                    <li>Time for a bit to propagate from start of link to next router.</li>
-                    <li><span class="formula">d<sub>prop</sub> = d / s</span></li>
-                    <li>d = length of physical link (meters), s = propagation speed in medium.</li>
-                    <li>s ≈ 2×10⁸ to 3×10⁸ m/s (speed of light in medium).</li>
-                    <li>Depends on physical medium and distance.</li>
-                    <li>Example: d = 1000 km, s = 2×10⁸ m/s → d<sub>prop</sub> = 5 ms.</li>
-                </ul>
-            </li>
-        </ol>
-
-        <h3>Transmission vs Propagation: Key Difference</h3>
-        <div class="box">
-            <ul>
-                <li><strong>Transmission Delay:</strong> Function of packet size (L) and link rate (R). Time to push bits onto link. Has NOTHING to do with distance.</li>
-                <li><strong>Propagation Delay:</strong> Function of distance (d) and speed (s). Time for bit to travel. Has NOTHING to do with packet size.</li>
-                <li><strong>Common confusion:</strong> Students often confuse these! Remember:
-                    <ul>
-                        <li>Transmission = "Time to send" (like loading cars onto highway)</li>
-                        <li>Propagation = "Time to travel" (like car driving on highway)</li>
-                    </ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Unguided Media (Atmosphere/Space):</strong> Waves propagate in
+          atmosphere/space.
+          <ul>
+            <li>
+              <em>Terrestrial Radio Channels:</em>
+              <ul>
+                <li>Path loss: Signal attenuates as it travels.</li>
+                <li>
+                  Shadow fading: Signal blocked by obstacles (buildings,
+                  mountains).
                 </li>
-            </ul>
-        </div>
-
-        <h3>Caravan Analogy (Transmission vs Propagation)</h3>
-        <div class="box">
-            <ul>
-                <li><strong>Scenario:</strong> 10 cars (bits in packet) in a caravan. Toll booth (Router). 100 km highway segment.</li>
-                <li>Cars travel at 100 km/h (Propagation Speed).</li>
-                <li>Toll booth takes 12s to service each car (Transmission Rate analog).</li>
-                <li><strong>Transmission Delay:</strong> Time for whole caravan to pass through booth = 12s × 10 cars = 120s = 2 min.</li>
-                <li><strong>Propagation Delay:</strong> Time for one car to drive 100km = 100km / 100km/h = 1 hour.</li>
-                <li><strong>End-to-End:</strong> First car arrives at next toll booth after 60 min. Last car of caravan arrives after 60 min + 2 min = 62 min.</li>
-            </ul>
-        </div>
-
-        <h3>Queuing Delay and Traffic Intensity</h3>
-        <div class="box">
-            <ul>
-                <li><strong>Traffic Intensity:</strong> Key metric for understanding queuing behavior.
-                    <br><span class="formula">Traffic Intensity I = (L × a) / R</span></li>
-                <li>L = average packet size (bits), a = average packet arrival rate (packets/sec), R = link transmission rate (bps).</li>
-                <li>La = average bits arriving per second. R = bits that can be transmitted per second.</li>
-            </ul>
-            <strong>Traffic Intensity Analysis:</strong>
-            <ul>
-                <li><strong>I ≈ 0:</strong> Packets arrive far apart. Average queuing delay is small.</li>
-                <li><strong>I → 1:</strong> Arrival rate approaches capacity. Average queuing delay grows <strong>exponentially</strong>.</li>
-                <li><strong>I > 1:</strong> More bits arriving than can be transmitted. Queue grows without bound → <strong>Infinite delay</strong> (packets will be lost).</li>
-                <li><strong>Golden Rule:</strong> Design systems so that traffic intensity &lt; 1.</li>
-            </ul>
-        </div>
-
-        <h3>Packet Loss</h3>
-        <ul>
-            <li><strong>Cause:</strong> Queues (buffers) in routers have <strong>finite capacity</strong>.</li>
-            <li>If packet arrives to find a full queue, router <strong>drops</strong> the packet (packet is lost).</li>
-            <li>Lost packet may be retransmitted by previous node, by source end system, or may not be retransmitted at all (depends on protocol).</li>
-            <li><strong>Packet Loss Rate:</strong> Fraction of packets lost. Increases as traffic intensity approaches 1.</li>
-            <li><strong>Performance trade-off:</strong> Larger buffers → less loss but more delay. Smaller buffers → less delay but more loss.</li>
-        </ul>
-
-        <h3>End-to-End Delay</h3>
-        <ul>
-            <li>For N-1 routers (N links) between source and destination, assuming identical delays at each node:
-                <br><span class="formula">d<sub>end-end</sub> = N × (d<sub>proc</sub> + d<sub>queue</sub> + d<sub>trans</sub> + d<sub>prop</sub>)</span></li>
-            <li>If we neglect queuing delays (unloaded network):
-                <br><span class="formula">d<sub>end-end</sub> = N × (d<sub>proc</sub> + d<sub>trans</sub> + d<sub>prop</sub>)</span></li>
-        </ul>
-
-        <h3>Traceroute and Round-Trip Time (RTT)</h3>
-        <div class="box">
-            <ul>
-                <li><strong>Traceroute:</strong> Diagnostic program to measure delay along the path.</li>
-                <li><strong>How it works:</strong>
-                    <ul>
-                        <li>Source sends packets with TTL (Time to Live) = 1, 2, 3, ... N.</li>
-                        <li>When TTL reaches 0 at router n, router discards packet and sends ICMP "Time Exceeded" message back to source.</li>
-                        <li>Source measures Round-Trip Time (RTT) for each router.</li>
-                        <li>Sends 3 packets per TTL value, reports 3 RTT measurements.</li>
-                    </ul>
+                <li>
+                  Multipath fading: Signal reflects off objects, causing
+                  interference.
                 </li>
-                <li><strong>Output interpretation:</strong>
-                    <ul>
-                        <li>Shows each hop along the path.</li>
-                        <li>* indicates lost probe (no response).</li>
-                        <li>RTT variations show queuing delay variability.</li>
-                    </ul>
+                <li>Interference: Other signals in same frequency band.</li>
+              </ul>
+            </li>
+            <li>
+              <em>Satellite Channels:</em>
+              <ul>
+                <li>
+                  <strong>Geostationary (GEO):</strong> 36,000 km altitude.
+                  Stationary relative to earth. <strong>280 ms</strong> one-way
+                  propagation delay (~560ms RTT).
                 </li>
-                <li><strong>RTT vs One-Way Delay:</strong> RTT ≈ 2 × One-way delay (approximately, if paths are symmetric).</li>
-            </ul>
-        </div>
-
-        <h3>Throughput</h3>
-        <ul>
-            <li><strong>Definition:</strong> Rate (bits/time unit) at which bits are being transferred between sender and receiver.</li>
-            <li><strong>Instantaneous Throughput:</strong> Rate at a given point in time.</li>
-            <li><strong>Average Throughput:</strong> Rate over longer period. If F bits transferred in T seconds:
-                <br><span class="formula">Average Throughput = F / T bits/sec</span></li>
-            <li><strong>Bottleneck Link:</strong> Link on end-to-end path that constrains end-to-end throughput.
-                <br><span class="formula">Throughput = min(R₁, R₂, ..., Rₙ) = min(R<sub>s</sub>, R<sub>c</sub>)</span>
-                <br>where R<sub>s</sub> = server access link, R<sub>c</sub> = client access link.</li>
-        </ul>
-
-        <div class="box">
-            <strong>Throughput Example - Single Connection:</strong>
-            <ul>
-                <li>Server connects at R<sub>s</sub> bps. Client connects at R<sub>c</sub> bps. Core network rate R (very high).</li>
-                <li>If R >> R<sub>s</sub> and R >> R<sub>c</sub>: <span class="formula">Throughput ≈ min(R<sub>s</sub>, R<sub>c</sub>)</span></li>
-                <li>In modern Internet, core is fast. Bottleneck is usually the <strong>access network</strong>.</li>
-            </ul>
-            <strong>Throughput Example - Multiple Connections:</strong>
-            <ul>
-                <li>10 connections sharing a link R. Each gets R/10 average.</li>
-                <li>Bottleneck may shift to shared link in core:
-                    <br><span class="formula">Throughput per connection = min(R<sub>s</sub>, R<sub>c</sub>, R/10)</span></li>
-            </ul>
-        </div>
-
-        <h3>Delay vs Throughput</h3>
-        <ul>
-            <li><strong>Different metrics:</strong> Low delay ≠ high throughput.</li>
-            <li>Example: Satellite link can have high throughput (many bits per second) but high delay (280ms propagation).</li>
-            <li>Fiber can have low delay AND high throughput.</li>
-            <li>Both matter for different applications:
-                <ul>
-                    <li>VoIP, gaming: Need low delay.</li>
-                    <li>File download: Need high throughput.</li>
-                    <li>Video streaming: Need both!</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h2>1.5 Protocol Layers and Their Service Models</h2>
-
-        <h3>Why Layering?</h3>
-        <ul>
-            <li><strong>Dealing with complex systems:</strong> Networks are complex! Layering provides a structured way to discuss system components.</li>
-            <li><strong>Modularization:</strong> Each layer provides a <strong>service</strong> to the layer above, using services of layer below.</li>
-            <li><strong>Advantages:</strong>
-                <ul>
-                    <li>Easier identification and relationship of components.</li>
-                    <li>Easier maintenance/updating (change in one layer doesn't affect others if interface remains same).</li>
-                    <li>Explicit structure allows easy understanding of complex systems.</li>
-                </ul>
-            </li>
-            <li><strong>Disadvantages:</strong>
-                <ul>
-                    <li>Header overhead at each layer.</li>
-                    <li>Possible duplication of functionality (e.g., error checking in multiple layers).</li>
-                    <li>Layering may hide information needed for optimization.</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h3>Service Models</h3>
-        <ul>
-            <li><strong>Service:</strong> Set of operations a layer provides to the layer above it.</li>
-            <li><strong>Service Model:</strong> Defines what guarantees the layer provides.
-                <ul>
-                    <li><em>Connection-oriented:</em> Establish connection before data transfer (setup phase).</li>
-                    <li><em>Connectionless:</em> No setup, just send data.</li>
-                    <li><em>Reliable:</em> Guarantees delivery (may use acknowledgments, retransmissions).</li>
-                    <li><em>Unreliable:</em> Best-effort, no guarantee.</li>
-                </ul>
-            </li>
-            <li><strong>Protocol:</strong> Defines the format and order of messages exchanged between peer entities (same layer on different hosts).</li>
-        </ul>
-
-        <h3>The Internet Protocol Stack (5 Layers)</h3>
-        <div class="box">
-            <strong>1. Application Layer</strong>
-            <ul>
-                <li><strong>Function:</strong> Where network applications and their application-layer protocols reside.</li>
-                <li><strong>Responsibilities:</strong> Creating user data, defining message semantics.</li>
-                <li><strong>Protocols:</strong> HTTP (Web), SMTP (email), FTP (file transfer), DNS (name resolution), DHCP (address allocation).</li>
-                <li><strong>PDU (Protocol Data Unit):</strong> <strong>Message</strong>.</li>
-                <li><strong>Examples:</strong> Web browser, email client, streaming apps.</li>
-            </ul>
-        </div>
-        <div class="box">
-            <strong>2. Transport Layer</strong>
-            <ul>
-                <li><strong>Function:</strong> Process-to-process data transfer. Transports application-layer messages between application endpoints.</li>
-                <li><strong>Multiplexing/Demultiplexing:</strong> Uses port numbers to deliver data to correct process.</li>
-                <li><strong>Protocols:</strong>
-                    <ul>
-                        <li><em>TCP (Transmission Control Protocol):</em>
-                            <ul>
-                                <li>Connection-oriented (3-way handshake).</li>
-                                <li>Reliable data transfer (acknowledgments, retransmissions).</li>
-                                <li>Flow control (prevent overwhelming receiver).</li>
-                                <li>Congestion control (prevent overwhelming network).</li>
-                            </ul>
-                        </li>
-                        <li><em>UDP (User Datagram Protocol):</em>
-                            <ul>
-                                <li>Connectionless ("fire and forget").</li>
-                                <li>Unreliable - no guarantees.</li>
-                                <li>No flow/congestion control.</li>
-                                <li>Fast, lightweight, used for streaming, DNS, gaming.</li>
-                            </ul>
-                        </li>
-                    </ul>
+                <li>
+                  <strong>MEO (Medium Earth Orbit):</strong> ~5,000-12,000 km.
+                  GPS satellites.
                 </li>
-                <li><strong>PDU:</strong> <strong>Segment</strong> (TCP) or <strong>Datagram</strong> (UDP).</li>
-            </ul>
-        </div>
-        <div class="box">
-            <strong>3. Network Layer</strong>
-            <ul>
-                <li><strong>Function:</strong> Moving packets from source host to destination host (host-to-host delivery).</li>
-                <li><strong>Responsibilities:</strong>
-                    <ul>
-                        <li><em>Forwarding:</em> Moving packets from router's input to appropriate output (local action).</li>
-                        <li><em>Routing:</em> Determining the path packets take from source to destination (global action).</li>
-                    </ul>
+                <li>
+                  <strong>LEO (Low Earth Orbit):</strong> ~500-2000 km. Low
+                  delay (~20-40ms RTT). Satellites move relative to earth
+                  (constellations needed, e.g., Starlink, OneWeb).
                 </li>
-                <li><strong>Key Protocol:</strong> <strong>IP (Internet Protocol)</strong>
-                    <ul>
-                        <li>Defines datagram format.</li>
-                        <li>Addressing conventions (IP addresses).</li>
-                        <li>Packet handling conventions.</li>
-                        <li><strong>Best-effort service:</strong> No guarantees on delivery, delay, or order.</li>
-                    </ul>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>1.3 The Network Core</h2>
+      <p>
+        The mesh of packet switches and links interconnecting the Internet's end
+        systems.
+      </p>
+
+      <h3>Packet Switching</h3>
+      <ul>
+        <li>
+          <strong>Concept:</strong> Application-layer messages broken into
+          <strong>Packets</strong> (L bits). Each packet travels independently
+          through network links and switches.
+        </li>
+        <li>
+          <strong>Store-and-Forward Transmission:</strong> Switch must receive
+          <em>entire</em> packet before it can begin transmitting the first bit
+          of the packet to the next link.
+          <ul>
+            <li>Packet must be completely stored before forwarding.</li>
+            <li>This is why we get per-hop delays.</li>
+          </ul>
+        </li>
+        <li>
+          <span class="formula"
+            >Transmission Delay for 1 packet on 1 link = L / R</span
+          >
+        </li>
+        <li>
+          <span class="formula"
+            >End-to-End Delay (N links, no prop/proc/queue) = N * (L/R)</span
+          >
+        </li>
+        <li>
+          <strong>Example:</strong> 1 packet, 3 links, L = 1000 bits, R = 1
+          Mbps: <br /><span class="formula">Delay = 3 × (1000/10⁶) = 3 ms</span>
+        </li>
+        <li>
+          <strong>Queuing Delay and Packet Loss:</strong>
+          <ul>
+            <li>Each packet switch has multiple links attached.</li>
+            <li>
+              For each attached link, packet switch has an
+              <strong>Output Buffer (Output Queue)</strong>.
+            </li>
+            <li>
+              If arrival rate > output link transmission rate, packets queue in
+              buffer.
+            </li>
+            <li>
+              <strong>Packet Loss:</strong> If buffer is full (finite capacity),
+              arriving packets are <strong>dropped</strong>.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Forwarding Table:</strong> Each router has a table mapping
+          destination IP addresses (or portions thereof) to outbound links.
+        </li>
+        <li>
+          <strong>Routing Protocols:</strong> Algorithms that automatically set
+          the forwarding tables.
+          <ul>
+            <li>Interior: OSPF, RIP</li>
+            <li>Exterior: BGP</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Self-Routing:</strong> Each packet contains destination
+          address in header. Router examines address, consults forwarding table,
+          forwards to appropriate outbound link.
+        </li>
+      </ul>
+
+      <h3>Circuit Switching</h3>
+      <ul>
+        <li>
+          <strong>Concept:</strong> Dedicated end-to-end path between source and
+          destination. Resources (bandwidth/buffers) <em>reserved</em> for
+          entire duration of session.
+        </li>
+        <li>
+          <strong>Call Setup:</strong> Path must be established before
+          communication begins.
+        </li>
+        <li>
+          <strong>Analogy:</strong> Restaurant requiring reservation (Circuit)
+          vs Walk-in and hope for table (Packet).
+        </li>
+        <li>
+          <strong>Pros:</strong>
+          <ul>
+            <li>Guaranteed constant transmission rate.</li>
+            <li>No variable queuing delays.</li>
+            <li>Predictable performance.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Cons:</strong>
+          <ul>
+            <li>
+              Inefficient during "silent periods" (resources wasted even when
+              not transmitting).
+            </li>
+            <li>Call setup/tear-down overhead.</li>
+            <li>Dedicated resources cannot be shared.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Multiplexing in Circuit-Switched Networks:</strong>
+          <ul>
+            <li>
+              <em>FDM (Frequency-Division Multiplexing):</em> Link's frequency
+              spectrum divided among connections. Each circuit gets dedicated
+              frequency band. Width of band = <strong>bandwidth</strong>.
+              <br />Example: FM radio stations in different frequencies.
+            </li>
+            <li>
+              <em>TDM (Time-Division Multiplexing):</em> Time divided into
+              frames, frames into slots. Each circuit gets dedicated time
+              slot(s) in each frame. <br /><span class="formula"
+                >Transmission Rate = (Bits per Slot) × (Frame Rate)</span
+              >
+              <br />Example: 8000 frames/sec, 8 bits/slot = 64 kbps per circuit.
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Packet vs Circuit Switching (Numerical Comparison)</h3>
+      <div class="box">
+        <strong>Scenario:</strong> 1 Mbps link. Each user needs 100 kbps when
+        active. Each user is active only 10% of the time.
+        <ul>
+          <li>
+            <strong>Circuit Switching:</strong> <br />Max users = 1 Mbps / 100
+            kbps = <strong>10 users</strong> (dedicated allocation).
+          </li>
+          <li>
+            <strong>Packet Switching:</strong> <br />With 35 users, probability
+            of >10 users being active simultaneously: <br /><span
+              class="formula"
+              >P(>10 active) = Σ C(35,k) × 0.1^k × 0.9^(35-k) for k=11 to 35 ≈
+              0.0004</span
+            >
+            <br />Can support <strong>35 users</strong> with negligible
+            probability of overload.
+          </li>
+          <li>
+            <strong>Conclusion:</strong>
+            <strong>Statistical Multiplexing Gain</strong> - Packet switching
+            wins for bursty data!
+          </li>
+        </ul>
+      </div>
+
+      <h3>Why Packet Switching?</h3>
+      <ul>
+        <li>
+          <strong>Better sharing of transmission capacity:</strong> Resources
+          used on demand rather than reserved.
+        </li>
+        <li><strong>Simpler, no call setup.</strong></li>
+        <li>
+          <strong>Better for bursty traffic:</strong> Data transmission tends to
+          be bursty (bursts of activity with idle periods).
+        </li>
+        <li>
+          <strong>Cons of Packet Switching:</strong>
+          <ul>
+            <li>
+              Variable, unpredictable end-to-end delay (not ideal for real-time
+              services like audio/video).
+            </li>
+            <li>Possible packet loss due to buffer overflow.</li>
+            <li>
+              Requires protocols for reliable data transfer (TCP), congestion
+              control.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>For real-time guarantees:</strong> Need additional mechanisms
+          (QoS guarantees - still an unsolved problem for public Internet).
+        </li>
+      </ul>
+
+      <h3>Network of Networks (Internet Structure Evolution)</h3>
+      <ul>
+        <li>
+          <strong>Problem:</strong> How to connect billions of access ISPs
+          together?
+        </li>
+        <li>
+          <strong>Structure 1:</strong> Access ISPs -> Single Global Transit ISP
+          (Monopoly, unrealistic).
+        </li>
+        <li>
+          <strong>Structure 2:</strong> Access ISPs -> Multiple competing Global
+          Transit ISPs. Transit ISPs must interconnect.
+        </li>
+        <li>
+          <strong>Structure 3:</strong> Multi-tier hierarchy. Access ISPs ->
+          Regional ISPs -> Tier-1 ISPs (backbone).
+        </li>
+        <li>
+          <strong>Structure 4 (Modern Features):</strong>
+          <ul>
+            <li>
+              <em>PoP (Point of Presence):</em> Group of routers in provider's
+              network where customer ISPs can connect.
+            </li>
+            <li>
+              <em>Multi-homing:</em> ISP connects to 2+ provider ISPs
+              (reliability, cost optimization).
+            </li>
+            <li>
+              <em>Peering:</em> Direct traffic exchange between same-tier ISPs
+              (bypasses payments to upstream provider). Usually settlement-free.
+            </li>
+            <li>
+              <em>IXP (Internet Exchange Point):</em> Physical location/building
+              where multiple ISPs can peer together. Reduces costs, improves
+              performance.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Structure 5 (Today's Internet):</strong> Adds
+          <strong>Content Provider Networks</strong> (Google, Microsoft,
+          Netflix, Meta).
+          <ul>
+            <li>
+              Built private global backbones to reduce payments to Tier-1 ISPs.
+            </li>
+            <li>Connect directly (peer) with lower-tier ISPs.</li>
+            <li>Provide better control over user experience.</li>
+            <li>Deploy servers close to users (CDNs).</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Tier-1 ISPs</h3>
+      <ul>
+        <li>
+          Global backbone providers: AT&T, Verizon, Sprint, NTT, Level3/Lumen,
+          etc.
+        </li>
+        <li>Peer with each other (settlement-free) - "Tier-1 club".</li>
+        <li>
+          Do not pay for transit (only receive payments from lower tiers).
+        </li>
+        <li>Have global reach through their own infrastructure.</li>
+      </ul>
+
+      <h2>1.4 Delay, Loss, and Throughput in Packet-Switched Networks</h2>
+      <p>Performance metrics critical for understanding network behavior.</p>
+
+      <h3>Overview of Delay</h3>
+      <ul>
+        <li>
+          As a packet travels from one node to the next, it suffers from several
+          types of delays.
+        </li>
+        <li>
+          These delays accumulate to give the
+          <strong>total nodal delay</strong>.
+        </li>
+      </ul>
+
+      <h3>Nodal Delay Components</h3>
+      <p class="formula">
+        d<sub>nodal</sub> = d<sub>proc</sub> + d<sub>queue</sub> + d<sub
+          >trans</sub
+        >
+        + d<sub>prop</sub>
+      </p>
+      <ol>
+        <li>
+          <strong>Processing Delay (d<sub>proc</sub>):</strong>
+          <ul>
+            <li>
+              Time to examine packet header and determine where to direct
+              packet.
+            </li>
+            <li>Check for bit-level errors.</li>
+            <li>Typically microseconds or less in high-speed routers.</li>
+            <li>Depends on router processing speed.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Queuing Delay (d<sub>queue</sub>):</strong>
+          <ul>
+            <li>
+              Time waiting in output buffer queue for transmission onto link.
+            </li>
+            <li>
+              Depends on congestion level (number of earlier-arriving packets in
+              queue).
+            </li>
+            <li>Can range from microseconds to milliseconds in practice.</li>
+            <li>Most interesting and complex component.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Transmission Delay (d<sub>trans</sub>):</strong>
+          <ul>
+            <li>
+              Time to push all packet's bits onto the link ("emit the packet").
+            </li>
+            <li>
+              <span class="formula">d<sub>trans</sub> = L / R</span>
+            </li>
+            <li>L = packet length (bits), R = link transmission rate (bps).</li>
+            <li>Depends on packet size and link bandwidth.</li>
+            <li>
+              Example: L = 1000 bits, R = 1 Mbps → d<sub>trans</sub> = 1 ms.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Propagation Delay (d<sub>prop</sub>):</strong>
+          <ul>
+            <li>
+              Time for a bit to propagate from start of link to next router.
+            </li>
+            <li>
+              <span class="formula">d<sub>prop</sub> = d / s</span>
+            </li>
+            <li>
+              d = length of physical link (meters), s = propagation speed in
+              medium.
+            </li>
+            <li>s ≈ 2×10⁸ to 3×10⁸ m/s (speed of light in medium).</li>
+            <li>Depends on physical medium and distance.</li>
+            <li>
+              Example: d = 1000 km, s = 2×10⁸ m/s → d<sub>prop</sub> = 5 ms.
+            </li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Transmission vs Propagation: Key Difference</h3>
+      <div class="box">
+        <ul>
+          <li>
+            <strong>Transmission Delay:</strong> Function of packet size (L) and
+            link rate (R). Time to push bits onto link. Has NOTHING to do with
+            distance.
+          </li>
+          <li>
+            <strong>Propagation Delay:</strong> Function of distance (d) and
+            speed (s). Time for bit to travel. Has NOTHING to do with packet
+            size.
+          </li>
+          <li>
+            <strong>Common confusion:</strong> Students often confuse these!
+            Remember:
+            <ul>
+              <li>
+                Transmission = "Time to send" (like loading cars onto highway)
+              </li>
+              <li>
+                Propagation = "Time to travel" (like car driving on highway)
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <h3>Caravan Analogy (Transmission vs Propagation)</h3>
+      <div class="box">
+        <ul>
+          <li>
+            <strong>Scenario:</strong> 10 cars (bits in packet) in a caravan.
+            Toll booth (Router). 100 km highway segment.
+          </li>
+          <li>Cars travel at 100 km/h (Propagation Speed).</li>
+          <li>
+            Toll booth takes 12s to service each car (Transmission Rate analog).
+          </li>
+          <li>
+            <strong>Transmission Delay:</strong> Time for whole caravan to pass
+            through booth = 12s × 10 cars = 120s = 2 min.
+          </li>
+          <li>
+            <strong>Propagation Delay:</strong> Time for one car to drive 100km
+            = 100km / 100km/h = 1 hour.
+          </li>
+          <li>
+            <strong>End-to-End:</strong> First car arrives at next toll booth
+            after 60 min. Last car of caravan arrives after 60 min + 2 min = 62
+            min.
+          </li>
+        </ul>
+      </div>
+
+      <h3>Queuing Delay and Traffic Intensity</h3>
+      <div class="box">
+        <ul>
+          <li>
+            <strong>Traffic Intensity:</strong> Key metric for understanding
+            queuing behavior. <br /><span class="formula"
+              >Traffic Intensity I = (L × a) / R</span
+            >
+          </li>
+          <li>
+            L = average packet size (bits), a = average packet arrival rate
+            (packets/sec), R = link transmission rate (bps).
+          </li>
+          <li>
+            La = average bits arriving per second. R = bits that can be
+            transmitted per second.
+          </li>
+        </ul>
+        <strong>Traffic Intensity Analysis:</strong>
+        <ul>
+          <li>
+            <strong>I ≈ 0:</strong> Packets arrive far apart. Average queuing
+            delay is small.
+          </li>
+          <li>
+            <strong>I → 1:</strong> Arrival rate approaches capacity. Average
+            queuing delay grows <strong>exponentially</strong>.
+          </li>
+          <li>
+            <strong>I > 1:</strong> More bits arriving than can be transmitted.
+            Queue grows without bound → <strong>Infinite delay</strong> (packets
+            will be lost).
+          </li>
+          <li>
+            <strong>Golden Rule:</strong> Design systems so that traffic
+            intensity &lt; 1.
+          </li>
+        </ul>
+      </div>
+
+      <h3>Packet Loss</h3>
+      <ul>
+        <li>
+          <strong>Cause:</strong> Queues (buffers) in routers have
+          <strong>finite capacity</strong>.
+        </li>
+        <li>
+          If packet arrives to find a full queue, router
+          <strong>drops</strong> the packet (packet is lost).
+        </li>
+        <li>
+          Lost packet may be retransmitted by previous node, by source end
+          system, or may not be retransmitted at all (depends on protocol).
+        </li>
+        <li>
+          <strong>Packet Loss Rate:</strong> Fraction of packets lost. Increases
+          as traffic intensity approaches 1.
+        </li>
+        <li>
+          <strong>Performance trade-off:</strong> Larger buffers → less loss but
+          more delay. Smaller buffers → less delay but more loss.
+        </li>
+      </ul>
+
+      <h3>End-to-End Delay</h3>
+      <ul>
+        <li>
+          For N-1 routers (N links) between source and destination, assuming
+          identical delays at each node: <br /><span class="formula"
+            >d<sub>end-end</sub> = N × (d<sub>proc</sub> + d<sub>queue</sub> +
+            d<sub>trans</sub> + d<sub>prop</sub>)</span
+          >
+        </li>
+        <li>
+          If we neglect queuing delays (unloaded network): <br /><span
+            class="formula"
+            >d<sub>end-end</sub> = N × (d<sub>proc</sub> + d<sub>trans</sub> +
+            d<sub>prop</sub>)</span
+          >
+        </li>
+      </ul>
+
+      <h3>Traceroute and Round-Trip Time (RTT)</h3>
+      <div class="box">
+        <ul>
+          <li>
+            <strong>Traceroute:</strong> Diagnostic program to measure delay
+            along the path.
+          </li>
+          <li>
+            <strong>How it works:</strong>
+            <ul>
+              <li>
+                Source sends packets with TTL (Time to Live) = 1, 2, 3, ... N.
+              </li>
+              <li>
+                When TTL reaches 0 at router n, router discards packet and sends
+                ICMP "Time Exceeded" message back to source.
+              </li>
+              <li>Source measures Round-Trip Time (RTT) for each router.</li>
+              <li>
+                Sends 3 packets per TTL value, reports 3 RTT measurements.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Output interpretation:</strong>
+            <ul>
+              <li>Shows each hop along the path.</li>
+              <li>* indicates lost probe (no response).</li>
+              <li>RTT variations show queuing delay variability.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>RTT vs One-Way Delay:</strong> RTT ≈ 2 × One-way delay
+            (approximately, if paths are symmetric).
+          </li>
+        </ul>
+      </div>
+
+      <h3>Throughput</h3>
+      <ul>
+        <li>
+          <strong>Definition:</strong> Rate (bits/time unit) at which bits are
+          being transferred between sender and receiver.
+        </li>
+        <li>
+          <strong>Instantaneous Throughput:</strong> Rate at a given point in
+          time.
+        </li>
+        <li>
+          <strong>Average Throughput:</strong> Rate over longer period. If F
+          bits transferred in T seconds: <br /><span class="formula"
+            >Average Throughput = F / T bits/sec</span
+          >
+        </li>
+        <li>
+          <strong>Bottleneck Link:</strong> Link on end-to-end path that
+          constrains end-to-end throughput. <br /><span class="formula"
+            >Throughput = min(R₁, R₂, ..., Rₙ) = min(R<sub>s</sub>,
+            R<sub>c</sub>)</span
+          >
+          <br />where R<sub>s</sub> = server access link, R<sub>c</sub> = client
+          access link.
+        </li>
+      </ul>
+
+      <div class="box">
+        <strong>Throughput Example - Single Connection:</strong>
+        <ul>
+          <li>
+            Server connects at R<sub>s</sub> bps. Client connects at R<sub
+              >c</sub
+            >
+            bps. Core network rate R (very high).
+          </li>
+          <li>
+            If R >> R<sub>s</sub> and R >> R<sub>c</sub>:
+            <span class="formula"
+              >Throughput ≈ min(R<sub>s</sub>, R<sub>c</sub>)</span
+            >
+          </li>
+          <li>
+            In modern Internet, core is fast. Bottleneck is usually the
+            <strong>access network</strong>.
+          </li>
+        </ul>
+        <strong>Throughput Example - Multiple Connections:</strong>
+        <ul>
+          <li>10 connections sharing a link R. Each gets R/10 average.</li>
+          <li>
+            Bottleneck may shift to shared link in core: <br /><span
+              class="formula"
+              >Throughput per connection = min(R<sub>s</sub>, R<sub>c</sub>,
+              R/10)</span
+            >
+          </li>
+        </ul>
+      </div>
+
+      <h3>Delay vs Throughput</h3>
+      <ul>
+        <li>
+          <strong>Different metrics:</strong> Low delay ≠ high throughput.
+        </li>
+        <li>
+          Example: Satellite link can have high throughput (many bits per
+          second) but high delay (280ms propagation).
+        </li>
+        <li>Fiber can have low delay AND high throughput.</li>
+        <li>
+          Both matter for different applications:
+          <ul>
+            <li>VoIP, gaming: Need low delay.</li>
+            <li>File download: Need high throughput.</li>
+            <li>Video streaming: Need both!</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>1.5 Protocol Layers and Their Service Models</h2>
+
+      <h3>Why Layering?</h3>
+      <ul>
+        <li>
+          <strong>Dealing with complex systems:</strong> Networks are complex!
+          Layering provides a structured way to discuss system components.
+        </li>
+        <li>
+          <strong>Modularization:</strong> Each layer provides a
+          <strong>service</strong> to the layer above, using services of layer
+          below.
+        </li>
+        <li>
+          <strong>Advantages:</strong>
+          <ul>
+            <li>Easier identification and relationship of components.</li>
+            <li>
+              Easier maintenance/updating (change in one layer doesn't affect
+              others if interface remains same).
+            </li>
+            <li>
+              Explicit structure allows easy understanding of complex systems.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Disadvantages:</strong>
+          <ul>
+            <li>Header overhead at each layer.</li>
+            <li>
+              Possible duplication of functionality (e.g., error checking in
+              multiple layers).
+            </li>
+            <li>Layering may hide information needed for optimization.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Service Models</h3>
+      <ul>
+        <li>
+          <strong>Service:</strong> Set of operations a layer provides to the
+          layer above it.
+        </li>
+        <li>
+          <strong>Service Model:</strong> Defines what guarantees the layer
+          provides.
+          <ul>
+            <li>
+              <em>Connection-oriented:</em> Establish connection before data
+              transfer (setup phase).
+            </li>
+            <li><em>Connectionless:</em> No setup, just send data.</li>
+            <li>
+              <em>Reliable:</em> Guarantees delivery (may use acknowledgments,
+              retransmissions).
+            </li>
+            <li><em>Unreliable:</em> Best-effort, no guarantee.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Protocol:</strong> Defines the format and order of messages
+          exchanged between peer entities (same layer on different hosts).
+        </li>
+      </ul>
+
+      <h3>The Internet Protocol Stack (5 Layers)</h3>
+      <div class="box">
+        <strong>1. Application Layer</strong>
+        <ul>
+          <li>
+            <strong>Function:</strong> Where network applications and their
+            application-layer protocols reside.
+          </li>
+          <li>
+            <strong>Responsibilities:</strong> Creating user data, defining
+            message semantics.
+          </li>
+          <li>
+            <strong>Protocols:</strong> HTTP (Web), SMTP (email), FTP (file
+            transfer), DNS (name resolution), DHCP (address allocation).
+          </li>
+          <li>
+            <strong>PDU (Protocol Data Unit):</strong> <strong>Message</strong>.
+          </li>
+          <li>
+            <strong>Examples:</strong> Web browser, email client, streaming
+            apps.
+          </li>
+        </ul>
+      </div>
+      <div class="box">
+        <strong>2. Transport Layer</strong>
+        <ul>
+          <li>
+            <strong>Function:</strong> Process-to-process data transfer.
+            Transports application-layer messages between application endpoints.
+          </li>
+          <li>
+            <strong>Multiplexing/Demultiplexing:</strong> Uses port numbers to
+            deliver data to correct process.
+          </li>
+          <li>
+            <strong>Protocols:</strong>
+            <ul>
+              <li>
+                <em>TCP (Transmission Control Protocol):</em>
+                <ul>
+                  <li>Connection-oriented (3-way handshake).</li>
+                  <li>
+                    Reliable data transfer (acknowledgments, retransmissions).
+                  </li>
+                  <li>Flow control (prevent overwhelming receiver).</li>
+                  <li>Congestion control (prevent overwhelming network).</li>
+                </ul>
+              </li>
+              <li>
+                <em>UDP (User Datagram Protocol):</em>
+                <ul>
+                  <li>Connectionless ("fire and forget").</li>
+                  <li>Unreliable - no guarantees.</li>
+                  <li>No flow/congestion control.</li>
+                  <li>Fast, lightweight, used for streaming, DNS, gaming.</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>PDU:</strong> <strong>Segment</strong> (TCP) or
+            <strong>Datagram</strong> (UDP).
+          </li>
+        </ul>
+      </div>
+      <div class="box">
+        <strong>3. Network Layer</strong>
+        <ul>
+          <li>
+            <strong>Function:</strong> Moving packets from source host to
+            destination host (host-to-host delivery).
+          </li>
+          <li>
+            <strong>Responsibilities:</strong>
+            <ul>
+              <li>
+                <em>Forwarding:</em> Moving packets from router's input to
+                appropriate output (local action).
+              </li>
+              <li>
+                <em>Routing:</em> Determining the path packets take from source
+                to destination (global action).
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Key Protocol:</strong>
+            <strong>IP (Internet Protocol)</strong>
+            <ul>
+              <li>Defines datagram format.</li>
+              <li>Addressing conventions (IP addresses).</li>
+              <li>Packet handling conventions.</li>
+              <li>
+                <strong>Best-effort service:</strong> No guarantees on delivery,
+                delay, or order.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Routing Protocols:</strong> OSPF, RIP (interior), BGP
+            (exterior).
+          </li>
+          <li><strong>PDU:</strong> <strong>Datagram</strong>.</li>
+          <li><strong>Devices:</strong> Routers.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <strong>4. Link Layer</strong>
+        <ul>
+          <li>
+            <strong>Function:</strong> Moving frames from one node to
+            neighboring node (node-to-node delivery over a single link).
+          </li>
+          <li>
+            <strong>Responsibilities:</strong>
+            <ul>
+              <li>Framing (encapsulating datagram into frame).</li>
+              <li>Link access (MAC protocol for shared medium).</li>
+              <li>Error detection/correction.</li>
+              <li>Reliable delivery between adjacent nodes (optional).</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Protocols:</strong> Ethernet (802.3), WiFi (802.11), PPP,
+            HDLC.
+          </li>
+          <li><strong>PDU:</strong> <strong>Frame</strong>.</li>
+          <li>
+            <strong>Addressing:</strong> MAC addresses (48-bit hardware
+            address).
+          </li>
+          <li>
+            <strong>Devices:</strong> Switches, NICs (Network Interface Cards).
+          </li>
+          <li>
+            <strong>Note:</strong> Different links may use different protocols
+            (e.g., Ethernet at home, WiFi at coffee shop).
+          </li>
+        </ul>
+      </div>
+      <div class="box">
+        <strong>5. Physical Layer</strong>
+        <ul>
+          <li>
+            <strong>Function:</strong> Moving individual bits "on the wire" from
+            one node to the next.
+          </li>
+          <li>
+            <strong>Responsibilities:</strong>
+            <ul>
+              <li>Bit representation (voltages, light pulses).</li>
+              <li>Transmission rate.</li>
+              <li>Physical characteristics of transmission media.</li>
+              <li>Synchronization of bits.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Protocols:</strong> Dependent on medium (e.g., DSL PHY,
+            Ethernet PHY, 802.11 PHY).
+          </li>
+          <li>
+            <strong>Concerned with:</strong> Mechanical, electrical, timing
+            specifications.
+          </li>
+        </ul>
+      </div>
+
+      <h3>OSI Reference Model (7 Layers)</h3>
+      <div class="box">
+        <ul>
+          <li>OSI (Open Systems Interconnection) model has 7 layers.</li>
+          <li>
+            Internet stack (5 layers) is missing two layers present in OSI:
+          </li>
+          <li>
+            <strong>6. Presentation Layer:</strong>
+            <ul>
+              <li>Data representation and encryption.</li>
+              <li>Compression, data conversion.</li>
+              <li>Allow applications to interpret meaning of data.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>5. Session Layer:</strong>
+            <ul>
+              <li>
+                Synchronization, checkpointing, recovery of data exchange.
+              </li>
+              <li>Establishing, managing, terminating sessions.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Internet philosophy:</strong> These services (if needed) are
+            implemented in the Application Layer. Keep complexity at the edges
+            (End-to-End Principle).
+          </li>
+          <li>
+            <strong>OSI Full Stack:</strong> Application → Presentation →
+            Session → Transport → Network → Data Link → Physical.
+          </li>
+        </ul>
+      </div>
+
+      <h3>Encapsulation</h3>
+      <div class="box">
+        <ul>
+          <li>
+            <strong>Concept:</strong> Each layer takes data from above, adds
+            header information, creates new data unit.
+          </li>
+          <li>
+            <strong>At sending host:</strong>
+            <ul>
+              <li>Application: Creates Message (M).</li>
+              <li>
+                Transport: Adds Transport Header (H<sub>t</sub>) → Segment
+                (H<sub>t</sub> + M).
+              </li>
+              <li>
+                Network: Adds Network Header (H<sub>n</sub>) → Datagram (H<sub
+                  >n</sub
+                >
+                + H<sub>t</sub> + M).
+              </li>
+              <li>
+                Link: Adds Link Header (H<sub>l</sub>) → Frame (H<sub>l</sub> +
+                H<sub>n</sub> + H<sub>t</sub> + M).
+              </li>
+              <li>Physical: Transmits bits.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>At receiving host:</strong> Reverse process (decapsulation).
+            Each layer removes its header and passes data up.
+          </li>
+        </ul>
+      </div>
+
+      <h3>What Each Device Processes</h3>
+      <ul>
+        <li>
+          <strong>Link-Layer Switch:</strong> Processes up to
+          <strong>Layer 2</strong> (Link). Examines frame header, makes
+          forwarding decision based on MAC address.
+        </li>
+        <li>
+          <strong>Router:</strong> Processes up to
+          <strong>Layer 3</strong> (Network). Examines datagram header, makes
+          routing decision based on IP address.
+        </li>
+        <li>
+          <strong>Host:</strong> Processes all <strong>5 layers</strong>. Full
+          protocol stack implementation.
+        </li>
+        <li>
+          <strong>Firewall/Middleboxes:</strong> May process up to Layer 7
+          (Application) for deep packet inspection.
+        </li>
+      </ul>
+
+      <h3>End-to-End Principle</h3>
+      <ul>
+        <li><strong>Key design principle of the Internet.</strong></li>
+        <li>
+          <strong>Idea:</strong> Implement functionality at the endpoints
+          (hosts), not in the network core.
+        </li>
+        <li>
+          <strong>Why?</strong>
+          <ul>
+            <li>Keeps network core simple, fast, and scalable.</li>
+            <li>Only endpoints know true requirements.</li>
+            <li>Network can focus on basic delivery.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Examples:</strong>
+          <ul>
+            <li>
+              Reliable data transfer: Implemented at transport layer (TCP), not
+              in routers.
+            </li>
+            <li>
+              Error checking: End systems verify, not every intermediate node.
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>1.6 Networks Under Attack (Security)</h2>
+      <p>
+        Internet was originally designed as "a group of mutually trusting users
+        attached to a transparent network." Security was an afterthought.
+      </p>
+
+      <h3>The Bad Guys Can Put Malware into Your Host</h3>
+      <ul>
+        <li>
+          <strong>Malware:</strong> Malicious software that can infect hosts via
+          the Internet.
+        </li>
+        <li>
+          <strong>Types of Malware:</strong>
+          <ul>
+            <li>
+              <em>Virus:</em>
+              <ul>
+                <li>
+                  Requires user interaction to infect (e.g., opening email
+                  attachment, downloading file).
                 </li>
-                <li><strong>Routing Protocols:</strong> OSPF, RIP (interior), BGP (exterior).</li>
-                <li><strong>PDU:</strong> <strong>Datagram</strong>.</li>
-                <li><strong>Devices:</strong> Routers.</li>
-            </ul>
-        </div>
-        <div class="box">
-            <strong>4. Link Layer</strong>
-            <ul>
-                <li><strong>Function:</strong> Moving frames from one node to neighboring node (node-to-node delivery over a single link).</li>
-                <li><strong>Responsibilities:</strong>
-                    <ul>
-                        <li>Framing (encapsulating datagram into frame).</li>
-                        <li>Link access (MAC protocol for shared medium).</li>
-                        <li>Error detection/correction.</li>
-                        <li>Reliable delivery between adjacent nodes (optional).</li>
-                    </ul>
+                <li>
+                  Self-replicating: copies itself to other programs/files.
                 </li>
-                <li><strong>Protocols:</strong> Ethernet (802.3), WiFi (802.11), PPP, HDLC.</li>
-                <li><strong>PDU:</strong> <strong>Frame</strong>.</li>
-                <li><strong>Addressing:</strong> MAC addresses (48-bit hardware address).</li>
-                <li><strong>Devices:</strong> Switches, NICs (Network Interface Cards).</li>
-                <li><strong>Note:</strong> Different links may use different protocols (e.g., Ethernet at home, WiFi at coffee shop).</li>
-            </ul>
-        </div>
-        <div class="box">
-            <strong>5. Physical Layer</strong>
-            <ul>
-                <li><strong>Function:</strong> Moving individual bits "on the wire" from one node to the next.</li>
-                <li><strong>Responsibilities:</strong>
-                    <ul>
-                        <li>Bit representation (voltages, light pulses).</li>
-                        <li>Transmission rate.</li>
-                        <li>Physical characteristics of transmission media.</li>
-                        <li>Synchronization of bits.</li>
-                    </ul>
+              </ul>
+            </li>
+            <li>
+              <em>Worm:</em>
+              <ul>
+                <li>
+                  Self-replicating, spreads automatically without user
+                  interaction.
                 </li>
-                <li><strong>Protocols:</strong> Dependent on medium (e.g., DSL PHY, Ethernet PHY, 802.11 PHY).</li>
-                <li><strong>Concerned with:</strong> Mechanical, electrical, timing specifications.</li>
-            </ul>
-        </div>
-
-        <h3>OSI Reference Model (7 Layers)</h3>
-        <div class="box">
-            <ul>
-                <li>OSI (Open Systems Interconnection) model has 7 layers.</li>
-                <li>Internet stack (5 layers) is missing two layers present in OSI:</li>
-                <li><strong>6. Presentation Layer:</strong>
-                    <ul>
-                        <li>Data representation and encryption.</li>
-                        <li>Compression, data conversion.</li>
-                        <li>Allow applications to interpret meaning of data.</li>
-                    </ul>
+                <li>Exploits vulnerabilities in networked software.</li>
+                <li>Can spread very rapidly across Internet.</li>
+              </ul>
+            </li>
+            <li>
+              <em>Trojan Horse:</em>
+              <ul>
+                <li>Disguised as legitimate software.</li>
+                <li>Provides backdoor access or performs malicious actions.</li>
+              </ul>
+            </li>
+            <li>
+              <em>Ransomware:</em>
+              <ul>
+                <li>Encrypts victim's files.</li>
+                <li>Demands payment for decryption key.</li>
+              </ul>
+            </li>
+            <li>
+              <em>Spyware:</em>
+              <ul>
+                <li>Monitors user activity, collects sensitive information.</li>
+                <li>
+                  Keyloggers capture keystrokes (passwords, credit cards).
                 </li>
-                <li><strong>5. Session Layer:</strong>
-                    <ul>
-                        <li>Synchronization, checkpointing, recovery of data exchange.</li>
-                        <li>Establishing, managing, terminating sessions.</li>
-                    </ul>
-                </li>
-                <li><strong>Internet philosophy:</strong> These services (if needed) are implemented in the Application Layer. Keep complexity at the edges (End-to-End Principle).</li>
-                <li><strong>OSI Full Stack:</strong> Application → Presentation → Session → Transport → Network → Data Link → Physical.</li>
-            </ul>
-        </div>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Botnet:</strong>
+          <ul>
+            <li>Network of compromised devices ("zombies" or "bots").</li>
+            <li>Controlled by attacker (botmaster).</li>
+            <li>Used for spam, DDoS attacks, cryptocurrency mining.</li>
+            <li>Can consist of millions of infected computers.</li>
+          </ul>
+        </li>
+      </ul>
 
-        <h3>Encapsulation</h3>
-        <div class="box">
+      <h3>The Bad Guys Can Attack Servers and Network Infrastructure</h3>
+      <div class="box">
+        <strong>Denial-of-Service (DoS) Attacks:</strong>
+        <ul>
+          <li>
+            <strong>Goal:</strong> Make a resource (server, bandwidth)
+            unavailable to legitimate users.
+          </li>
+          <li>
+            <strong>Types:</strong>
             <ul>
-                <li><strong>Concept:</strong> Each layer takes data from above, adds header information, creates new data unit.</li>
-                <li><strong>At sending host:</strong>
-                    <ul>
-                        <li>Application: Creates Message (M).</li>
-                        <li>Transport: Adds Transport Header (H<sub>t</sub>) → Segment (H<sub>t</sub> + M).</li>
-                        <li>Network: Adds Network Header (H<sub>n</sub>) → Datagram (H<sub>n</sub> + H<sub>t</sub> + M).</li>
-                        <li>Link: Adds Link Header (H<sub>l</sub>) → Frame (H<sub>l</sub> + H<sub>n</sub> + H<sub>t</sub> + M).</li>
-                        <li>Physical: Transmits bits.</li>
-                    </ul>
-                </li>
-                <li><strong>At receiving host:</strong> Reverse process (decapsulation). Each layer removes its header and passes data up.</li>
+              <li>
+                <em>Vulnerability Attack:</em>
+                <ul>
+                  <li>Send specially crafted malformed packets.</li>
+                  <li>
+                    Exploits software vulnerability to crash or hang the host.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <em>Bandwidth Flooding:</em>
+                <ul>
+                  <li>
+                    Send flood of packets to saturate target's access link.
+                  </li>
+                  <li>Legitimate packets cannot get through.</li>
+                </ul>
+              </li>
+              <li>
+                <em>Connection Flooding:</em>
+                <ul>
+                  <li>
+                    Establish many half-open or fully open TCP connections.
+                  </li>
+                  <li>
+                    SYN Flood: Send many TCP SYN requests, never complete
+                    handshake.
+                  </li>
+                  <li>Exhausts server's resources for tracking connections.</li>
+                </ul>
+              </li>
             </ul>
-        </div>
-
-        <h3>What Each Device Processes</h3>
-        <ul>
-            <li><strong>Link-Layer Switch:</strong> Processes up to <strong>Layer 2</strong> (Link). Examines frame header, makes forwarding decision based on MAC address.</li>
-            <li><strong>Router:</strong> Processes up to <strong>Layer 3</strong> (Network). Examines datagram header, makes routing decision based on IP address.</li>
-            <li><strong>Host:</strong> Processes all <strong>5 layers</strong>. Full protocol stack implementation.</li>
-            <li><strong>Firewall/Middleboxes:</strong> May process up to Layer 7 (Application) for deep packet inspection.</li>
+          </li>
         </ul>
+      </div>
 
-        <h3>End-to-End Principle</h3>
+      <div class="box">
+        <strong>Distributed Denial-of-Service (DDoS):</strong>
         <ul>
-            <li><strong>Key design principle of the Internet.</strong></li>
-            <li><strong>Idea:</strong> Implement functionality at the endpoints (hosts), not in the network core.</li>
-            <li><strong>Why?</strong>
-                <ul>
-                    <li>Keeps network core simple, fast, and scalable.</li>
-                    <li>Only endpoints know true requirements.</li>
-                    <li>Network can focus on basic delivery.</li>
-                </ul>
-            </li>
-            <li><strong>Examples:</strong>
-                <ul>
-                    <li>Reliable data transfer: Implemented at transport layer (TCP), not in routers.</li>
-                    <li>Error checking: End systems verify, not every intermediate node.</li>
-                </ul>
-            </li>
+          <li>Attack launched from multiple sources (usually a botnet).</li>
+          <li>Much harder to defend against than single-source DoS.</li>
+          <li>
+            Difficult to filter because traffic comes from many IP addresses.
+          </li>
+          <li>Attack traffic can be larger than target's total bandwidth.</li>
         </ul>
+      </div>
 
-        <h2>1.6 Networks Under Attack (Security)</h2>
-        <p>Internet was originally designed as "a group of mutually trusting users attached to a transparent network." Security was an afterthought.</p>
+      <h3>The Bad Guys Can Sniff Packets</h3>
+      <ul>
+        <li>
+          <strong>Packet Sniffer:</strong> Passive receiver that records a copy
+          of every packet that passes by.
+        </li>
+        <li>
+          <strong>How it works:</strong>
+          <ul>
+            <li>
+              Place receiver near sender (same WiFi network, same broadcast
+              LAN).
+            </li>
+            <li>
+              Set network interface to
+              <strong>promiscuous mode</strong> (receives all packets, not just
+              those addressed to it).
+            </li>
+            <li>Software like Wireshark records and analyzes packets.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Danger:</strong> Can capture passwords, emails, sensitive data
+          if unencrypted.
+        </li>
+        <li>
+          <strong>Defense:</strong> <strong>Encryption</strong> (HTTPS, TLS,
+          VPN). Even if sniffed, data is unreadable.
+        </li>
+        <li>
+          <strong>Common locations:</strong> Coffee shop WiFi, corporate LAN,
+          Internet backbone (nation-state surveillance).
+        </li>
+      </ul>
 
-        <h3>The Bad Guys Can Put Malware into Your Host</h3>
+      <h3>The Bad Guys Can Masquerade as Someone You Trust</h3>
+      <div class="box">
+        <strong>IP Spoofing:</strong>
         <ul>
-            <li><strong>Malware:</strong> Malicious software that can infect hosts via the Internet.</li>
-            <li><strong>Types of Malware:</strong>
-                <ul>
-                    <li><em>Virus:</em>
-                        <ul>
-                            <li>Requires user interaction to infect (e.g., opening email attachment, downloading file).</li>
-                            <li>Self-replicating: copies itself to other programs/files.</li>
-                        </ul>
-                    </li>
-                    <li><em>Worm:</em>
-                        <ul>
-                            <li>Self-replicating, spreads automatically without user interaction.</li>
-                            <li>Exploits vulnerabilities in networked software.</li>
-                            <li>Can spread very rapidly across Internet.</li>
-                        </ul>
-                    </li>
-                    <li><em>Trojan Horse:</em>
-                        <ul>
-                            <li>Disguised as legitimate software.</li>
-                            <li>Provides backdoor access or performs malicious actions.</li>
-                        </ul>
-                    </li>
-                    <li><em>Ransomware:</em>
-                        <ul>
-                            <li>Encrypts victim's files.</li>
-                            <li>Demands payment for decryption key.</li>
-                        </ul>
-                    </li>
-                    <li><em>Spyware:</em>
-                        <ul>
-                            <li>Monitors user activity, collects sensitive information.</li>
-                            <li>Keyloggers capture keystrokes (passwords, credit cards).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li><strong>Botnet:</strong>
-                <ul>
-                    <li>Network of compromised devices ("zombies" or "bots").</li>
-                    <li>Controlled by attacker (botmaster).</li>
-                    <li>Used for spam, DDoS attacks, cryptocurrency mining.</li>
-                    <li>Can consist of millions of infected computers.</li>
-                </ul>
-            </li>
+          <li>Inject packets into Internet with a false source IP address.</li>
+          <li>Receiver believes packet came from trusted source.</li>
+          <li>
+            Used in DoS attacks, to hide identity, or to bypass IP-based access
+            controls.
+          </li>
+          <li>
+            <strong>Defense:</strong> End-point authentication (cryptographic
+            verification of identity).
+          </li>
         </ul>
+      </div>
 
-        <h3>The Bad Guys Can Attack Servers and Network Infrastructure</h3>
-        <div class="box">
-            <strong>Denial-of-Service (DoS) Attacks:</strong>
-            <ul>
-                <li><strong>Goal:</strong> Make a resource (server, bandwidth) unavailable to legitimate users.</li>
-                <li><strong>Types:</strong>
-                    <ul>
-                        <li><em>Vulnerability Attack:</em>
-                            <ul>
-                                <li>Send specially crafted malformed packets.</li>
-                                <li>Exploits software vulnerability to crash or hang the host.</li>
-                            </ul>
-                        </li>
-                        <li><em>Bandwidth Flooding:</em>
-                            <ul>
-                                <li>Send flood of packets to saturate target's access link.</li>
-                                <li>Legitimate packets cannot get through.</li>
-                            </ul>
-                        </li>
-                        <li><em>Connection Flooding:</em>
-                            <ul>
-                                <li>Establish many half-open or fully open TCP connections.</li>
-                                <li>SYN Flood: Send many TCP SYN requests, never complete handshake.</li>
-                                <li>Exhausts server's resources for tracking connections.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>Distributed Denial-of-Service (DDoS):</strong>
-            <ul>
-                <li>Attack launched from multiple sources (usually a botnet).</li>
-                <li>Much harder to defend against than single-source DoS.</li>
-                <li>Difficult to filter because traffic comes from many IP addresses.</li>
-                <li>Attack traffic can be larger than target's total bandwidth.</li>
-            </ul>
-        </div>
-
-        <h3>The Bad Guys Can Sniff Packets</h3>
+      <div class="box">
+        <strong>Man-in-the-Middle (MITM) Attack:</strong>
         <ul>
-            <li><strong>Packet Sniffer:</strong> Passive receiver that records a copy of every packet that passes by.</li>
-            <li><strong>How it works:</strong>
-                <ul>
-                    <li>Place receiver near sender (same WiFi network, same broadcast LAN).</li>
-                    <li>Set network interface to <strong>promiscuous mode</strong> (receives all packets, not just those addressed to it).</li>
-                    <li>Software like Wireshark records and analyzes packets.</li>
-                </ul>
-            </li>
-            <li><strong>Danger:</strong> Can capture passwords, emails, sensitive data if unencrypted.</li>
-            <li><strong>Defense:</strong> <strong>Encryption</strong> (HTTPS, TLS, VPN). Even if sniffed, data is unreadable.</li>
-            <li><strong>Common locations:</strong> Coffee shop WiFi, corporate LAN, Internet backbone (nation-state surveillance).</li>
+          <li>
+            Attacker secretly relays and possibly alters communication between
+            two parties.
+          </li>
+          <li>
+            Both parties believe they are communicating directly with each
+            other.
+          </li>
+          <li>Attacker can eavesdrop, modify messages, inject false data.</li>
+          <li>
+            <strong>Defense:</strong> Mutual authentication, encryption (TLS
+            with certificate verification).
+          </li>
         </ul>
+      </div>
 
-        <h3>The Bad Guys Can Masquerade as Someone You Trust</h3>
-        <div class="box">
-            <strong>IP Spoofing:</strong>
-            <ul>
-                <li>Inject packets into Internet with a false source IP address.</li>
-                <li>Receiver believes packet came from trusted source.</li>
-                <li>Used in DoS attacks, to hide identity, or to bypass IP-based access controls.</li>
-                <li><strong>Defense:</strong> End-point authentication (cryptographic verification of identity).</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>Man-in-the-Middle (MITM) Attack:</strong>
-            <ul>
-                <li>Attacker secretly relays and possibly alters communication between two parties.</li>
-                <li>Both parties believe they are communicating directly with each other.</li>
-                <li>Attacker can eavesdrop, modify messages, inject false data.</li>
-                <li><strong>Defense:</strong> Mutual authentication, encryption (TLS with certificate verification).</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <strong>DNS Spoofing/Poisoning:</strong>
-            <ul>
-                <li>Corrupt DNS cache to redirect users to malicious sites.</li>
-                <li>User types legitimate URL but goes to attacker's server.</li>
-                <li><strong>Defense:</strong> DNSSEC (cryptographic authentication of DNS responses).</li>
-            </ul>
-        </div>
-
-        <h3>Security Principles (Defense)</h3>
+      <div class="box">
+        <strong>DNS Spoofing/Poisoning:</strong>
         <ul>
-            <li><strong>Confidentiality:</strong> Only sender and intended receiver should understand message contents (encryption).</li>
-            <li><strong>Integrity:</strong> Sender/receiver should be able to detect message alteration (message digests, digital signatures).</li>
-            <li><strong>Authentication:</strong> Sender and receiver should be able to confirm identity of other party.</li>
-            <li><strong>Access Control:</strong> Services must be accessible only to authorized users.</li>
-            <li><strong>Availability:</strong> Services must be accessible when needed (counter DoS attacks).</li>
+          <li>Corrupt DNS cache to redirect users to malicious sites.</li>
+          <li>User types legitimate URL but goes to attacker's server.</li>
+          <li>
+            <strong>Defense:</strong> DNSSEC (cryptographic authentication of
+            DNS responses).
+          </li>
         </ul>
+      </div>
 
-        <h3>Lines of Defense</h3>
+      <h3>Security Principles (Defense)</h3>
+      <ul>
+        <li>
+          <strong>Confidentiality:</strong> Only sender and intended receiver
+          should understand message contents (encryption).
+        </li>
+        <li>
+          <strong>Integrity:</strong> Sender/receiver should be able to detect
+          message alteration (message digests, digital signatures).
+        </li>
+        <li>
+          <strong>Authentication:</strong> Sender and receiver should be able to
+          confirm identity of other party.
+        </li>
+        <li>
+          <strong>Access Control:</strong> Services must be accessible only to
+          authorized users.
+        </li>
+        <li>
+          <strong>Availability:</strong> Services must be accessible when needed
+          (counter DoS attacks).
+        </li>
+      </ul>
+
+      <h3>Lines of Defense</h3>
+      <ul>
+        <li>
+          <strong>Firewalls:</strong> Filter packets at network edge based on
+          rules.
+        </li>
+        <li>
+          <strong>Intrusion Detection Systems (IDS):</strong> Monitor traffic
+          for suspicious activity, alert administrators.
+        </li>
+        <li>
+          <strong>Intrusion Prevention Systems (IPS):</strong> Actively block
+          detected attacks.
+        </li>
+        <li>
+          <strong>Encryption:</strong> Protect data confidentiality and
+          integrity.
+        </li>
+        <li>
+          <strong>Authentication mechanisms:</strong> Verify identities
+          (passwords, certificates, multi-factor).
+        </li>
+        <li>
+          <strong>Regular patching:</strong> Fix vulnerabilities in software.
+        </li>
+      </ul>
+
+      <h2>1.7 History of Computer Networking and the Internet</h2>
+
+      <h3>1961-1972: Development of Packet Switching</h3>
+      <ul>
+        <li>
+          <strong>1961 - Kleinrock (MIT):</strong>
+          <ul>
+            <li>First paper on queuing theory applied to networks.</li>
+            <li>
+              Demonstrated effectiveness of packet switching for bursty traffic.
+            </li>
+            <li>Analytical foundation for computer networking.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>1964 - Paul Baran (RAND):</strong>
+          <ul>
+            <li>Packet switching for secure military voice communications.</li>
+            <li>
+              Proposed distributed network architecture (no single point of
+              failure).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>1967 - ARPANET planned:</strong>
+          <ul>
+            <li>Funded by ARPA (Advanced Research Projects Agency, US DoD).</li>
+            <li>Goal: Connect research computers at universities.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>1969 - First ARPAnet node:</strong>
+          <ul>
+            <li>Installed at UCLA (Kleinrock's lab).</li>
+            <li>First message sent to Stanford Research Institute (SRI).</li>
+            <li>
+              Intended: "LOGIN" | Sent: "LO" (system crashed after 2 letters!).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>1970:</strong> ALOHAnet (Hawaii) - first wireless
+          packet-switched network (Norman Abramson).
+        </li>
+        <li>
+          <strong>1972:</strong>
+          <ul>
+            <li>ARPAnet public demonstration (15 nodes).</li>
+            <li>
+              First email program (Ray Tomlinson) - invented @ symbol for email
+              addresses.
+            </li>
+            <li>
+              NCP (Network Control Protocol) - first host-to-host protocol.
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>1972-1980: Proprietary Networks and Internetworking</h3>
+      <ul>
+        <li>
+          <strong>1973 - Metcalfe's Ph.D. thesis:</strong> Ethernet (inspired by
+          ALOHAnet). Published 1976.
+        </li>
+        <li>
+          <strong>1974 - Cerf and Kahn:</strong>
+          <ul>
+            <li>Published architecture for interconnecting networks.</li>
+            <li>Foundation for TCP/IP.</li>
+            <li>
+              Key principles: Minimalist network core, intelligence at edges.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Proprietary architectures:</strong> IBM SNA, DEC DECnet, Xerox
+          XNS.
+        </li>
+        <li><strong>1976:</strong> First Ethernet at Xerox PARC.</li>
+        <li>
+          <strong>Late 1970s:</strong>
+          <ul>
+            <li>Fixed-length packet switching (ATM precursor).</li>
+            <li>ARPANET had ~200 hosts.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>1980-1990: Protocol Proliferation</h3>
+      <ul>
+        <li>
+          <strong>January 1, 1983 - "Flag Day":</strong>
+          <ul>
+            <li>ARPANET switches from NCP to TCP/IP.</li>
+            <li>All hosts required to migrate simultaneously.</li>
+            <li>Birth of the modern Internet.</li>
+          </ul>
+        </li>
+        <li><strong>1983:</strong> DNS (Domain Name System) defined.</li>
+        <li>
+          <strong>1985:</strong> NSFnet created by National Science Foundation.
+          <ul>
+            <li>Connected university supercomputer centers.</li>
+            <li>Initially 56 kbps backbone, later upgraded.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Mid-1980s:</strong>
+          <ul>
+            <li>TCP congestion control added (Van Jacobson).</li>
+            <li>Addressed "congestion collapse" problem.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Minitel (France, 1984):</strong>
+          <ul>
+            <li>Pre-Web online service, great success in France.</li>
+            <li>Had email, online banking, info services before WWW.</li>
+            <li>Government-deployed terminals in households.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>By 1990:</strong> ARPANET decommissioned. ~100,000 hosts on
+          Internet.
+        </li>
+      </ul>
+
+      <h3>1990s: The World Wide Web and Explosion</h3>
+      <ul>
+        <li>
+          <strong>1989-1991 - Tim Berners-Lee (CERN):</strong>
+          <ul>
+            <li>Invented the World Wide Web.</li>
+            <li>Created: HTTP (HyperText Transfer Protocol).</li>
+            <li>Created: HTML (HyperText Markup Language).</li>
+            <li>Created: First browser and server.</li>
+            <li>Original purpose: Share research documents.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>1993:</strong> Mosaic browser (NCSA, Marc Andreessen) - first
+          popular graphical browser.
+        </li>
+        <li><strong>1994:</strong> Netscape founded. Browser wars begin.</li>
+        <li>
+          <strong>1995:</strong>
+          <ul>
+            <li>
+              NSFnet backbone decommissioned - commercial backbone takes over.
+            </li>
+            <li>Internet becomes commercial.</li>
+            <li>~50 million hosts.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Killer Applications of 1990s:</strong>
+          <ul>
+            <li>Email (already existed but exploded in popularity).</li>
+            <li>Web browsing.</li>
+            <li>Instant messaging (ICQ, AIM).</li>
+            <li>P2P file sharing (Napster, 1999).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Late 1990s:</strong> Dot-com boom. Internet startups
+          proliferate.
+        </li>
+      </ul>
+
+      <h3>2000s-Present: The New Millennium</h3>
+      <ul>
+        <li>
+          <strong>2000:</strong> Dot-com bust. Many Internet companies fail.
+        </li>
+        <li>
+          <strong>Broadband explosion:</strong>
+          <ul>
+            <li>DSL, Cable modem replace dial-up.</li>
+            <li>Always-on connectivity becomes norm.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>2003-2004:</strong> Social networking (MySpace, then Facebook
+          2004).
+        </li>
+        <li>
+          <strong>2005:</strong> YouTube - user-generated video explosion.
+        </li>
+        <li>
+          <strong>2007:</strong> iPhone - mobile Internet goes mainstream.
+        </li>
+        <li>
+          <strong>2010s:</strong>
+          <ul>
+            <li>Cloud computing (AWS, Azure, Google Cloud).</li>
+            <li>4G LTE widespread.</li>
+            <li>Streaming services (Netflix, Spotify).</li>
+            <li>Internet of Things (IoT) - billions of connected devices.</li>
+            <li>Video constitutes majority of Internet traffic.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>2020s:</strong>
+          <ul>
+            <li>5G deployment.</li>
+            <li>LEO satellite constellations (Starlink).</li>
+            <li>~5+ billion Internet users worldwide.</li>
+            <li>AI-generated content.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Key Figures in Internet History</h3>
+      <div class="box">
         <ul>
-            <li><strong>Firewalls:</strong> Filter packets at network edge based on rules.</li>
-            <li><strong>Intrusion Detection Systems (IDS):</strong> Monitor traffic for suspicious activity, alert administrators.</li>
-            <li><strong>Intrusion Prevention Systems (IPS):</strong> Actively block detected attacks.</li>
-            <li><strong>Encryption:</strong> Protect data confidentiality and integrity.</li>
-            <li><strong>Authentication mechanisms:</strong> Verify identities (passwords, certificates, multi-factor).</li>
-            <li><strong>Regular patching:</strong> Fix vulnerabilities in software.</li>
+          <li>
+            <strong>Leonard Kleinrock:</strong> Queuing theory for packet
+            switching.
+          </li>
+          <li>
+            <strong>Paul Baran:</strong> Distributed packet-switched networks.
+          </li>
+          <li>
+            <strong>Vint Cerf & Bob Kahn:</strong> TCP/IP architecture ("Fathers
+            of the Internet").
+          </li>
+          <li><strong>Ray Tomlinson:</strong> Email, @ symbol.</li>
+          <li><strong>Tim Berners-Lee:</strong> World Wide Web, HTTP, HTML.</li>
+          <li><strong>Marc Andreessen:</strong> Mosaic browser, Netscape.</li>
+          <li><strong>Bob Metcalfe:</strong> Ethernet.</li>
+          <li><strong>Van Jacobson:</strong> TCP congestion control.</li>
         </ul>
+      </div>
 
-        <h2>1.7 History of Computer Networking and the Internet</h2>
-
-        <h3>1961-1972: Development of Packet Switching</h3>
+      <h2>Key Formulas Summary</h2>
+      <div class="box">
         <ul>
-            <li><strong>1961 - Kleinrock (MIT):</strong>
-                <ul>
-                    <li>First paper on queuing theory applied to networks.</li>
-                    <li>Demonstrated effectiveness of packet switching for bursty traffic.</li>
-                    <li>Analytical foundation for computer networking.</li>
-                </ul>
-            </li>
-            <li><strong>1964 - Paul Baran (RAND):</strong>
-                <ul>
-                    <li>Packet switching for secure military voice communications.</li>
-                    <li>Proposed distributed network architecture (no single point of failure).</li>
-                </ul>
-            </li>
-            <li><strong>1967 - ARPANET planned:</strong>
-                <ul>
-                    <li>Funded by ARPA (Advanced Research Projects Agency, US DoD).</li>
-                    <li>Goal: Connect research computers at universities.</li>
-                </ul>
-            </li>
-            <li><strong>1969 - First ARPAnet node:</strong>
-                <ul>
-                    <li>Installed at UCLA (Kleinrock's lab).</li>
-                    <li>First message sent to Stanford Research Institute (SRI).</li>
-                    <li>Intended: "LOGIN" | Sent: "LO" (system crashed after 2 letters!).</li>
-                </ul>
-            </li>
-            <li><strong>1970:</strong> ALOHAnet (Hawaii) - first wireless packet-switched network (Norman Abramson).</li>
-            <li><strong>1972:</strong>
-                <ul>
-                    <li>ARPAnet public demonstration (15 nodes).</li>
-                    <li>First email program (Ray Tomlinson) - invented @ symbol for email addresses.</li>
-                    <li>NCP (Network Control Protocol) - first host-to-host protocol.</li>
-                </ul>
-            </li>
+          <li>
+            <strong>Transmission Delay:</strong>
+            <span class="formula">d<sub>trans</sub> = L / R</span> (L=bits,
+            R=bps)
+          </li>
+          <li>
+            <strong>Propagation Delay:</strong>
+            <span class="formula">d<sub>prop</sub> = d / s</span> (d=distance,
+            s=speed)
+          </li>
+          <li>
+            <strong>Nodal Delay:</strong>
+            <span class="formula"
+              >d<sub>nodal</sub> = d<sub>proc</sub> + d<sub>queue</sub> + d<sub
+                >trans</sub
+              >
+              + d<sub>prop</sub></span
+            >
+          </li>
+          <li>
+            <strong>End-to-End Delay (N links):</strong>
+            <span class="formula"
+              >d<sub>e2e</sub> = N × (d<sub>proc</sub> + d<sub>trans</sub> +
+              d<sub>prop</sub>)</span
+            >
+          </li>
+          <li>
+            <strong>Traffic Intensity:</strong>
+            <span class="formula">I = La / R</span> (L=pkt size, a=arrival rate)
+          </li>
+          <li>
+            <strong>Throughput:</strong>
+            <span class="formula"
+              >= min(R<sub>s</sub>, R<sub>c</sub>, R<sub>link</sub>)</span
+            >
+          </li>
+          <li>
+            <strong>TDM Rate:</strong>
+            <span class="formula">= (bits/slot) × (frames/sec)</span>
+          </li>
+          <li>
+            <strong>Circuit Capacity:</strong>
+            <span class="formula">= Total Bandwidth / Bandwidth per user</span>
+          </li>
         </ul>
+      </div>
 
-        <h3>1972-1980: Proprietary Networks and Internetworking</h3>
+      <h2>Important Definitions</h2>
+      <div class="box">
         <ul>
-            <li><strong>1973 - Metcalfe's Ph.D. thesis:</strong> Ethernet (inspired by ALOHAnet). Published 1976.</li>
-            <li><strong>1974 - Cerf and Kahn:</strong>
-                <ul>
-                    <li>Published architecture for interconnecting networks.</li>
-                    <li>Foundation for TCP/IP.</li>
-                    <li>Key principles: Minimalist network core, intelligence at edges.</li>
-                </ul>
-            </li>
-            <li><strong>Proprietary architectures:</strong> IBM SNA, DEC DECnet, Xerox XNS.</li>
-            <li><strong>1976:</strong> First Ethernet at Xerox PARC.</li>
-            <li><strong>Late 1970s:</strong>
-                <ul>
-                    <li>Fixed-length packet switching (ATM precursor).</li>
-                    <li>ARPANET had ~200 hosts.</li>
-                </ul>
-            </li>
+          <li>
+            <strong>Protocol:</strong> Rules defining format, order of messages,
+            and actions on transmission/receipt.
+          </li>
+          <li>
+            <strong>Packet:</strong> Chunk of data with header information.
+          </li>
+          <li>
+            <strong>Router:</strong> Network-layer packet switch (forwards based
+            on IP).
+          </li>
+          <li>
+            <strong>Switch:</strong> Link-layer packet switch (forwards based on
+            MAC).
+          </li>
+          <li>
+            <strong>ISP:</strong> Internet Service Provider - network of routers
+            and links.
+          </li>
+          <li>
+            <strong>RFC:</strong> Request for Comments - Internet standards
+            documents.
+          </li>
+          <li>
+            <strong>Socket:</strong> Interface between application and transport
+            layer.
+          </li>
+          <li>
+            <strong>Bandwidth:</strong> Maximum rate at which data can be
+            transferred.
+          </li>
+          <li>
+            <strong>Throughput:</strong> Actual rate of successful data
+            transfer.
+          </li>
+          <li>
+            <strong>Latency/Delay:</strong> Time for packet to travel from
+            source to destination.
+          </li>
+          <li>
+            <strong>RTT:</strong> Round-Trip Time - time for packet to go and
+            acknowledgment to return.
+          </li>
         </ul>
+      </div>
 
-        <h3>1980-1990: Protocol Proliferation</h3>
-        <ul>
-            <li><strong>January 1, 1983 - "Flag Day":</strong>
-                <ul>
-                    <li>ARPANET switches from NCP to TCP/IP.</li>
-                    <li>All hosts required to migrate simultaneously.</li>
-                    <li>Birth of the modern Internet.</li>
-                </ul>
-            </li>
-            <li><strong>1983:</strong> DNS (Domain Name System) defined.</li>
-            <li><strong>1985:</strong> NSFnet created by National Science Foundation.
-                <ul>
-                    <li>Connected university supercomputer centers.</li>
-                    <li>Initially 56 kbps backbone, later upgraded.</li>
-                </ul>
-            </li>
-            <li><strong>Mid-1980s:</strong>
-                <ul>
-                    <li>TCP congestion control added (Van Jacobson).</li>
-                    <li>Addressed "congestion collapse" problem.</li>
-                </ul>
-            </li>
-            <li><strong>Minitel (France, 1984):</strong>
-                <ul>
-                    <li>Pre-Web online service, great success in France.</li>
-                    <li>Had email, online banking, info services before WWW.</li>
-                    <li>Government-deployed terminals in households.</li>
-                </ul>
-            </li>
-            <li><strong>By 1990:</strong> ARPANET decommissioned. ~100,000 hosts on Internet.</li>
-        </ul>
+      <div class="chapter-nav">
+        <a href="index.html" class="nav-btn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          Home
+        </a>
+        <a href="Chapter2.html" class="nav-btn next">
+          Chapter 2: Application Layer
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
 
-        <h3>1990s: The World Wide Web and Explosion</h3>
-        <ul>
-            <li><strong>1989-1991 - Tim Berners-Lee (CERN):</strong>
-                <ul>
-                    <li>Invented the World Wide Web.</li>
-                    <li>Created: HTTP (HyperText Transfer Protocol).</li>
-                    <li>Created: HTML (HyperText Markup Language).</li>
-                    <li>Created: First browser and server.</li>
-                    <li>Original purpose: Share research documents.</li>
-                </ul>
-            </li>
-            <li><strong>1993:</strong> Mosaic browser (NCSA, Marc Andreessen) - first popular graphical browser.</li>
-            <li><strong>1994:</strong> Netscape founded. Browser wars begin.</li>
-            <li><strong>1995:</strong>
-                <ul>
-                    <li>NSFnet backbone decommissioned - commercial backbone takes over.</li>
-                    <li>Internet becomes commercial.</li>
-                    <li>~50 million hosts.</li>
-                </ul>
-            </li>
-            <li><strong>Killer Applications of 1990s:</strong>
-                <ul>
-                    <li>Email (already existed but exploded in popularity).</li>
-                    <li>Web browsing.</li>
-                    <li>Instant messaging (ICQ, AIM).</li>
-                    <li>P2P file sharing (Napster, 1999).</li>
-                </ul>
-            </li>
-            <li><strong>Late 1990s:</strong> Dot-com boom. Internet startups proliferate.</li>
-        </ul>
-
-        <h3>2000s-Present: The New Millennium</h3>
-        <ul>
-            <li><strong>2000:</strong> Dot-com bust. Many Internet companies fail.</li>
-            <li><strong>Broadband explosion:</strong>
-                <ul>
-                    <li>DSL, Cable modem replace dial-up.</li>
-                    <li>Always-on connectivity becomes norm.</li>
-                </ul>
-            </li>
-            <li><strong>2003-2004:</strong> Social networking (MySpace, then Facebook 2004).</li>
-            <li><strong>2005:</strong> YouTube - user-generated video explosion.</li>
-            <li><strong>2007:</strong> iPhone - mobile Internet goes mainstream.</li>
-            <li><strong>2010s:</strong>
-                <ul>
-                    <li>Cloud computing (AWS, Azure, Google Cloud).</li>
-                    <li>4G LTE widespread.</li>
-                    <li>Streaming services (Netflix, Spotify).</li>
-                    <li>Internet of Things (IoT) - billions of connected devices.</li>
-                    <li>Video constitutes majority of Internet traffic.</li>
-                </ul>
-            </li>
-            <li><strong>2020s:</strong>
-                <ul>
-                    <li>5G deployment.</li>
-                    <li>LEO satellite constellations (Starlink).</li>
-                    <li>~5+ billion Internet users worldwide.</li>
-                    <li>AI-generated content.</li>
-                </ul>
-            </li>
-        </ul>
-
-        <h3>Key Figures in Internet History</h3>
-        <div class="box">
-            <ul>
-                <li><strong>Leonard Kleinrock:</strong> Queuing theory for packet switching.</li>
-                <li><strong>Paul Baran:</strong> Distributed packet-switched networks.</li>
-                <li><strong>Vint Cerf & Bob Kahn:</strong> TCP/IP architecture ("Fathers of the Internet").</li>
-                <li><strong>Ray Tomlinson:</strong> Email, @ symbol.</li>
-                <li><strong>Tim Berners-Lee:</strong> World Wide Web, HTTP, HTML.</li>
-                <li><strong>Marc Andreessen:</strong> Mosaic browser, Netscape.</li>
-                <li><strong>Bob Metcalfe:</strong> Ethernet.</li>
-                <li><strong>Van Jacobson:</strong> TCP congestion control.</li>
-            </ul>
-        </div>
-
-        <h2>Key Formulas Summary</h2>
-        <div class="box">
-            <ul>
-                <li><strong>Transmission Delay:</strong> <span class="formula">d<sub>trans</sub> = L / R</span> (L=bits, R=bps)</li>
-                <li><strong>Propagation Delay:</strong> <span class="formula">d<sub>prop</sub> = d / s</span> (d=distance, s=speed)</li>
-                <li><strong>Nodal Delay:</strong> <span class="formula">d<sub>nodal</sub> = d<sub>proc</sub> + d<sub>queue</sub> + d<sub>trans</sub> + d<sub>prop</sub></span></li>
-                <li><strong>End-to-End Delay (N links):</strong> <span class="formula">d<sub>e2e</sub> = N × (d<sub>proc</sub> + d<sub>trans</sub> + d<sub>prop</sub>)</span></li>
-                <li><strong>Traffic Intensity:</strong> <span class="formula">I = La / R</span> (L=pkt size, a=arrival rate)</li>
-                <li><strong>Throughput:</strong> <span class="formula">= min(R<sub>s</sub>, R<sub>c</sub>, R<sub>link</sub>)</span></li>
-                <li><strong>TDM Rate:</strong> <span class="formula">= (bits/slot) × (frames/sec)</span></li>
-                <li><strong>Circuit Capacity:</strong> <span class="formula">= Total Bandwidth / Bandwidth per user</span></li>
-            </ul>
-        </div>
-
-        <h2>Important Definitions</h2>
-        <div class="box">
-            <ul>
-                <li><strong>Protocol:</strong> Rules defining format, order of messages, and actions on transmission/receipt.</li>
-                <li><strong>Packet:</strong> Chunk of data with header information.</li>
-                <li><strong>Router:</strong> Network-layer packet switch (forwards based on IP).</li>
-                <li><strong>Switch:</strong> Link-layer packet switch (forwards based on MAC).</li>
-                <li><strong>ISP:</strong> Internet Service Provider - network of routers and links.</li>
-                <li><strong>RFC:</strong> Request for Comments - Internet standards documents.</li>
-                <li><strong>Socket:</strong> Interface between application and transport layer.</li>
-                <li><strong>Bandwidth:</strong> Maximum rate at which data can be transferred.</li>
-                <li><strong>Throughput:</strong> Actual rate of successful data transfer.</li>
-                <li><strong>Latency/Delay:</strong> Time for packet to travel from source to destination.</li>
-                <li><strong>RTT:</strong> Round-Trip Time - time for packet to go and acknowledgment to return.</li>
-            </ul>
-        </div>
-
-        <div class="chapter-nav">
-            <a href="index.html" class="nav-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                Home
-            </a>
-            <a href="Chapter2.html" class="nav-btn next">
-                Chapter 2: Application Layer
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
-
-        <div class="footer">
-            Made by <a href="https://www.linkedin.com/in/ks-iitjmu" target="_blank" style="color: #0056b3; text-decoration: none;">Kunal Sharma</a>
-        </div>
-
+      <div class="footer">
+        Made by
+        <a
+          href="https://www.linkedin.com/in/ks-iitjmu"
+          target="_blank"
+          style="color: #0056b3; text-decoration: none"
+          >Kunal Sharma</a
+        >
+      </div>
     </div>
-</body>
+  </body>
 </html>
